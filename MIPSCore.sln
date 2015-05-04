@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIPSCore", "MIPSCore\MIPSCore.csproj", "{8167717C-DF36-4477-AD3F-F655F4C4033E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClockTest", "ClockTest\ClockTest.csproj", "{CD32CE1B-2289-41D3-A8E2-795D98DA12D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{BE9515DB-53FA-4570-99C6-4661CF6676AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArgumentTest", "ArgumentTest\ArgumentTest.csproj", "{1A521DE3-DA2D-4AFD-B2DC-CED695346108}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstructionMemoryTest", "InstructionMemoryTest\InstructionMemoryTest.csproj", "{AB2E6275-3373-4091-9FAC-EA456703D71B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Tests", "Integration Tests", "{F69D4D3E-AD31-46EE-A745-31E22E0CA315}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8167717C-DF36-4477-AD3F-F655F4C4033E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8167717C-DF36-4477-AD3F-F655F4C4033E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8167717C-DF36-4477-AD3F-F655F4C4033E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8167717C-DF36-4477-AD3F-F655F4C4033E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD32CE1B-2289-41D3-A8E2-795D98DA12D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD32CE1B-2289-41D3-A8E2-795D98DA12D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD32CE1B-2289-41D3-A8E2-795D98DA12D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD32CE1B-2289-41D3-A8E2-795D98DA12D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB2E6275-3373-4091-9FAC-EA456703D71B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB2E6275-3373-4091-9FAC-EA456703D71B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB2E6275-3373-4091-9FAC-EA456703D71B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB2E6275-3373-4091-9FAC-EA456703D71B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CD32CE1B-2289-41D3-A8E2-795D98DA12D2} = {BE9515DB-53FA-4570-99C6-4661CF6676AD}
+		{1A521DE3-DA2D-4AFD-B2DC-CED695346108} = {BE9515DB-53FA-4570-99C6-4661CF6676AD}
+		{AB2E6275-3373-4091-9FAC-EA456703D71B} = {BE9515DB-53FA-4570-99C6-4661CF6676AD}
+	EndGlobalSection
+EndGlobal
