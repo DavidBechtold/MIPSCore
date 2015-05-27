@@ -46,20 +46,21 @@ namespace MIPSCore.InstructionMemory
             nextInstruction = core.getInstructionMemory.readNextInstuction();
 
             // 3.) divide instruction for the register file and the control unit
-            opCode = nextInstruction.getSubword(26, 6);
-            rt = nextInstruction.getSubword(16, 5);
-            rs = nextInstruction.getSubword(21, 5);
+            opCode = nextInstruction.getSubword(0, 6);
+            rs = nextInstruction.getSubword(6, 5);
+            rt = nextInstruction.getSubword(6 + 5, 5);
+            
 
             /* R Format */
-            function = nextInstruction.getSubword(0, 6);
-            shiftAmount = nextInstruction.getSubword(6, 5);
-            rd = nextInstruction.getSubword(11, 5);
+            function = nextInstruction.getSubword(32 - 6, 6);
+            shiftAmount = nextInstruction.getSubword(6 + 5 + 5 + 5, 5);
+            rd = nextInstruction.getSubword(6 + 5 + 5, 5);
 
             /* I Format */
-            immediate = nextInstruction.getSubword(0, 16);
+            immediate = nextInstruction.getSubword(16, 16);
 
             /* J Format */
-            jumpTarget = nextInstruction.getSubword(0, 26);
+            jumpTarget = nextInstruction.getSubword(6, 26);
         }
 
         public void flush()

@@ -12,14 +12,13 @@ namespace MIPSCore.InstructionSet
         public enum RegisterDestination { rt, rd };
         public enum ALUSource { regFile, signExtend }
         public enum ALUControl {
-            and = 0,
-            or = 1,
-            add = 2,
+            and             = 0,
+            or              = 1,
+            add             = 2,
             addu, 
-            sub = 6, 
-            setOnLessThan = 7,
-            nor = 12,
-
+            sub             = 6, 
+            setOnLessThan   = 7,
+            nor             = 12,
         }
         public enum ProgramCounterSource { signExtend, programCounter }
 
@@ -35,7 +34,7 @@ namespace MIPSCore.InstructionSet
 
         public CControlSignals(CWord opCode, CWord function)
         {
-
+            prepareControlSignals(opCode, function);
         }
 
         private void prepareControlSignals(CWord opCode, CWord function)
@@ -46,6 +45,7 @@ namespace MIPSCore.InstructionSet
                     prepareRFormatControlSignals(function);
                     break;
                 case InstructionFormat.I:
+
                     break;
                 case InstructionFormat.J:
                     break;

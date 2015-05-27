@@ -16,7 +16,7 @@ namespace CInstructionMemoryTest
             /* write image into the instruction memory and read it */
             for (UInt32 i = 0; i < CInstructionMemory.endAddress; i++)
             {
-                memory.writeWord((UInt16) i, i);
+                memory.writeWord((UInt16) i, new CWord((UInt32) i));
                 Assert.AreEqual(memory.getInstructionInvalidAddress, false);
             }
 
@@ -32,7 +32,7 @@ namespace CInstructionMemoryTest
         public void CInstuctionMemory_OutOfBoundWriteAndRead()
         {
             CInstructionMemory memory = new CInstructionMemory();
-            memory.writeWord(CInstructionMemory.endAddress + 1, 100);
+            memory.writeWord(CInstructionMemory.endAddress + 1, new CWord(100));
             Assert.AreEqual(memory.getInstructionInvalidAddress, true);
 
             memory = new CInstructionMemory();

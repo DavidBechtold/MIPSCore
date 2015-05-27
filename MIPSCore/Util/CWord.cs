@@ -8,7 +8,9 @@ namespace MIPSCore.Util
 {
     public class CWord
     {
-        private UInt16 maxBinaryLength = 32;
+        public const UInt16 wordLength = 32;
+        private UInt16 maxHexLength = wordLength / 4;
+        private UInt16 maxBinaryLength = wordLength;
         private string binary;
         private UInt32 unsignedDecimal;
         private Int32 signedDecimal;
@@ -27,7 +29,7 @@ namespace MIPSCore.Util
 
         public CWord(string binary)
         {
-             set(binary);
+            setBinary(binary);
         }
 
         public static CWord operator +(CWord arg1, CWord arg2)
@@ -78,16 +80,17 @@ namespace MIPSCore.Util
             signed = true;
         }
 
-        public void set(string binary)
+        public void setBinary(string binary)
         {
             if (binary.Length > maxBinaryLength)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": Binary length > 32");
-            this.binary = binary.PadLeft(32, '0');
+            this.binary = binary.PadLeft(maxBinaryLength, '0');
             this.unsignedDecimal = Convert.ToUInt32(binary, 2);
             this.signedDecimal = Convert.ToInt32(binary, 2);
             this.hexadecimal = Convert.ToString(this.unsignedDecimal, 16).PadLeft(8, '0').ToUpper();
             signed = false;
         }
+
 
         public Int32 getSignedDecimal
         {

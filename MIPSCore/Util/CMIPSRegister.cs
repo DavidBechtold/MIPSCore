@@ -32,7 +32,7 @@ namespace MIPSCore.Util
         public void write(UInt16 number, string binary)
         {
             checkNumber(number);
-            registers[number].set(binary);
+            registers[number].setBinary(binary);
         }
 
         public CWord readCWord(UInt16 number)

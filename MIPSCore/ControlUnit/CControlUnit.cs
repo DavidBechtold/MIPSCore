@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MIPSCore.Core;
 using MIPSCore.Util;
 using MIPSCore.InstructionMemory;
+using MIPSCore.InstructionSet;
 
 namespace MIPSCore.ControlUnit
 {
@@ -28,6 +29,10 @@ namespace MIPSCore.ControlUnit
 
         private CCore core;
 
+
+
+        private CControlSignals signals;
+
         public CControlUnit(CCore core)
         {
             this.core = core;
@@ -48,8 +53,11 @@ namespace MIPSCore.ControlUnit
             CWord opCode = core.getInstructionFetch.getOpCode;
             CWord function = core.getInstructionFetch.getFunction;
 
-            // 2.) interpret the opCode
+            // 2.) interpret the opCode and function
             // TODO make opcode classes => make a toString function
+            signals = new CControlSignals(opCode, function);
+ 
+
             
         }
     }

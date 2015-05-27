@@ -56,7 +56,7 @@ namespace MIPSCore.InstructionMemory
             return instructionMemory[nextAddressRead];
         }
 
-        public void writeWord(UInt16 address, UInt32 word)
+        public void writeWord(UInt16 address, CWord word)
         {
             if (address > endAddress)
             {
@@ -64,7 +64,7 @@ namespace MIPSCore.InstructionMemory
                 return;
             }
             invalidAddress = false;
-            instructionMemory[address] = new CWord(word);
+            instructionMemory[address] = word;
         }
 
         public bool getInstructionInvalidAddress
@@ -78,7 +78,7 @@ namespace MIPSCore.InstructionMemory
         private void initialiseInstructionMemory()
         {
             for (UInt32 i = 0; i < CInstructionMemory.endAddress; i++)
-                this.writeWord((UInt16)i, 0);
+                this.writeWord((UInt16)i, new CWord(0));
         }
     }
 }
