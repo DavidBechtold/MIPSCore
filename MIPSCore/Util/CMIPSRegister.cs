@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MIPSCore.Util
 {
-    class CMIPSRegister
+    public class CMIPSRegister
     {
-        public const UInt16 numberOfRegisters = 32;
+        public const UInt32 numberOfRegisters = 32;
         private CRegister[] registers;
 
         public CMIPSRegister()
@@ -33,6 +33,12 @@ namespace MIPSCore.Util
         {
             checkNumber(number);
             registers[number].setBinary(binary);
+        }
+
+        public void write(UInt16 number, CWord word)
+        {
+            checkNumber(number);
+            registers[number].setCWord(word);
         }
 
         public CWord readCWord(UInt16 number)
@@ -65,7 +71,7 @@ namespace MIPSCore.Util
             return registers[number].getSignedDecimal;
         }
 
-        private void flush()
+        public void flush()
         {
             for(UInt16 i = 0; i < numberOfRegisters; i++)
                 registers[i] = new CRegister(i, (UInt32) 0);

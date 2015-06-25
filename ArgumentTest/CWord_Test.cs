@@ -123,5 +123,20 @@ namespace CWordTest
             /* argument out of range */
             subWord = word.getSubword(32, 5);
         }
+
+
+        [TestMethod]
+        public void CWord_signExtendSigned()
+        {
+            CWord arg = new CWord(-5);
+            arg = arg.getSubword(16, 16);
+            arg.signExtendSigned();
+            Assert.AreEqual("FFFFFFFB", arg.getHexadecimal);
+            Assert.AreEqual(-5, arg.getSignedDecimal);
+
+            arg = new CWord(5);
+            arg.signExtendSigned();
+            Assert.AreEqual("00000005", arg.getHexadecimal);
+        }
     }
 }

@@ -10,41 +10,14 @@ using MIPSCore.InstructionSet;
 
 namespace MIPSCore.ControlUnit
 {
-    class CControlUnit
+    public class CControlUnit
     {
-        public enum RegisterDestination {rt, rs};
-        public enum ALUSource { regFile, signExtend }
-        public enum ALUControl {  add, subtract, and, or, setOnLessThan}
-        public enum ProgramCounterSource { signExtend, programCounter}
-
-        /* control signals */
-        private RegisterDestination     regDestination; //which register will be written
-        private ALUSource               aluSource;      //alu take the value fom regFile or from the sign extender (immediate cmd)
-        private ALUControl              aluControl;     //which operation the alu should perform
-        private bool                    regWrite;       //true => write register | false => no register to write (jmp, beq commands)
-        private bool                    memWrite;       //true => write memory
-        private bool                    memRead;        //true => read memory
-        private bool                    memToReg;       //true => write memory content to register
-        private ProgramCounterSource    pcSource;       //take the source from the programcounter or from the sign extender (jmp,.. instruction)
-
         private CCore core;
-
-
-
         private CControlSignals signals;
 
         public CControlUnit(CCore core)
         {
             this.core = core;
-
-            regDestination = RegisterDestination.rt;
-            aluSource = ALUSource.regFile;
-            aluControl = ALUControl.add;
-            regWrite = false;
-            memWrite = false;
-            memRead = false;
-            memToReg = false;
-            pcSource = ProgramCounterSource.programCounter;
         }
 
         public void clock()
@@ -54,11 +27,17 @@ namespace MIPSCore.ControlUnit
             CWord function = core.getInstructionFetch.getFunction;
 
             // 2.) interpret the opCode and function
-            // TODO make opcode classes => make a toString function
-            signals = new CControlSignals(opCode, function);
- 
-
-            
+            signals = new CControlSignals(opCode, function);       
         }
+
+        /*** SETTER | GETTER ***/
+        public RegisterDestination getRegDestination { get { return getRegDestination; } }
+        public ALUSource getAluSource { get { return signals.getAluSource; } }
+        public ALUControl getAluControl { get { return signals.getAluControl; } }
+        public bool getRegWrite { get { return signals.getRegWrite; } }
+        public bool getMemWrite { get { return signals.getMemWrite; } }
+        public bool getMemRead { get { return signals.getMemRead; } }
+        public bool getMemToReg { get { return signals.getMemToReg; } }
+        public ProgramCounterSource getPcSource { get { return signals.getPcSource; } }
     }
 }

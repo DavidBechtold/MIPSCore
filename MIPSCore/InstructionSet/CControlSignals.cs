@@ -7,22 +7,28 @@ using MIPSCore.Util;
 
 namespace MIPSCore.InstructionSet
 {
-    class CControlSignals
+    public enum InstructionFormat {R, I, J}
+    public enum RegisterDestination { rt, rd };
+    public enum ALUSource { regFile, signExtend }
+    public enum ALUControl
     {
-        public enum RegisterDestination { rt, rd };
-        public enum ALUSource { regFile, signExtend }
-        public enum ALUControl {
-            and             = 0,
-            or              = 1,
-            add             = 2,
-            addu, 
-            sub             = 6, 
-            setOnLessThan   = 7,
-            nor             = 12,
-        }
-        public enum ProgramCounterSource { signExtend, programCounter }
+        and = 0,
+        or = 1,
+        add = 2,
+        addu,
+        sub = 6,
+        setOnLessThan = 7,
+        nor = 12,
+    }
+    public enum ProgramCounterSource { signExtend, programCounter }
+
+    public class CControlSignals
+    {
+        
+        
 
         /* control signals */
+        private InstructionFormat instructionFormat;
         private RegisterDestination regDestination; //which register will be written
         private ALUSource aluSource;      //alu take the value fom regFile or from the sign extender (immediate cmd)
         private ALUControl aluControl;     //which operation the alu should perform
@@ -45,7 +51,7 @@ namespace MIPSCore.InstructionSet
                     prepareRFormatControlSignals(function);
                     break;
                 case InstructionFormat.I:
-
+                    prepareIFormatControlSignals(opCode);
                     break;
                 case InstructionFormat.J:
                     break;
@@ -54,13 +60,13 @@ namespace MIPSCore.InstructionSet
             }
         }
 
-        public enum InstructionFormat {R, I, J}
         private InstructionFormat getFormat(CWord opCode)
         {
             switch (opCode.getUnsignedDecimal)
             {
                 /* R-Format */
                 case 0:
+                    instructionFormat = InstructionFormat.R;
                     return InstructionFormat.R;
       
                 /* I-Format */
@@ -81,10 +87,12 @@ namespace MIPSCore.InstructionSet
                 case 11: //sltiu: set less than imm. unsigned
                 case 43: //sw: store word
                 case 14: //xori: xor imm.
+                    instructionFormat = InstructionFormat.I;
                     return InstructionFormat.I;
                 /* J-Format */
                 case 2: //j: jump
                 case 3: //jal: jump and link
+                    instructionFormat = InstructionFormat.J;
                     return InstructionFormat.J;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
@@ -137,9 +145,56 @@ namespace MIPSCore.InstructionSet
                 case 43: //sltu:
                     throw new NotImplementedException("not implemented");
                 default:
+                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": function out of range");
+            }
+        }
+
+        private void prepareIFormatControlSignals(CWord opCode)
+        {
+            regDestination = RegisterDestination.rt;
+            aluSource = ALUSource.signExtend;
+           
+            /* TODO set this per opcode */
+            pcSource = ProgramCounterSource.programCounter;
+            regWrite = true;
+            memRead = false;
+            memWrite = false;
+            memToReg = false;
+
+            // check function 
+            switch (opCode.getUnsignedDecimal)
+            {
+                case 4: //beq
+                case 5: //bne
+                case 8: //andi
+                   aluControl = ALUControl.add;
+                   break;
+                case 9: //addiu
+                case 12://andi
+                case 32: //lb: load byte
+                case 36: //lbu: load byte unsigned
+                case 33: //lh: load half word
+                case 37: //lhu: load half word unsigned
+                case 35: //lw: load word
+                case 13: //ori
+                case 40: //sb: store byte
+                case 41: //sh: store halfword
+                case 10: //slti: set less than imm.
+                case 11: //sltiu: set less than imm. unsigned
+                case 43: //sw: store word
+                case 14: //xori: xor imm.
+                default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
             }
-            
         }
+
+        public RegisterDestination getRegDestination { get { return getRegDestination; } }
+        public ALUSource getAluSource { get { return aluSource; } }
+        public ALUControl getAluControl { get { return aluControl; } }
+        public bool getRegWrite { get { return regWrite; } }
+        public bool getMemWrite { get { return memWrite; } }
+        public bool getMemRead { get { return memRead; } }
+        public bool getMemToReg { get { return memToReg; } }
+        public ProgramCounterSource getPcSource { get { return pcSource; } }
     }
 }

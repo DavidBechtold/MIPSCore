@@ -20,7 +20,7 @@ namespace MIPSCore.Core
         private CClock clock;
         private CInstructionMemory instructionMemory;
         private CInstructionFetch instructionFetch;
-        private CRegisterFile regFile;
+        private CRegisterFile registerFile;
         private CALU alu;
         private CControlUnit controlUnit;
 
@@ -30,7 +30,7 @@ namespace MIPSCore.Core
         {
             instructionMemory = new CInstructionMemory();
             instructionFetch = new CInstructionFetch(this);
-            regFile = new CRegisterFile(this);
+            registerFile = new CRegisterFile(this);
             alu = new CALU(this);
             controlUnit = new CControlUnit(this);
 
@@ -62,7 +62,8 @@ namespace MIPSCore.Core
             instructionMemory.setAddressOfNextInstruction(address);
             instructionFetch.clock();
             controlUnit.clock();
-            address += 4;
+            alu.clock();
+            address += 1;
             clock.start();
         }
 
@@ -79,6 +80,22 @@ namespace MIPSCore.Core
             get
             {
                 return instructionFetch;
+            }
+        }
+
+        public CControlUnit getControlUnit
+        {
+            get
+            {
+                return controlUnit;
+            }
+        }
+
+        public CRegisterFile getRegisterFile
+        {
+            get
+            {
+                return registerFile;
             }
         }
     }

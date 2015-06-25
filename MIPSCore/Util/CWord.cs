@@ -32,6 +32,33 @@ namespace MIPSCore.Util
             setBinary(binary);
         }
 
+        public void signExtendSigned()
+        {
+            if ((signedDecimal & 32768) == 32768)
+            {
+                this.hexadecimal = Convert.ToString(signedDecimal, 16).PadLeft(8, 'F').ToUpper();
+                this.signedDecimal = Convert.ToInt32(hexadecimal, 16);
+                this.unsignedDecimal = Convert.ToUInt32(hexadecimal, 16);
+                this.binary = Convert.ToString(signedDecimal, 2).PadLeft(32, '1');
+                signed = true;
+            }
+            else
+            {
+                this.hexadecimal = Convert.ToString(signedDecimal, 16).PadLeft(8, '0').ToUpper();
+                this.unsignedDecimal = Convert.ToUInt32((UInt32)signedDecimal);
+                this.binary = Convert.ToString(signedDecimal, 2).PadLeft(32, '0');
+                signed = true;
+            }
+        }
+
+        public void signExtendUnsigned()
+        {
+            this.hexadecimal = Convert.ToString(signedDecimal, 16).PadLeft(8, '0').ToUpper();
+            this.unsignedDecimal = Convert.ToUInt32((UInt32)signedDecimal);
+            this.binary = Convert.ToString(signedDecimal, 2).PadLeft(32, '0');
+            signed = false;
+        }
+
         public static CWord operator +(CWord arg1, CWord arg2)
         {
             if (arg1.signed && arg2.signed)
@@ -89,6 +116,15 @@ namespace MIPSCore.Util
             this.signedDecimal = Convert.ToInt32(binary, 2);
             this.hexadecimal = Convert.ToString(this.unsignedDecimal, 16).PadLeft(8, '0').ToUpper();
             signed = false;
+        }
+
+        public void setCWord(CWord word)
+        {
+            this.binary = word.binary;
+            this.unsignedDecimal = word.unsignedDecimal;
+            this.signedDecimal = word.signedDecimal;
+            this.hexadecimal = word.hexadecimal;
+            this.signed = word.signed;
         }
 
 

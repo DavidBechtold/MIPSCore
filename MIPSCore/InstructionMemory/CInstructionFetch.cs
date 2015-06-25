@@ -116,7 +116,7 @@ namespace MIPSCore.InstructionMemory
         {
             get
             {
-                return immediate;
+                return rd;
             }
         }
 
