@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AB2E6275-3373-4091-9FAC-EA456703D71B}</ProjectGuid>
+    <ProjectGuid>{C9E80771-90C8-4A6B-9C13-5DF46F125DAD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InstructionMemoryTest</RootNamespace>
-    <AssemblyName>InstructionMemoryTest</AssemblyName>
+    <RootNamespace>MemoryTest</RootNamespace>
+    <AssemblyName>MemoryTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,15 +50,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest_InstructionMemory.cs" />
+    <Compile Include="UnitTest_Memory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTest_CMemory.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MIPSCore\MIPSCore.csproj">
-      <Project>{8167717c-df36-4477-ad3f-f655f4c4033e}</Project>
-      <Name>MIPSCore</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

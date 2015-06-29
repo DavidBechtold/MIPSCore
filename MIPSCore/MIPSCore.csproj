@@ -45,11 +45,14 @@
     <Compile Include="ALU\CALU.cs" />
     <Compile Include="ControlUnit\CControlUnit.cs" />
     <Compile Include="Core\CCore.cs" />
+    <Compile Include="DataMemory\CDataMemory.cs" />
     <Compile Include="InstructionMemory\CInstructionFetch.cs" />
     <Compile Include="InstructionSet\CInstruction.cs" />
     <Compile Include="InstructionSet\CInstructionSet.cs" />
     <Compile Include="InstructionSet\CControlSignals.cs" />
     <Compile Include="RegisterFile\CRegisterFile.cs" />
+    <Compile Include="Util\CByte.cs" />
+    <Compile Include="Util\CMemory.cs" />
     <Compile Include="Util\CMIPSRegister.cs" />
     <Compile Include="Util\CRegister.cs" />
     <Compile Include="Util\CWord.cs" />

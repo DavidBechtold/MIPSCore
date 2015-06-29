@@ -15,6 +15,9 @@ namespace MIPSCore.ALU
         private bool overflow;
 
         private CCore core;
+      
+        private CWord arg1;
+        private CWord arg2;
         private CWord result;
 
         public CALU(CCore core)
@@ -27,26 +30,18 @@ namespace MIPSCore.ALU
 
         public void clock()
         {
+            /* set the arguments for the calculation */
+            setALUArguments();
+
+            /* perform the calculation */
             switch (core.getControlUnit.getAluControl)
             {
-                case ALUControl.add:
-                    performAdd();
-                    break;
-                case ALUControl.addu:
-                    performAddU();
-                    break;
-                case ALUControl.and:
-                    throw new NotImplementedException();
-                    break;
-                case ALUControl.or:
-                    throw new NotImplementedException();
-                    break;
-                case ALUControl.sub:
-                    throw new NotImplementedException();
-                    break;
-                case ALUControl.setOnLessThan:
-                    throw new NotImplementedException();
-                    break;
+                case ALUControl.add:            performAdd();           break;
+                case ALUControl.addu:           performAddU();          break;
+                case ALUControl.and:            performAnd();           break;
+                case ALUControl.or:             performOr();            break;
+                case ALUControl.sub:            performSub();           break;
+                case ALUControl.setOnLessThan:  performSetOnLessThen(); break;
                 case ALUControl.nor:
                     throw new NotImplementedException();
                     break;
@@ -55,48 +50,73 @@ namespace MIPSCore.ALU
             }
         }
 
-        
-
         private void performAdd()
         {
-            // always add register RS with the ALUSource Register
-            switch (core.getControlUnit.getAluSource)
-            {
-                case ALUSource.regFile:
-                    try{ result.set(checked((Int32)core.getRegisterFile.readRs().getSignedDecimal + core.getRegisterFile.readRt().getSignedDecimal)); }
-                    catch (System.OverflowException ) { overflow = true; }
-                    break;
-                case ALUSource.signExtend:
-                    core.getInstructionFetch.getImmediate.signExtendSigned();
-                    try { result.set((checked((Int32)core.getRegisterFile.readRs().getSignedDecimal + core.getInstructionFetch.getImmediate.getSignedDecimal))); }
-                    catch (System.OverflowException) { overflow = true; }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": AluSrc out of range");
-            }
+            try { result.set(checked((Int32)arg1.getSignedDecimal + arg2.getSignedDecimal)); }
+            catch (System.OverflowException) { overflow = true; }
 
-            if (result.getSignedDecimal == 0)
-                zero = true;
+            checkIfResultIsZero();
         }
 
         private void performAddU()
         {
-            // always add register RS with the ALUSource Register
+            try { result.set(checked((UInt32)arg1.getUnsignedDecimal + arg2.getUnsignedDecimal)); }
+            catch (System.OverflowException) { overflow = true; }
+
+            checkIfResultIsZero();
+        }
+
+        private void performAnd()
+        {
+            result.set((UInt32) arg1.getUnsignedDecimal & arg2.getUnsignedDecimal);
+            checkIfResultIsZero();
+        }
+
+        private void performOr()
+        {
+            result.set((UInt32)arg1.getUnsignedDecimal | arg2.getUnsignedDecimal);
+            checkIfResultIsZero();
+        }
+
+        private void performSub()
+        {
+            try { result.set(checked((Int32)arg1.getSignedDecimal - arg2.getSignedDecimal)); }
+            catch (System.OverflowException) { overflow = true; }
+
+            checkIfResultIsZero();
+        }
+
+        private void performSetOnLessThen()
+        {
+            if (arg1.getSignedDecimal < arg2.getSignedDecimal)
+                result.set((Int32)1);
+            else
+                result.set((Int32)0);
+
+            checkIfResultIsZero();
+        }
+
+        private void setALUArguments()
+        {
+            arg1 = core.getRegisterFile.readRs();
             switch (core.getControlUnit.getAluSource)
             {
+                /* if the regFile signal is set take the rt register from the register file */
                 case ALUSource.regFile:
-                    try{ result.set(checked((UInt32)core.getRegisterFile.readRs().getUnsignedDecimal + core.getRegisterFile.readRt().getUnsignedDecimal)); }
-                    catch (System.OverflowException ) { overflow = true; }
+                    arg2 = core.getRegisterFile.readRt();
                     break;
+                /* if the signExtend signal is set take the register from the sign extender */
                 case ALUSource.signExtend:
-                    core.getInstructionFetch.getImmediate.signExtendUnsigned();
-                    try { result.set((checked((UInt32)core.getRegisterFile.readRs().getUnsignedDecimal + core.getInstructionFetch.getImmediate.getUnsignedDecimal))); }
-                    catch (System.OverflowException) { overflow = true; }
+                    core.getInstructionFetch.getImmediate.signExtendSigned();
+                    arg2 = core.getInstructionFetch.getImmediate;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": AluSrc out of range");
             }
+        }
 
+        private void checkIfResultIsZero()
+        {
             if (result.getUnsignedDecimal == 0)
                 zero = true;
         }
