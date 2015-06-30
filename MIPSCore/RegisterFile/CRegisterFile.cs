@@ -25,7 +25,14 @@ namespace MIPSCore.RegisterFile
 
         public void clock()
         {
-           
+            if (core.getControlUnit.getRegWrite)
+            {
+                //check if the result comes from the data mem or the alu
+                if (core.getControlUnit.getMemToReg)
+                    write(core.getDataMemory.getLoadedValue);
+                else
+                    write(core.getAlu.getResult);
+            }
         }
 
 
@@ -35,7 +42,7 @@ namespace MIPSCore.RegisterFile
 
         }
 
-        public void write(CWord word)
+        private void write(CWord word)
         {
             switch(core.getControlUnit.getRegDestination)
             {

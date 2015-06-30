@@ -10,6 +10,8 @@ using MIPSCore.ALU;
 using MIPSCore.InstructionMemory;
 using MIPSCore.ControlUnit;
 using MIPSCore.RegisterFile;
+using MIPSCore.DataMemory;
+
 
 namespace MIPSCore.Core
 {
@@ -23,6 +25,7 @@ namespace MIPSCore.Core
         private CRegisterFile registerFile;
         private CALU alu;
         private CControlUnit controlUnit;
+        private CDataMemory dataMemory;
 
         private UInt16 address;
 
@@ -33,6 +36,7 @@ namespace MIPSCore.Core
             registerFile = new CRegisterFile(this);
             alu = new CALU(this);
             controlUnit = new CControlUnit(this);
+            dataMemory = new CDataMemory(this, MemSize.Size_1kB);
 
             address = 0x000;
             clock = new CClock(1, clockTick);
@@ -63,6 +67,8 @@ namespace MIPSCore.Core
             instructionFetch.clock();
             controlUnit.clock();
             alu.clock();
+            dataMemory.clock();
+            registerFile.clock();
             address += 1;
             clock.start();
         }
@@ -96,6 +102,22 @@ namespace MIPSCore.Core
             get
             {
                 return registerFile;
+            }
+        }
+
+        public CALU getAlu
+        {
+            get
+            {
+                return alu;
+            }
+        }
+
+        public CDataMemory getDataMemory
+        {
+            get
+            {
+                return dataMemory;
             }
         }
     }

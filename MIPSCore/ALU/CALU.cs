@@ -9,7 +9,7 @@ using MIPSCore.InstructionSet;
 
 namespace MIPSCore.ALU
 {
-    class CALU
+    public class CALU
     {
         private bool zero;
         private bool overflow;
@@ -134,6 +134,14 @@ namespace MIPSCore.ALU
             get
             {
                 return zero;
+            }
+        }
+
+        public CWord getResult
+        {
+            get
+            {
+                return result;
             }
         }
     }

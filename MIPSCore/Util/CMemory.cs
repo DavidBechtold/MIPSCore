@@ -62,6 +62,11 @@ namespace MIPSCore.Util
             memory[byteAddress] = (Byte)byteVal.getUnsignedDecimal;
         }
 
+        public void writeByte(CWord byteVal, CWord byteAddress)
+        {
+            writeByte(byteVal, byteAddress.getUnsignedDecimal);
+        }
+
         public void writeHalfWord(CWord halfword, UInt32 byteAddress)
         {
             checkAddress(byteAddress + 1);
@@ -71,6 +76,11 @@ namespace MIPSCore.Util
 
             memory[byteAddress] = (Byte)(halfword.getUnsignedDecimal >> 8);
             memory[byteAddress + 1] = (Byte)(halfword.getUnsignedDecimal);
+        }
+
+        public void writeHalfWord(CWord halfword, CWord byteAddress)
+        {
+            writeHalfWord(halfword, byteAddress.getUnsignedDecimal);
         }
 
         public void writeWord(CWord word, UInt32 byteAddress)
@@ -86,11 +96,21 @@ namespace MIPSCore.Util
             memory[byteAddress + 3] = (Byte)(word.getUnsignedDecimal);
         }
 
+        public void writeWord(CWord word, CWord byteAddress)
+        {
+            writeWord(word, byteAddress.getUnsignedDecimal);
+        }
+
         public CWord readByte(UInt32 byteAddress)
         {
             checkAddress(byteAddress);
 
             return new CWord((UInt32) memory[byteAddress]);
+        }
+
+        public CWord readByte(CWord byteAddress)
+        {
+            return readByte(byteAddress.getUnsignedDecimal);
         }
 
         public CWord readHalfWord(UInt32 byteAddress)
@@ -100,11 +120,21 @@ namespace MIPSCore.Util
             return new CWord((UInt32) (memory[byteAddress] << 8 | memory[byteAddress + 1]));
         }
 
+        public CWord readHalfWord(CWord byteAddress)
+        {
+            return readHalfWord(byteAddress.getUnsignedDecimal);
+        }
+
         public CWord readWord(UInt32 byteAddress)
         {
             checkAddress(byteAddress + 3);
 
             return new CWord((UInt32)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
+        }
+
+        public CWord readWord(CWord byteAddress)
+        {
+            return readWord(byteAddress.getUnsignedDecimal);
         }
 
         private void checkAddress(UInt32 byteAddress)

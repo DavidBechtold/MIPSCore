@@ -50,7 +50,6 @@ namespace MIPSCore.InstructionMemory
             rs = nextInstruction.getSubword(6, 5);
             rt = nextInstruction.getSubword(6 + 5, 5);
             
-
             /* R Format */
             function = nextInstruction.getSubword(32 - 6, 6);
             shiftAmount = nextInstruction.getSubword(6 + 5 + 5 + 5, 5);

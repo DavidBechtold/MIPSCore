@@ -21,29 +21,29 @@ namespace MIPSCore.InstructionSet
         nor = 12,
     }
     public enum ProgramCounterSource { signExtend, programCounter }
+    public enum DataMemoryWordSize { singleByte, halfWord, word }
 
     public class CControlSignals
     {
         
-        
-
         /* control signals */
         private InstructionFormat instructionFormat;
         private RegisterDestination regDestination; //which register will be written
-        private ALUSource aluSource;      //alu take the value fom regFile or from the sign extender (immediate cmd)
-        private ALUControl aluControl;     //which operation the alu should perform
-        private bool regWrite;       //true => write register | false => no register to write (jmp, beq commands)
-        private bool memWrite;       //true => write memory
-        private bool memRead;        //true => read memory
-        private bool memToReg;       //true => write memory content to register
-        private ProgramCounterSource pcSource;       //take the source from the programcounter or from the sign extender (jmp,.. instruction)
+        private ALUSource aluSource;                //alu take the value fom regFile or from the sign extender (immediate cmd)
+        private ALUControl aluControl;              //which operation the alu should perform
+        private bool regWrite;                      //true => write register | false => no register to write (jmp, beq commands)
+        private bool memWrite;                      //true => write memory
+        private bool memRead;                       //true => read memory
+        private bool memToReg;                      //true => write memory content to register
+        private ProgramCounterSource pcSource;      //take the source from the programcounter or from the sign extender (jmp,.. instruction)
+        private DataMemoryWordSize dataMemWordSize; //how much data must be read from the data memory
 
-        public CControlSignals(CWord opCode, CWord function)
+        public CControlSignals()
         {
-            prepareControlSignals(opCode, function);
+            
         }
 
-        private void prepareControlSignals(CWord opCode, CWord function)
+        protected void prepareControlSignals(CWord opCode, CWord function)
         {
             switch (getFormat(opCode))
             {
@@ -167,28 +167,49 @@ namespace MIPSCore.InstructionSet
                 case 4: //beq
                 case 5: //bne
                 case 8: //andi
-                   aluControl = ALUControl.add;
-                   break;
+                    aluControl = ALUControl.add;
+                    break;
                 case 9: //addiu
                 case 12://andi
                 case 32: //lb: load byte
+                    regWrite = true;                            //no need to write data back to the register file
+                    memRead = true;                             //read value from data memory
+                    memToReg = true;                            //signal needed for the register file => take value from data memory
+                    aluControl = ALUControl.add;                //add baseregister to the offset
+                    dataMemWordSize = DataMemoryWordSize.word;  //write a word size to the datamemory
+                    break;
                 case 36: //lbu: load byte unsigned
+                    dataMemWordSize = DataMemoryWordSize.singleByte;
+                    break;
                 case 33: //lh: load half word
+                    dataMemWordSize = DataMemoryWordSize.halfWord;
+                    break;
                 case 37: //lhu: load half word unsigned
                 case 35: //lw: load word
+                    regWrite = true;                            //no need to write data back to the register file
+                    memRead = true;                             //read value from data memory
+                    memToReg = true;                            //signal needed for the register file => take value from data memory
+                    aluControl = ALUControl.add;                //add baseregister to the offset
+                    dataMemWordSize = DataMemoryWordSize.word;  //write a word size to the datamemory
+                    break;
                 case 13: //ori
                 case 40: //sb: store byte
                 case 41: //sh: store halfword
                 case 10: //slti: set less than imm.
                 case 11: //sltiu: set less than imm. unsigned
                 case 43: //sw: store word
+                    regWrite = false;                           //no need to write data back to the register file
+                    memWrite = true;                            //we need to write to the data memory
+                    aluControl = ALUControl.add;                //add baseregister to the offset
+                    dataMemWordSize = DataMemoryWordSize.word;  //write a word size to the datamemory
+                    break;
                 case 14: //xori: xor imm.
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
             }
         }
 
-        public RegisterDestination getRegDestination { get { return getRegDestination; } }
+        public RegisterDestination getRegDestination { get { return regDestination; } }
         public ALUSource getAluSource { get { return aluSource; } }
         public ALUControl getAluControl { get { return aluControl; } }
         public bool getRegWrite { get { return regWrite; } }
@@ -196,5 +217,6 @@ namespace MIPSCore.InstructionSet
         public bool getMemRead { get { return memRead; } }
         public bool getMemToReg { get { return memToReg; } }
         public ProgramCounterSource getPcSource { get { return pcSource; } }
+        public DataMemoryWordSize getDataMemoryWordSize { get { return dataMemWordSize; } }
     }
 }

@@ -10,12 +10,12 @@ using MIPSCore.InstructionSet;
 
 namespace MIPSCore.ControlUnit
 {
-    public class CControlUnit
+    public class CControlUnit : CControlSignals
     {
         private CCore core;
-        private CControlSignals signals;
 
         public CControlUnit(CCore core)
+            : base()
         {
             this.core = core;
         }
@@ -27,17 +27,7 @@ namespace MIPSCore.ControlUnit
             CWord function = core.getInstructionFetch.getFunction;
 
             // 2.) interpret the opCode and function
-            signals = new CControlSignals(opCode, function);       
+            base.prepareControlSignals(opCode, function);       
         }
-
-        /*** SETTER | GETTER ***/
-        public RegisterDestination getRegDestination { get { return getRegDestination; } }
-        public ALUSource getAluSource { get { return signals.getAluSource; } }
-        public ALUControl getAluControl { get { return signals.getAluControl; } }
-        public bool getRegWrite { get { return signals.getRegWrite; } }
-        public bool getMemWrite { get { return signals.getMemWrite; } }
-        public bool getMemRead { get { return signals.getMemRead; } }
-        public bool getMemToReg { get { return signals.getMemToReg; } }
-        public ProgramCounterSource getPcSource { get { return signals.getPcSource; } }
     }
 }

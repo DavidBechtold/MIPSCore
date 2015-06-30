@@ -14,6 +14,7 @@ namespace MIPSCore.Clock
         private double frequency_ms;
         private EventHandler callback;
         private Timer timer;
+
         public CClock(UInt64 frequency_Hz, EventHandler callback)
         {
             if (frequency_Hz == 0)
