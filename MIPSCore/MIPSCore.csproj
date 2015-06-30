@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ALU\Adder.cs" />
     <Compile Include="ALU\CALU.cs" />
     <Compile Include="ControlUnit\CControlUnit.cs" />
     <Compile Include="Core\CCore.cs" />
@@ -56,8 +55,7 @@
     <Compile Include="Util\CMIPSRegister.cs" />
     <Compile Include="Util\CRegister.cs" />
     <Compile Include="Util\CWord.cs" />
-    <Compile Include="ALU\signedDecimal.cs" />
-    <Compile Include="Clock\Clock.cs" />
+    <Compile Include="Clock\CClock.cs" />
     <Compile Include="InstructionMemory\CInstructionMemory.cs" />
     <Compile Include="MIPSCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -42,5 +42,32 @@ namespace CMemoryTest
             Assert.AreEqual((UInt32) 0x0000A0B0, mem.readWord(3019).getUnsignedDecimal);
             Assert.AreEqual((UInt32)UInt32.MaxValue, mem.readWord(4102).getUnsignedDecimal);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CMemory_AddressOutOfBound_WriteByte()
+        {
+            CMemory mem = new CMemory(MemSize.Size_4kB);
+
+            mem.writeByte(new CWord(1), 4096*8);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CMemory_AddressOutOfBound_WriteHalfWord()
+        {
+            CMemory mem = new CMemory(MemSize.Size_8kB);
+
+            mem.writeHalfWord(new CWord(1), 8192 * 8 - 1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CMemory_AddressOutOfBound_WriteWord()
+        {
+            CMemory mem = new CMemory(MemSize.Size_8kB);
+
+            mem.writeWord(new CWord(1), 8192 * 8 - 2);
+        }
     }
 }
