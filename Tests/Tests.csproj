@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AB2E6275-3373-4091-9FAC-EA456703D71B}</ProjectGuid>
+    <ProjectGuid>{AC7FBABA-B5B6-4B96-9875-5B4B10858160}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InstructionMemoryTest</RootNamespace>
-    <AssemblyName>InstructionMemoryTest</AssemblyName>
+    <RootNamespace>Tests</RootNamespace>
+    <AssemblyName>Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,8 +50,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest_InstructionMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTest_CClock.cs" />
+    <Compile Include="UnitTest_CMemory.cs" />
+    <Compile Include="UnitTest_CMIPSRegister.cs" />
+    <Compile Include="UnitTest_CWord.cs" />
+    <Compile Include="UnitTest_InstructionMemory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MIPSCore\MIPSCore.csproj">

@@ -3,11 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIPSCore", "MIPSCore\MIPSCore.csproj", "{8167717C-DF36-4477-AD3F-F655F4C4033E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{BE9515DB-53FA-4570-99C6-4661CF6676AD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "ArgumentTest\Tests.csproj", "{1A521DE3-DA2D-4AFD-B2DC-CED695346108}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Tests", "Integration Tests", "{F69D4D3E-AD31-46EE-A745-31E22E0CA315}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{57946455-5A87-4D65-9DCF-CBAFF478BABF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{AC7FBABA-B5B6-4B96-9875-5B4B10858160}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8167717C-DF36-4477-AD3F-F655F4C4033E} = {8167717C-DF36-4477-AD3F-F655F4C4033E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,15 +22,15 @@ Global
 		{8167717C-DF36-4477-AD3F-F655F4C4033E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8167717C-DF36-4477-AD3F-F655F4C4033E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8167717C-DF36-4477-AD3F-F655F4C4033E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A521DE3-DA2D-4AFD-B2DC-CED695346108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC7FBABA-B5B6-4B96-9875-5B4B10858160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC7FBABA-B5B6-4B96-9875-5B4B10858160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC7FBABA-B5B6-4B96-9875-5B4B10858160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC7FBABA-B5B6-4B96-9875-5B4B10858160}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1A521DE3-DA2D-4AFD-B2DC-CED695346108} = {BE9515DB-53FA-4570-99C6-4661CF6676AD}
+		{AC7FBABA-B5B6-4B96-9875-5B4B10858160} = {57946455-5A87-4D65-9DCF-CBAFF478BABF}
 	EndGlobalSection
 EndGlobal
