@@ -23,8 +23,8 @@ namespace MIPSCore.ControlUnit
         public void clock()
         {
             // 1.) take the input from the instruction fetch
-            CWord opCode = core.getInstructionFetch.getOpCode;
-            CWord function = core.getInstructionFetch.getFunction;
+            CWord opCode = core.getInstructionMemory.getOpCode;
+            CWord function = core.getInstructionMemory.getFunction;
 
             // 2.) interpret the opCode and function
             base.prepareControlSignals(opCode, function);       

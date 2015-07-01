@@ -21,24 +21,20 @@ namespace MIPSCore.Core
 
         private CClock clock;
         private CInstructionMemory instructionMemory;
-        private CInstructionFetch instructionFetch;
+        //private CInstructionFetch instructionFetch;
         private CRegisterFile registerFile;
         private CALU alu;
         private CControlUnit controlUnit;
         private CDataMemory dataMemory;
 
-        private UInt16 address;
-
         public CCore()
         {
-            instructionMemory = new CInstructionMemory();
-            instructionFetch = new CInstructionFetch(this);
+            instructionMemory = new CInstructionMemory(this, MemSize.Size_1kB);
+            //instructionFetch = new CInstructionFetch(this);
             registerFile = new CRegisterFile(this);
             alu = new CALU(this);
             controlUnit = new CControlUnit(this);
             dataMemory = new CDataMemory(this, MemSize.Size_1kB);
-
-            address = 0x000;
             clock = new CClock(1, clockTick);
         }
 
@@ -51,25 +47,25 @@ namespace MIPSCore.Core
         {
             string[] code = System.IO.File.ReadAllLines(path);
 
-            if (code.Length >= CInstructionMemory.endAddress)
-                throw new IndexOutOfRangeException("Codelength is greater than " + CInstructionMemory.endAddress + ".");
+            if (code.Length >= instructionMemory.getSize)
+                throw new IndexOutOfRangeException("Codelength is greater than " + instructionMemory.getSize + ".");
 
-            for (UInt16 i = 0; i < code.Length; i++)
-                instructionMemory.writeWord(i, new CWord(Convert.ToUInt32(code[i], 16)));
+            for (UInt32 i = 0; i < code.Length; i++)
+                instructionMemory.programWord(new CWord(Convert.ToUInt32(code[i], 16)), i * 4);
         }
 
         private void clockTick(object sender, EventArgs e)
         {
             //for debugging and to avoid race conditions at the beginning stop the clock,
             //if we don't stop the clock here, it can happen that the clock interrupt interrupts the next instructions (specially at debugging)
-            clock.stop(); 
-            instructionMemory.setAddressOfNextInstruction(address);
-            instructionFetch.clock();
+
+            //for debugging clock all components in one clock
+            clock.stop();
+            instructionMemory.clock();
             controlUnit.clock();
             alu.clock();
             dataMemory.clock();
             registerFile.clock();
-            address += 1;
             clock.start();
         }
 
@@ -78,14 +74,6 @@ namespace MIPSCore.Core
             get
             {
                 return instructionMemory;
-            }
-        }
-
-        public CInstructionFetch getInstructionFetch
-        {
-            get
-            {
-                return instructionFetch;
             }
         }
 

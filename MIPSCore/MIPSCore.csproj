@@ -45,7 +45,6 @@
     <Compile Include="ControlUnit\CControlUnit.cs" />
     <Compile Include="Core\CCore.cs" />
     <Compile Include="DataMemory\CDataMemory.cs" />
-    <Compile Include="InstructionMemory\CInstructionFetch.cs" />
     <Compile Include="InstructionSet\CInstruction.cs" />
     <Compile Include="InstructionSet\CInstructionSet.cs" />
     <Compile Include="InstructionSet\CControlSignals.cs" />

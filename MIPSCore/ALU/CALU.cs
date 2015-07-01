@@ -107,8 +107,8 @@ namespace MIPSCore.ALU
                     break;
                 /* if the signExtend signal is set take the register from the sign extender */
                 case ALUSource.signExtend:
-                    core.getInstructionFetch.getImmediate.signExtendSigned();
-                    arg2 = core.getInstructionFetch.getImmediate;
+                    core.getInstructionMemory.getImmediate.signExtendSigned();
+                    arg2 = core.getInstructionMemory.getImmediate;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": AluSrc out of range");

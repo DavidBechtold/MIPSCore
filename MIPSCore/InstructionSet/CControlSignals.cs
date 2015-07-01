@@ -19,8 +19,9 @@ namespace MIPSCore.InstructionSet
         sub = 6,
         setOnLessThan = 7,
         nor = 12,
+        stall,
     }
-    public enum ProgramCounterSource { signExtend, programCounter }
+    public enum ProgramCounterSource { programCounter, signExtend, jump }
     public enum DataMemoryWordSize { singleByte, halfWord, word }
 
     public class CControlSignals
@@ -40,7 +41,8 @@ namespace MIPSCore.InstructionSet
 
         public CControlSignals()
         {
-            
+            instructionFormat = InstructionFormat.R;
+            pcSource = ProgramCounterSource.programCounter;
         }
 
         protected void prepareControlSignals(CWord opCode, CWord function)
@@ -204,6 +206,25 @@ namespace MIPSCore.InstructionSet
                     dataMemWordSize = DataMemoryWordSize.word;  //write a word size to the datamemory
                     break;
                 case 14: //xori: xor imm.
+                default:
+                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
+            }
+        }
+
+        private void prepareJFormatControlSignals(CWord opCode)
+        {
+            regDestination = RegisterDestination.rd;
+            aluSource = ALUSource.regFile;
+            pcSource = ProgramCounterSource.programCounter;
+            aluControl = ALUControl.add;
+            regWrite = true;
+            memRead = false;
+            memWrite = false;
+            memToReg = false;
+            switch (opCode.getUnsignedDecimal)
+            {
+                case 2: //j: jump
+                case 3: //jal: jump and link
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
             }

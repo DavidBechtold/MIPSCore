@@ -13,7 +13,7 @@ namespace MIPSCore.Util
     {
         private Byte[] memory;
         private MemSize size;
-        private UInt32  endByteAddress;
+        private UInt32 endByteAddress;
        
 
         public CMemory(MemSize size)
@@ -141,6 +141,21 @@ namespace MIPSCore.Util
         {
             if (byteAddress > endByteAddress)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": byteAddress out of range");
+        }
+
+
+        public UInt32 getEndByteAddress
+        {
+            get
+            {
+                return endByteAddress;
+            }
+        }
+
+        public void flush()
+        {
+            for (UInt32 i = 0; i < endByteAddress; i += 4)
+                writeWord(new CWord(0), i);
         }
     }
 }

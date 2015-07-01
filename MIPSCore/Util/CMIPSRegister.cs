@@ -19,25 +19,30 @@ namespace MIPSCore.Util
 
         public void  write(UInt16 number, UInt32 unsignedDecimal)
         {
-            checkNumber(number);
+            if (checkNumber(number))
+                return;
             registers[number].set(unsignedDecimal);
         }
 
         public void write(UInt16 number, Int32 signedDecimal)
         {
-            checkNumber(number);
+            if (checkNumber(number))
+                return;
             registers[number].set(signedDecimal);
         }
 
         public void write(UInt16 number, string binary)
         {
-            checkNumber(number);
+            if (checkNumber(number))
+                return;
             registers[number].setBinary(binary);
         }
 
         public void write(UInt16 number, CWord word)
         {
-            checkNumber(number);
+            if (checkNumber(number))
+                return;
+
             registers[number].setCWord(word);
         }
 
@@ -77,10 +82,16 @@ namespace MIPSCore.Util
                 registers[i] = new CRegister(i, (UInt32) 0);
         }
 
-        private void checkNumber(UInt16 number)
+        private bool checkNumber(UInt16 number)
         {
             if (number >= numberOfRegisters)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": number must be < 32");
+            
+            //register $zero cannot be overwritten => this register is constant zero
+            if (number == 0)
+                return true;
+            else
+                return false;
         }
     }
 }

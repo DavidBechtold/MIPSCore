@@ -47,17 +47,17 @@ namespace MIPSCore.RegisterFile
             switch(core.getControlUnit.getRegDestination)
             {
                 case  RegisterDestination.rd:
-                    if (core.getInstructionFetch.getRd.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
+                    if (core.getInstructionMemory.getRd.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
                         throw new ArgumentOutOfRangeException(this.GetType().Name + ": RD number out of Range");
 
-                    registers.write((ushort) core.getInstructionFetch.getRd.getUnsignedDecimal, word);
+                    registers.write((ushort) core.getInstructionMemory.getRd.getUnsignedDecimal, word);
                     break;
 
                 case RegisterDestination.rt:
-                    if (core.getInstructionFetch.getRt.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
+                    if (core.getInstructionMemory.getRt.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
                         throw new ArgumentOutOfRangeException(this.GetType().Name + ": RT number out of Range");
 
-                    registers.write((ushort)core.getInstructionFetch.getRt.getUnsignedDecimal, word);
+                    registers.write((ushort)core.getInstructionMemory.getRt.getUnsignedDecimal, word);
                     break;
 
                 default:
@@ -67,16 +67,16 @@ namespace MIPSCore.RegisterFile
 
         public CWord readRs()
         {
-            if(core.getInstructionFetch.getRs.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
+            if(core.getInstructionMemory.getRs.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": RS number out of Range");
-            return registers.readCWord((ushort) core.getInstructionFetch.getRs.getUnsignedDecimal);
+            return registers.readCWord((ushort) core.getInstructionMemory.getRs.getUnsignedDecimal);
         }
 
         public CWord readRt()
         {
-            if (core.getInstructionFetch.getRt.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
+            if (core.getInstructionMemory.getRt.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": RT number out of Range");
-            return registers.readCWord((ushort)core.getInstructionFetch.getRt.getUnsignedDecimal);
+            return registers.readCWord((ushort)core.getInstructionMemory.getRt.getUnsignedDecimal);
         }
     }
 }
