@@ -45,6 +45,8 @@ namespace MIPSCore.ALU
                 case ALUControl.nor:
                     throw new NotImplementedException();
                     break;
+                case ALUControl.stall:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": AluControl out of range");
             }

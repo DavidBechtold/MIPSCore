@@ -56,6 +56,7 @@ namespace MIPSCore.InstructionSet
                     prepareIFormatControlSignals(opCode);
                     break;
                 case InstructionFormat.J:
+                    prepareJFormatControlSignals(opCode);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": InstuctionFormat out of range");
@@ -215,9 +216,9 @@ namespace MIPSCore.InstructionSet
         {
             regDestination = RegisterDestination.rd;
             aluSource = ALUSource.regFile;
-            pcSource = ProgramCounterSource.programCounter;
-            aluControl = ALUControl.add;
-            regWrite = true;
+            pcSource = ProgramCounterSource.jump;
+            aluControl = ALUControl.stall;
+            regWrite = false;
             memRead = false;
             memWrite = false;
             memToReg = false;
@@ -225,6 +226,7 @@ namespace MIPSCore.InstructionSet
             {
                 case 2: //j: jump
                 case 3: //jal: jump and link
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
             }

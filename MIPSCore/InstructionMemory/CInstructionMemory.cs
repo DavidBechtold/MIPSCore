@@ -73,7 +73,7 @@ namespace MIPSCore.InstructionMemory
                 case ProgramCounterSource.signExtend:
                     break;
                 case ProgramCounterSource.jump:
-
+                    programCounter = jumpTarget.getUnsignedDecimal * 4;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": ProgramCounterSource out of range");
