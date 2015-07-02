@@ -69,6 +69,11 @@ namespace MIPSCore.Util
                 throw new ArithmeticException("CWord: Cannot add an signed Value to an unsigned Value");
         }
 
+        public static CWord operator +(CWord arg1, UInt32 arg2)
+        {
+            return new CWord(arg1.unsignedDecimal + arg2);
+        }
+
         public static CWord operator -(CWord arg1, CWord arg2)
         {
             if (arg1.signed && arg2.signed)
@@ -77,6 +82,16 @@ namespace MIPSCore.Util
                 return new CWord(arg1.getUnsignedDecimal - arg2.getUnsignedDecimal);
             else
                 throw new ArithmeticException("CWord: Cannot subtract an signed Value off an unsigned Value");
+        }
+
+        public static CWord operator *(CWord arg1, UInt32 arg2)
+        {
+            return new CWord(arg1.unsignedDecimal * arg2);
+        }
+
+        public static CWord operator /(CWord arg1, UInt32 arg2)
+        {
+            return new CWord(arg1.unsignedDecimal / arg2);
         }
 
         public string getSubBinary(UInt16 start, UInt16 length)

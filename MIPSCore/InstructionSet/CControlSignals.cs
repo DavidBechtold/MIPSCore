@@ -8,7 +8,7 @@ using MIPSCore.Util;
 namespace MIPSCore.InstructionSet
 {
     public enum InstructionFormat {R, I, J}
-    public enum RegisterDestination { rt, rd };
+    public enum RegisterDestination { rt, rd, ra};
     public enum ALUSource { regFile, signExtend }
     public enum ALUControl
     {
@@ -18,10 +18,13 @@ namespace MIPSCore.InstructionSet
         addu,
         sub = 6,
         setOnLessThan = 7,
+        mult,
+        div,
         nor = 12,
         stall,
     }
-    public enum ProgramCounterSource { programCounter, signExtend, jump }
+    public enum RegisterFileInput { alu, dataMemory, programCounter }
+    public enum ProgramCounterSource { programCounter, signExtend, jump, register }
     public enum DataMemoryWordSize { singleByte, halfWord, word }
 
     public class CControlSignals
@@ -35,7 +38,7 @@ namespace MIPSCore.InstructionSet
         private bool regWrite;                      //true => write register | false => no register to write (jmp, beq commands)
         private bool memWrite;                      //true => write memory
         private bool memRead;                       //true => read memory
-        private bool memToReg;                      //true => write memory content to register
+        private RegisterFileInput regFileInput;
         private ProgramCounterSource pcSource;      //take the source from the programcounter or from the sign extender (jmp,.. instruction)
         private DataMemoryWordSize dataMemWordSize; //how much data must be read from the data memory
 
@@ -110,13 +113,20 @@ namespace MIPSCore.InstructionSet
             regWrite = true;
             memRead = false;
             memWrite = false;
-            memToReg = false;
+            regFileInput = RegisterFileInput.alu;   //save the result from the alu to the register
 
             // check function 
             switch (function.getUnsignedDecimal)
             {
                 case 0: //sll: shift left logical
                 case 2: //srl: shift right logicl
+                case 8: //jr: jump register
+                    memRead = false;
+                    memWrite = false;
+                    regWrite = false;
+                    aluControl = ALUControl.stall;
+                    pcSource = ProgramCounterSource.register;
+                    break;
                 case 24: //mult
                 case 25: //multu
                     throw new NotImplementedException("not implemented");
@@ -159,27 +169,27 @@ namespace MIPSCore.InstructionSet
            
             /* TODO set this per opcode */
             pcSource = ProgramCounterSource.programCounter;
-            regWrite = true;
-            memRead = false;
-            memWrite = false;
-            memToReg = false;
-
+            
             // check function 
             switch (opCode.getUnsignedDecimal)
             {
                 case 4: //beq
                 case 5: //bne
                 case 8: //andi
+                    regWrite = true;                        //write result back to the register file
+                    memRead = false;                        //no need to read from data memory
+                    memWrite = false;                       //no need to write data to the data memory
+                    regFileInput = RegisterFileInput.alu;   //save the result from the alu to the register
                     aluControl = ALUControl.add;
                     break;
                 case 9: //addiu
                 case 12://andi
                 case 32: //lb: load byte
-                    regWrite = true;                            //no need to write data back to the register file
-                    memRead = true;                             //read value from data memory
-                    memToReg = true;                            //signal needed for the register file => take value from data memory
-                    aluControl = ALUControl.add;                //add baseregister to the offset
-                    dataMemWordSize = DataMemoryWordSize.word;  //write a word size to the datamemory
+                    regWrite = true;                                // need to write data back to the register file
+                    memRead = true;                                 //read value from data memory
+                    regFileInput = RegisterFileInput.dataMemory;    //save the result from the data memory to the register                        
+                    aluControl = ALUControl.add;                    //add baseregister to the offset
+                    dataMemWordSize = DataMemoryWordSize.word;      //write a word size to the datamemory
                     break;
                 case 36: //lbu: load byte unsigned
                     dataMemWordSize = DataMemoryWordSize.singleByte;
@@ -189,11 +199,11 @@ namespace MIPSCore.InstructionSet
                     break;
                 case 37: //lhu: load half word unsigned
                 case 35: //lw: load word
-                    regWrite = true;                            //no need to write data back to the register file
-                    memRead = true;                             //read value from data memory
-                    memToReg = true;                            //signal needed for the register file => take value from data memory
-                    aluControl = ALUControl.add;                //add baseregister to the offset
-                    dataMemWordSize = DataMemoryWordSize.word;  //write a word size to the datamemory
+                    regWrite = true;                                //no need to write data back to the register file
+                    memRead = true;                                 //read value from data memory
+                    regFileInput = RegisterFileInput.dataMemory;    //save the result from the data memory to the register    
+                    aluControl = ALUControl.add;                    //add baseregister to the offset
+                    dataMemWordSize = DataMemoryWordSize.word;      //write a word size to the datamemory
                     break;
                 case 13: //ori
                 case 40: //sb: store byte
@@ -214,18 +224,21 @@ namespace MIPSCore.InstructionSet
 
         private void prepareJFormatControlSignals(CWord opCode)
         {
-            regDestination = RegisterDestination.rd;
+            pcSource = ProgramCounterSource.jump;   //take the jump address for the source of the pc
             aluSource = ALUSource.regFile;
-            pcSource = ProgramCounterSource.jump;
             aluControl = ALUControl.stall;
-            regWrite = false;
             memRead = false;
             memWrite = false;
-            memToReg = false;
+            
             switch (opCode.getUnsignedDecimal)
             {
                 case 2: //j: jump
+                    regWrite = false;   //no need to write a register
+                    break;
                 case 3: //jal: jump and link
+                    regWrite = true;                            //need to write the program counter to $ra
+                    regDestination = RegisterDestination.ra;    //save the program counter to the ra register
+                    regFileInput = RegisterFileInput.programCounter; 
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
@@ -238,7 +251,7 @@ namespace MIPSCore.InstructionSet
         public bool getRegWrite { get { return regWrite; } }
         public bool getMemWrite { get { return memWrite; } }
         public bool getMemRead { get { return memRead; } }
-        public bool getMemToReg { get { return memToReg; } }
+        public RegisterFileInput getRegisterFileInput { get { return regFileInput; } }
         public ProgramCounterSource getPcSource { get { return pcSource; } }
         public DataMemoryWordSize getDataMemoryWordSize { get { return dataMemWordSize; } }
     }

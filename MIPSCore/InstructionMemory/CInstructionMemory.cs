@@ -15,7 +15,7 @@ namespace MIPSCore.InstructionMemory
         private CMemory memory;
         private bool firstCommand;
         private CWord nextInstruction;
-        private UInt32 programCounter;
+        private CWord programCounter;
 
         /* arguments for the control unit and register file */
         private CWord opCode;
@@ -30,7 +30,7 @@ namespace MIPSCore.InstructionMemory
         public CInstructionMemory(CCore core, MemSize size)
         {
             this.core = core;
-            programCounter = 0x000;
+            programCounter = new CWord(0);
             memory = new CMemory(size);
             firstCommand = true;
         }
@@ -73,7 +73,10 @@ namespace MIPSCore.InstructionMemory
                 case ProgramCounterSource.signExtend:
                     break;
                 case ProgramCounterSource.jump:
-                    programCounter = jumpTarget.getUnsignedDecimal * 4;
+                    programCounter = jumpTarget * 4;
+                    break;
+                case ProgramCounterSource.register:
+                    programCounter = core.getRegisterFile.readRs();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": ProgramCounterSource out of range");
@@ -171,6 +174,14 @@ namespace MIPSCore.InstructionMemory
             get
             {
                 return jumpTarget;
+            }
+        }
+
+        public CWord getProgramCounter
+        {
+            get
+            {
+                return programCounter;
             }
         }
     }

@@ -12,7 +12,6 @@ using MIPSCore.ControlUnit;
 using MIPSCore.RegisterFile;
 using MIPSCore.DataMemory;
 
-
 namespace MIPSCore.Core
 {
     public class CCore
@@ -21,7 +20,6 @@ namespace MIPSCore.Core
 
         private CClock clock;
         private CInstructionMemory instructionMemory;
-        //private CInstructionFetch instructionFetch;
         private CRegisterFile registerFile;
         private CALU alu;
         private CControlUnit controlUnit;
@@ -30,7 +28,6 @@ namespace MIPSCore.Core
         public CCore()
         {
             instructionMemory = new CInstructionMemory(this, MemSize.Size_1kB);
-            //instructionFetch = new CInstructionFetch(this);
             registerFile = new CRegisterFile(this);
             alu = new CALU(this);
             controlUnit = new CControlUnit(this);

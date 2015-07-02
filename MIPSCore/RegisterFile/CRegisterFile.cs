@@ -13,6 +13,7 @@ namespace MIPSCore.RegisterFile
     public class CRegisterFile
     {
         private CCore core;
+        public const UInt16 RegisterNumber_ra = 31;
 
         /* register */
         private CMIPSRegister registers;
@@ -28,14 +29,22 @@ namespace MIPSCore.RegisterFile
             if (core.getControlUnit.getRegWrite)
             {
                 //check if the result comes from the data mem or the alu
-                if (core.getControlUnit.getMemToReg)
-                    write(core.getDataMemory.getLoadedValue);
-                else
-                    write(core.getAlu.getResult);
+                switch (core.getControlUnit.getRegisterFileInput)
+                {
+                    case RegisterFileInput.alu:
+                        write(core.getAlu.getResult);
+                        break;
+                    case RegisterFileInput.dataMemory:
+                        write(core.getDataMemory.getLoadedValue);
+                        break;
+                    case RegisterFileInput.programCounter:
+                        write(core.getInstructionMemory.getProgramCounter / 4 + 4);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(this.GetType().Name + ": RegisterFileInput out of range");
+                }                    
             }
         }
-
-
 
         public void clearAll()
         {
@@ -58,6 +67,10 @@ namespace MIPSCore.RegisterFile
                         throw new ArgumentOutOfRangeException(this.GetType().Name + ": RT number out of Range");
 
                     registers.write((ushort)core.getInstructionMemory.getRt.getUnsignedDecimal, word);
+                    break;
+
+                case RegisterDestination.ra:
+                    registers.write(RegisterNumber_ra, word);
                     break;
 
                 default:
