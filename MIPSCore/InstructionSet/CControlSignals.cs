@@ -20,6 +20,8 @@ namespace MIPSCore.InstructionSet
         setOnLessThan = 7,
         mult,
         div,
+        shiftLeft,
+        shiftRight,
         nor = 12,
         stall,
     }
@@ -119,7 +121,11 @@ namespace MIPSCore.InstructionSet
             switch (function.getUnsignedDecimal)
             {
                 case 0: //sll: shift left logical
+                    aluControl = ALUControl.shiftLeft;
+                    break;
                 case 2: //srl: shift right logicl
+                    aluControl = ALUControl.shiftRight;
+                    break;
                 case 8: //jr: jump register
                     memRead = false;
                     memWrite = false;

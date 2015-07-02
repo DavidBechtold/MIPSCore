@@ -44,9 +44,9 @@ namespace MIPSCore.ALU
                 case ALUControl.setOnLessThan:  performSetOnLessThen(); break;
                 case ALUControl.nor:
                     throw new NotImplementedException();
-                    break;
-                case ALUControl.stall:
-                    break;
+                case ALUControl.shiftLeft: performShift(true); break;
+                case ALUControl.shiftRight: performShift(false); break;
+                case ALUControl.stall:  break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": AluControl out of range");
             }
@@ -98,8 +98,33 @@ namespace MIPSCore.ALU
             checkIfResultIsZero();
         }
 
+        private void performShift(bool left)
+        {
+            UInt32 shiftAmount = core.getInstructionMemory.getShiftAmount.getUnsignedDecimal;
+            UInt32 valueToShift = arg2.getUnsignedDecimal;
+            for (int i = 0; i < shiftAmount; i++)
+            {
+                if (left)
+                {
+                    if ((valueToShift & 0x80000000) == 0x80000000)
+                        overflow = true;
+                    valueToShift = valueToShift << 1;
+                }
+                else
+                {
+                    if ((valueToShift & 0x00000001) == 0x00000001)
+                        overflow = true;
+                    valueToShift = valueToShift >> 1;
+                }
+            }
+            result.set((UInt32)valueToShift);
+            checkIfResultIsZero();
+        }
+
         private void setALUArguments()
         {
+            overflow = false;
+            zero = false;
             arg1 = core.getRegisterFile.readRs();
             switch (core.getControlUnit.getAluSource)
             {
