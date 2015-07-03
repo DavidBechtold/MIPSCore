@@ -50,22 +50,20 @@ namespace MIPSCore.ALU
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": AluControl out of range");
             }
+
+            checkIfResultIsZero();
         }
 
         private void performAdd()
         {
             try { result.set(checked((Int32)arg1.getSignedDecimal + arg2.getSignedDecimal)); }
             catch (System.OverflowException) { overflow = true; }
-
-            checkIfResultIsZero();
         }
 
         private void performAddU()
         {
             try { result.set(checked((UInt32)arg1.getUnsignedDecimal + arg2.getUnsignedDecimal)); }
             catch (System.OverflowException) { overflow = true; }
-
-            checkIfResultIsZero();
         }
 
         private void performAnd()
@@ -84,8 +82,6 @@ namespace MIPSCore.ALU
         {
             try { result.set(checked((Int32)arg1.getSignedDecimal - arg2.getSignedDecimal)); }
             catch (System.OverflowException) { overflow = true; }
-
-            checkIfResultIsZero();
         }
 
         private void performSetOnLessThen()
@@ -94,8 +90,6 @@ namespace MIPSCore.ALU
                 result.set((Int32)1);
             else
                 result.set((Int32)0);
-
-            checkIfResultIsZero();
         }
 
         private void performShift(bool left)
@@ -118,7 +112,6 @@ namespace MIPSCore.ALU
                 }
             }
             result.set((UInt32)valueToShift);
-            checkIfResultIsZero();
         }
 
         private void setALUArguments()

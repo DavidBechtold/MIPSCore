@@ -26,7 +26,7 @@ namespace MIPSCore.InstructionSet
         stall,
     }
     public enum RegisterFileInput { alu, dataMemory, programCounter }
-    public enum ProgramCounterSource { programCounter, signExtend, jump, register }
+    public enum ProgramCounterSource { programCounter, signExtendEqual, signExtendUnequal, jump, register }
     public enum DataMemoryWordSize { singleByte, halfWord, word }
 
     public class CControlSignals
@@ -180,7 +180,21 @@ namespace MIPSCore.InstructionSet
             switch (opCode.getUnsignedDecimal)
             {
                 case 4: //beq
+                    regWrite = false;   //don't write value back to the register file
+                    memRead = false;    //no need to read from data memory
+                    memWrite = false;   //no need to write data to the data memory
+                    pcSource = ProgramCounterSource.signExtendEqual; //it's a branch command => if result are equal jump
+                    aluSource = ALUSource.regFile;
+                    aluControl = ALUControl.sub;
+                    break;
                 case 5: //bne
+                    regWrite = false;   //don't write value back to the register file
+                    memRead = false;    //no need to read from data memory
+                    memWrite = false;   //no need to write data to the data memory
+                    pcSource = ProgramCounterSource.signExtendUnequal; //it's a branch command => if result are unequal jump
+                    aluSource = ALUSource.regFile;
+                    aluControl = ALUControl.sub;
+                    break;
                 case 8: //andi
                     regWrite = true;                        //write result back to the register file
                     memRead = false;                        //no need to read from data memory

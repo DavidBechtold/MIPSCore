@@ -58,12 +58,19 @@ namespace MIPSCore.Core
 
             //for debugging clock all components in one clock
             clock.stop();
-            instructionMemory.clock();
-            controlUnit.clock();
-            alu.clock();
-            dataMemory.clock();
-            registerFile.clock();
-            clock.start();
+            try
+            {
+                instructionMemory.clock();
+                controlUnit.clock();
+                alu.clock();
+                dataMemory.clock();
+                registerFile.clock();
+                clock.start();
+            }
+            catch (Exception exeption)
+            {
+                Console.WriteLine(exeption.ToString());
+            }
         }
 
         public CInstructionMemory getInstructionMemory

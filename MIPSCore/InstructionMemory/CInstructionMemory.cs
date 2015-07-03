@@ -70,7 +70,17 @@ namespace MIPSCore.InstructionMemory
                     else
                         programCounter += 4;
                     break;
-                case ProgramCounterSource.signExtend:
+                case ProgramCounterSource.signExtendEqual:
+                    if(core.getAlu.zeroFlag)
+                        programCounter += immediate * 4 + 4;
+                    else
+                        programCounter += 4;
+                    break;
+                case ProgramCounterSource.signExtendUnequal:
+                    if (!core.getAlu.zeroFlag)
+                        programCounter += immediate * 4 + 4;
+                    else
+                        programCounter += 4;
                     break;
                 case ProgramCounterSource.jump:
                     programCounter = jumpTarget * 4;
