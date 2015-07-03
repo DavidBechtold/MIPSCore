@@ -15,7 +15,7 @@ namespace MIPSCore
         {
             CCore core = new CCore();
 
-            core.programCore("C:\\Users\\david\\Dropbox\\Bachelor Arbeit\\Testcode\\simpleAdd.s");
+            core.programObjdump("C:\\Users\\david\\Dropbox\\Bachelor Arbeit\\Testcode\\testcode.s");
 
             core.startCore();
             while (true) ;

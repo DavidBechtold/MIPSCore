@@ -51,6 +51,33 @@ namespace MIPSCore.Core
                 instructionMemory.programWord(new CWord(Convert.ToUInt32(code[i], 16)), i * 4);
         }
 
+        public void programObjdump(string path)
+        {
+            string[] code = System.IO.File.ReadAllLines(path);
+            UInt32 codeCounter = 0;
+
+            for (UInt32 i = 0; i < code.Length; i++)
+            {
+                if (code[i].Contains(":\t"))
+                {
+                    if (code.Length >= instructionMemory.getSize)
+                        throw new IndexOutOfRangeException("Codelength is greater than " + instructionMemory.getSize + ".");
+                    string substring = code[i].Substring(code[i].IndexOf(':') + 2, 8);
+
+                    try
+                    {
+                        instructionMemory.programWord(new CWord(Convert.ToUInt32(substring, 16)), codeCounter++ * 4);
+                    }
+                    catch
+                    {
+                        throw new ArithmeticException("Bei der Zeile: " + code[i] + " : konnte der Hexwert nicht gelesen werden");
+                    }
+                }
+
+            }
+
+        }
+
         private void clockTick(object sender, EventArgs e)
         {
             //for debugging and to avoid race conditions at the beginning stop the clock,
