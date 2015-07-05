@@ -44,6 +44,43 @@ namespace CMemoryTest
         }
 
         [TestMethod]
+        public void CMemory_WriteAndReadWithOffset()
+        {
+            CMemory mem = new CMemory(MemSize.Size_1kB);
+            mem.setOffset = new CWord(0x00400000);
+
+            mem.writeByte(new CWord((UInt32)Byte.MaxValue), 0x00400000);
+            mem.writeByte(new CWord((UInt32)127), 0x00400000 + 1023);
+            mem.writeByte(new CWord((UInt32)170), 0x00400000 + 1024);
+            mem.writeHalfWord(new CWord((UInt32)0xAA0B), 0x00400000 + 2048);
+            mem.writeHalfWord(new CWord((UInt32)UInt16.MaxValue), 0x00400000 + 8190);
+
+            mem.writeWord(new CWord(0xA0B0C0D0), 0x00400000 + 3021);
+            mem.writeWord(new CWord(UInt32.MaxValue), 0x00400000 + 4102);
+
+            Assert.AreEqual(Byte.MaxValue, mem.readByte(0x00400000 + 0).getSignedDecimal);
+            Assert.AreEqual(127, mem.readByte(0x00400000 + 1023).getSignedDecimal);
+            Assert.AreEqual(0xAA, mem.readByte(0x00400000 + 2048).getSignedDecimal);
+            Assert.AreEqual(0x0B, mem.readByte(0x00400000 + 2049).getSignedDecimal);
+            Assert.AreEqual(Byte.MaxValue, mem.readByte(0x00400000 + 8190).getSignedDecimal);
+            Assert.AreEqual(Byte.MaxValue, mem.readByte(0x00400000 + 8191).getSignedDecimal);
+            Assert.AreEqual(0xC0, mem.readByte(0x00400000 + 3023).getSignedDecimal);
+
+
+            Assert.AreEqual(65280, mem.readHalfWord(0x00400000 + 0).getSignedDecimal);
+            Assert.AreEqual(32682, mem.readHalfWord(0x00400000 + 1023).getSignedDecimal);
+            Assert.AreEqual(0xAA0B, mem.readHalfWord(0x00400000 + 2048).getSignedDecimal);
+            Assert.AreEqual(UInt16.MaxValue, mem.readHalfWord(0x00400000 + 8190).getSignedDecimal);
+            Assert.AreEqual(0xC0D0, mem.readHalfWord(0x00400000 + 3023).getSignedDecimal);
+
+            Assert.AreEqual(4278190080, mem.readWord(0x00400000 + 0).getUnsignedDecimal);
+            Assert.AreEqual(0xA0B0C0D0, mem.readWord(0x00400000 + 3021).getUnsignedDecimal);
+            Assert.AreEqual((UInt32)0x0000A0B0, mem.readWord(0x00400000 + 3019).getUnsignedDecimal);
+            Assert.AreEqual((UInt32)UInt32.MaxValue, mem.readWord(0x00400000 + 4102).getUnsignedDecimal);
+
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void CMemory_AddressOutOfBound_WriteByte()
         {

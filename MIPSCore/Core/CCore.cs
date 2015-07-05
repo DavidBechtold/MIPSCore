@@ -11,6 +11,7 @@ using MIPSCore.InstructionMemory;
 using MIPSCore.ControlUnit;
 using MIPSCore.RegisterFile;
 using MIPSCore.DataMemory;
+using System.Text.RegularExpressions;
 
 namespace MIPSCore.Core
 {
@@ -53,29 +54,64 @@ namespace MIPSCore.Core
 
         public void programObjdump(string path)
         {
-            string[] code = System.IO.File.ReadAllLines(path);
+            string strCode = System.IO.File.ReadAllText(path);
             UInt32 codeCounter = 0;
 
-            for (UInt32 i = 0; i < code.Length; i++)
+            Regex rgx = new Regex("([0-9]|[a-f])+(?=\\:)|(?!\t{1})([0-9]|[a-f]){8}(?= \t)", RegexOptions.IgnoreCase);
+            MatchCollection match = rgx.Matches(strCode);
+            rgx = null;
+            strCode = null;
+
+            if (match.Count / 2 * 4 >= instructionMemory.getSize)
+                throw new IndexOutOfRangeException("Codelength is greater than " + instructionMemory.getSize + ".");
+
+            UInt32 address = 0;
+            UInt32 instruction = 0;
+            foreach (Match codeMatch in match)
+            {
+                string stringMatch = codeMatch.Value;
+                
+                if (codeCounter % 2 == 0)
+                    address = Convert.ToUInt32(stringMatch, 16);
+                else
+                {
+                    instruction = Convert.ToUInt32(stringMatch, 16);
+                    instructionMemory.programWord(new CWord((UInt32)instruction), address);
+                }
+                codeCounter++;
+            }
+
+
+            /*for (UInt32 i = 0; i < code.Length; i++)
             {
                 if (code[i].Contains(":\t"))
                 {
+             
                     if (code.Length >= instructionMemory.getSize)
                         throw new IndexOutOfRangeException("Codelength is greater than " + instructionMemory.getSize + ".");
-                    string substring = code[i].Substring(code[i].IndexOf(':') + 2, 8);
+
+                    string maschineCode = code[i].Substring(code[i].IndexOf(':') + 2, 8);
+                    string test = code[i].Substring(2, code[i].IndexOf(':') - 2);
+
+                    Regex rgx = new Regex("([0-9]|[a-f])+(?=\\:)", RegexOptions.IgnoreCase);
+                    MatchCollection matches = rgx.Matches(strCode);
+                    UInt32 address = Convert.ToUInt32(test, 16);
+                    if (codeCounter == 0) //save offsetaddress
+                        instructionMemory.setAddressOffset = new CWord((UInt32) address);
+
+                    if(maschineCode.Contains(' '))
+                        throw new ArithmeticException("Bei der Zeile: " + code[i] + " : konnte der Hexwert nicht gelesen werden");
 
                     try
                     {
-                        instructionMemory.programWord(new CWord(Convert.ToUInt32(substring, 16)), codeCounter++ * 4);
+                        instructionMemory.programWord(new CWord(Convert.ToUInt32(maschineCode, 16)), address);
                     }
                     catch
                     {
                         throw new ArithmeticException("Bei der Zeile: " + code[i] + " : konnte der Hexwert nicht gelesen werden");
                     }
                 }
-
-            }
-
+            }*/
         }
 
         private void clockTick(object sender, EventArgs e)
@@ -139,5 +175,7 @@ namespace MIPSCore.Core
                 return dataMemory;
             }
         }
+
+        
     }
 }

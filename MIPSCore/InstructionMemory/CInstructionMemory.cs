@@ -32,6 +32,7 @@ namespace MIPSCore.InstructionMemory
             this.core = core;
             programCounter = new CWord(0);
             memory = new CMemory(size);
+            
             firstCommand = true;
         }
 
@@ -78,6 +79,12 @@ namespace MIPSCore.InstructionMemory
                     break;
                 case ProgramCounterSource.signExtendUnequal:
                     if (!core.getAlu.zeroFlag)
+                        programCounter += immediate * 4 + 4;
+                    else
+                        programCounter += 4;
+                    break;
+                case ProgramCounterSource.signExtendLessOrEqualZero:
+                    if (!core.getAlu.zeroFlag || core.getAlu.getResultLO.getUnsignedDecimal == 1)
                         programCounter += immediate * 4 + 4;
                     else
                         programCounter += 4;
@@ -192,6 +199,22 @@ namespace MIPSCore.InstructionMemory
             get
             {
                 return programCounter;
+            }
+        }
+
+        public CWord getActualInstruction
+        {
+            get
+            {
+                return nextInstruction;
+            }
+        }
+
+        public CWord setAddressOffset
+        {
+            set
+            {
+                memory.setOffset = value;
             }
         }
     }

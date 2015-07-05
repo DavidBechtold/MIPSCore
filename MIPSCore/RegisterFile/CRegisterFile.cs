@@ -31,8 +31,11 @@ namespace MIPSCore.RegisterFile
                 //check if the result comes from the data mem or the alu
                 switch (core.getControlUnit.getRegisterFileInput)
                 {
-                    case RegisterFileInput.alu:
-                        write(core.getAlu.getResult);
+                    case RegisterFileInput.aluLO:
+                        write(core.getAlu.getResultLO);
+                        break;
+                    case RegisterFileInput.aluHI:
+                        write(core.getAlu.getResultHI);
                         break;
                     case RegisterFileInput.dataMemory:
                         write(core.getDataMemory.getLoadedValue);

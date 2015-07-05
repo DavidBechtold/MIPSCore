@@ -25,8 +25,8 @@ namespace MIPSCore.InstructionSet
         nor = 12,
         stall,
     }
-    public enum RegisterFileInput { alu, dataMemory, programCounter }
-    public enum ProgramCounterSource { programCounter, signExtendEqual, signExtendUnequal, jump, register }
+    public enum RegisterFileInput { aluLO, aluHI, dataMemory, programCounter }
+    public enum ProgramCounterSource { programCounter, signExtendEqual, signExtendUnequal, signExtendLessOrEqualZero, jump, register }
     public enum DataMemoryWordSize { singleByte, halfWord, word }
 
     public class CControlSignals
@@ -80,6 +80,7 @@ namespace MIPSCore.InstructionSet
                 /* I-Format */
                 case 4: //beq
                 case 5: //bne
+                case 6: //blez: Branch on less than or equal to zero
                 case 8: //andi
                 case 9: //addiu
                 case 12://andi
@@ -103,7 +104,7 @@ namespace MIPSCore.InstructionSet
                     instructionFormat = InstructionFormat.J;
                     return InstructionFormat.J;
                 default:
-                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
+                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode " + opCode.getUnsignedDecimal + " out of range");
             }
         }
 
@@ -115,7 +116,7 @@ namespace MIPSCore.InstructionSet
             regWrite = true;
             memRead = false;
             memWrite = false;
-            regFileInput = RegisterFileInput.alu;   //save the result from the alu to the register
+            regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
 
             // check function 
             switch (function.getUnsignedDecimal)
@@ -132,6 +133,10 @@ namespace MIPSCore.InstructionSet
                     regWrite = false;
                     aluControl = ALUControl.stall;
                     pcSource = ProgramCounterSource.register;
+                    break;
+                case 16: //mfhi: move from high
+                    regFileInput = RegisterFileInput.aluHI;     //read from hi result
+                    aluControl = ALUControl.stall;
                     break;
                 case 24: //mult
                 case 25: //multu
@@ -195,15 +200,31 @@ namespace MIPSCore.InstructionSet
                     aluSource = ALUSource.regFile;
                     aluControl = ALUControl.sub;
                     break;
-                case 8: //andi
+                case 6: //blez: Branch on less than or equal to zero
+                    regWrite = false;   //don't write value back to the register file
+                    memRead = false;    //no need to read from data memory
+                    memWrite = false;   //no need to write data to the data memory
+                    pcSource = ProgramCounterSource.signExtendLessOrEqualZero; //it's a branch command => if result are unequal jump
+                    aluSource = ALUSource.regFile;
+                    aluControl = ALUControl.setOnLessThan;
+                    break;
+
+                case 8: //addi
                     regWrite = true;                        //write result back to the register file
                     memRead = false;                        //no need to read from data memory
                     memWrite = false;                       //no need to write data to the data memory
-                    regFileInput = RegisterFileInput.alu;   //save the result from the alu to the register
+                    regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
                     aluControl = ALUControl.add;
                     break;
                 case 9: //addiu
+                    regWrite = true;                        //write result back to the register file
+                    memRead = false;                        //no need to read from data memory
+                    memWrite = false;                       //no need to write data to the data memory
+                    regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
+                    aluControl = ALUControl.addu;
+                    break;
                 case 12://andi
+                    throw new NotImplementedException();
                 case 32: //lb: load byte
                     regWrite = true;                                // need to write data back to the register file
                     memRead = true;                                 //read value from data memory

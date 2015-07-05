@@ -18,14 +18,16 @@ namespace MIPSCore.ALU
       
         private CWord arg1;
         private CWord arg2;
-        private CWord result;
+        private CWord resultLO;
+        private CWord resultHI;
 
         public CALU(CCore core)
         {
             this.core = core;
             zero = false;
             overflow = false;
-            result = new CWord((UInt32) 0);
+            resultLO = new CWord((UInt32) 0);
+            resultHI = new CWord((UInt32) 0);
         }
 
         public void clock()
@@ -42,10 +44,13 @@ namespace MIPSCore.ALU
                 case ALUControl.or:             performOr();            break;
                 case ALUControl.sub:            performSub();           break;
                 case ALUControl.setOnLessThan:  performSetOnLessThen(); break;
+                case ALUControl.mult:           performMult();          break;
+                case ALUControl.div:            performDiv();           break;
+                case ALUControl.shiftLeft:      performShift(true);     break;
+                case ALUControl.shiftRight:     performShift(false);    break;
                 case ALUControl.nor:
                     throw new NotImplementedException();
-                case ALUControl.shiftLeft: performShift(true); break;
-                case ALUControl.shiftRight: performShift(false); break;
+                
                 case ALUControl.stall:  break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": AluControl out of range");
@@ -56,40 +61,38 @@ namespace MIPSCore.ALU
 
         private void performAdd()
         {
-            try { result.set(checked((Int32)arg1.getSignedDecimal + arg2.getSignedDecimal)); }
+            try { resultLO.set(checked((Int32)arg1.getSignedDecimal + arg2.getSignedDecimal)); }
             catch (System.OverflowException) { overflow = true; }
         }
 
         private void performAddU()
         {
-            try { result.set(checked((UInt32)arg1.getUnsignedDecimal + arg2.getUnsignedDecimal)); }
+            try { resultLO.set(checked((UInt32)arg1.getUnsignedDecimal + arg2.getUnsignedDecimal)); }
             catch (System.OverflowException) { overflow = true; }
         }
 
         private void performAnd()
         {
-            result.set((UInt32) arg1.getUnsignedDecimal & arg2.getUnsignedDecimal);
-            checkIfResultIsZero();
+            resultLO.set((UInt32) arg1.getUnsignedDecimal & arg2.getUnsignedDecimal);
         }
 
         private void performOr()
         {
-            result.set((UInt32)arg1.getUnsignedDecimal | arg2.getUnsignedDecimal);
-            checkIfResultIsZero();
+            resultLO.set((UInt32)arg1.getUnsignedDecimal | arg2.getUnsignedDecimal);
         }
 
         private void performSub()
         {
-            try { result.set(checked((Int32)arg1.getSignedDecimal - arg2.getSignedDecimal)); }
+            try { resultLO.set(checked((Int32)arg1.getSignedDecimal - arg2.getSignedDecimal)); }
             catch (System.OverflowException) { overflow = true; }
         }
 
         private void performSetOnLessThen()
         {
             if (arg1.getSignedDecimal < arg2.getSignedDecimal)
-                result.set((Int32)1);
+                resultLO.set((Int32)1);
             else
-                result.set((Int32)0);
+                resultLO.set((Int32)0);
         }
 
         private void performShift(bool left)
@@ -111,7 +114,20 @@ namespace MIPSCore.ALU
                     valueToShift = valueToShift >> 1;
                 }
             }
-            result.set((UInt32)valueToShift);
+            resultLO.set((UInt32)valueToShift);
+        }
+
+        private void performMult()
+        {
+            UInt64 res = arg1.getUnsignedDecimal * arg2.getUnsignedDecimal;
+            resultLO.set((UInt32) res);
+            resultHI.set((UInt32) (res >> 32));
+        }
+
+        private void performDiv()
+        {
+            resultLO.set((UInt32) (arg1.getUnsignedDecimal / arg2.getUnsignedDecimal));
+            resultHI.set((UInt32) (arg1.getUnsignedDecimal % arg2.getUnsignedDecimal));
         }
 
         private void setALUArguments()
@@ -137,7 +153,7 @@ namespace MIPSCore.ALU
 
         private void checkIfResultIsZero()
         {
-            if (result.getUnsignedDecimal == 0)
+            if (resultLO.getUnsignedDecimal == 0)
                 zero = true;
         }
 
@@ -157,11 +173,19 @@ namespace MIPSCore.ALU
             }
         }
 
-        public CWord getResult
+        public CWord getResultLO
         {
             get
             {
-                return result;
+                return resultLO;
+            }
+        }
+
+        public CWord getResultHI
+        {
+            get
+            {
+                return resultHI;
             }
         }
     }

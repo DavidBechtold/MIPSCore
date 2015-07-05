@@ -33,7 +33,7 @@ namespace MIPSCore.DataMemory
 
         private void loadDataFromMemory()
         {
-            CWord address = core.getAlu.getResult;
+            CWord address = core.getAlu.getResultLO;
 
             switch (core.getControlUnit.getDataMemoryWordSize)
             {
@@ -53,7 +53,7 @@ namespace MIPSCore.DataMemory
 
         private void storeDataToMemory()
         {
-            CWord address = core.getAlu.getResult;
+            CWord address = core.getAlu.getResultLO;
             CWord valueToStore = core.getRegisterFile.readRt();
             switch (core.getControlUnit.getDataMemoryWordSize)
             {
@@ -76,6 +76,14 @@ namespace MIPSCore.DataMemory
             get
             {
                 return loadedValue;
+            }
+        }
+
+        public CWord setAddressOffset
+        {
+            set
+            {
+                memory.setOffset = value;
             }
         }
     }

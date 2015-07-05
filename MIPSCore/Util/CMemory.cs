@@ -14,13 +14,13 @@ namespace MIPSCore.Util
         private Byte[] memory;
         private MemSize size;
         private UInt32 endByteAddress;
+        private CWord offset;           //address offset of the addresses
        
-
         public CMemory(MemSize size)
         {
             this.size = size;
             createMemory(size);
-
+            offset = new CWord((UInt32) 0);
         }
 
         private void createMemory(MemSize size)
@@ -54,7 +54,7 @@ namespace MIPSCore.Util
 
         public void writeByte(CWord byteVal, UInt32 byteAddress)
         {
-            checkAddress(byteAddress);
+            byteAddress = checkAndCalculateAddress(byteAddress, 0);
 
             if (byteVal.getUnsignedDecimal > Byte.MaxValue)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": byte out of range");
@@ -69,7 +69,7 @@ namespace MIPSCore.Util
 
         public void writeHalfWord(CWord halfword, UInt32 byteAddress)
         {
-            checkAddress(byteAddress + 1);
+            byteAddress = checkAndCalculateAddress(byteAddress, 1);
 
             if (halfword.getUnsignedDecimal > UInt16.MaxValue)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": halfWord out of range");
@@ -85,7 +85,7 @@ namespace MIPSCore.Util
 
         public void writeWord(CWord word, UInt32 byteAddress)
         {
-            checkAddress(byteAddress + 3);
+            byteAddress = checkAndCalculateAddress(byteAddress, 3);
 
             if (word.getUnsignedDecimal > UInt32.MaxValue)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": halfWord out of range");
@@ -103,7 +103,7 @@ namespace MIPSCore.Util
 
         public CWord readByte(UInt32 byteAddress)
         {
-            checkAddress(byteAddress);
+            byteAddress = checkAndCalculateAddress(byteAddress, 0);
 
             return new CWord((UInt32) memory[byteAddress]);
         }
@@ -115,7 +115,7 @@ namespace MIPSCore.Util
 
         public CWord readHalfWord(UInt32 byteAddress)
         {
-            checkAddress(byteAddress + 1);
+            byteAddress = checkAndCalculateAddress(byteAddress, 1);
 
             return new CWord((UInt32) (memory[byteAddress] << 8 | memory[byteAddress + 1]));
         }
@@ -127,7 +127,7 @@ namespace MIPSCore.Util
 
         public CWord readWord(UInt32 byteAddress)
         {
-            checkAddress(byteAddress + 3);
+            byteAddress = checkAndCalculateAddress(byteAddress, 3);
 
             return new CWord((UInt32)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
         }
@@ -137,10 +137,12 @@ namespace MIPSCore.Util
             return readWord(byteAddress.getUnsignedDecimal);
         }
 
-        private void checkAddress(UInt32 byteAddress)
+        private UInt32 checkAndCalculateAddress(UInt32 byteAddress, UInt32 bytesRead)
         {
-            if (byteAddress > endByteAddress)
+            UInt32 realAddress = byteAddress - offset.getUnsignedDecimal;
+            if (realAddress + bytesRead > endByteAddress)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": byteAddress out of range");
+            return realAddress;
         }
 
 
@@ -156,6 +158,14 @@ namespace MIPSCore.Util
         {
             for (UInt32 i = 0; i < endByteAddress; i += 4)
                 writeWord(new CWord(0), i);
+        }
+
+        public CWord setOffset
+        {
+            set
+            {
+                this.offset = value;
+            }
         }
     }
 }
