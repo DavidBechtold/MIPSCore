@@ -15,7 +15,16 @@ namespace MIPSCore
         {
             CCore core = new CCore();
 
-            core.programObjdump("C:\\Users\\david\\Dropbox\\Bachelor Arbeit\\Testcode\\eulerPhiFunktion.s");
+
+            /*while (true)
+            {
+                string cmd = Console.ReadLine();
+
+
+            }*/
+    
+            
+            core.programObjdump("C:\\Users\\david\\Dropbox\\Bachelor Arbeit\\Testcode\\fib2.s");
 
             core.startCore();
             while (true) ;

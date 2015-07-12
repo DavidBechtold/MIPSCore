@@ -242,6 +242,7 @@ namespace MIPSCore.InstructionSet
                 case 35: //lw: load word
                     regWrite = true;                                //no need to write data back to the register file
                     memRead = true;                                 //read value from data memory
+                    memWrite = false;                               
                     regFileInput = RegisterFileInput.dataMemory;    //save the result from the data memory to the register    
                     aluControl = ALUControl.add;                    //add baseregister to the offset
                     dataMemWordSize = DataMemoryWordSize.word;      //write a word size to the datamemory
@@ -249,8 +250,16 @@ namespace MIPSCore.InstructionSet
                 case 13: //ori
                 case 40: //sb: store byte
                 case 41: //sh: store halfword
+                    throw new NotImplementedException();
                 case 10: //slti: set less than imm.
+                    regWrite = true;
+                    memRead = false;
+                    memWrite = false;
+                    regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
+                    aluControl = ALUControl.setOnLessThan;
+                    break;
                 case 11: //sltiu: set less than imm. unsigned
+                    throw new NotImplementedException();
                 case 43: //sw: store word
                     regWrite = false;                           //no need to write data back to the register file
                     memWrite = true;                            //we need to write to the data memory

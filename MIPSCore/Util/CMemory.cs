@@ -88,7 +88,7 @@ namespace MIPSCore.Util
             byteAddress = checkAndCalculateAddress(byteAddress, 3);
 
             if (word.getUnsignedDecimal > UInt32.MaxValue)
-                throw new ArgumentOutOfRangeException(this.GetType().Name + ": halfWord out of range");
+                throw new ArgumentOutOfRangeException(this.GetType().Name + ": halfWord out of range");     
 
             memory[byteAddress] = (Byte)(word.getUnsignedDecimal >> 24);
             memory[byteAddress + 1] = (Byte)(word.getUnsignedDecimal >> 16);
@@ -166,6 +166,18 @@ namespace MIPSCore.Util
             {
                 this.offset = value;
             }
+        }
+
+        public string hexdump(UInt32 startaddress, UInt32 bytesToRead)
+        {
+            UInt32 realStartaddress = checkAndCalculateAddress(startaddress, bytesToRead);
+            string result = "";
+
+            for (UInt32 i = realStartaddress; i < realStartaddress + bytesToRead; i+=4)
+            {
+                result += String.Format("{0:X8} {1:X2} {2:X2} {3:X2} {4:X2}\n", i + offset.getUnsignedDecimal, memory[i], memory[i + 1], memory[i + 2], memory[i + 3]);
+            }
+            return result;
         }
     }
 }

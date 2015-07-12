@@ -20,8 +20,8 @@ namespace MIPSCore.Clock
             if (frequency_Hz == 0)
                 throw new ArgumentException("Class Clock: Constructor: Argument frequency_Hz must be greater than zero.");
             this.frequency_Hz = frequency_Hz;
-            this.frequency_ns = 1 / frequency_Hz * 1E9;
-            this.frequency_ms = 1 / frequency_Hz * 1E3;
+            this.frequency_ns = 1.0 / frequency_Hz * 1E9;
+            this.frequency_ms = 1.0 / frequency_Hz * 1E3;
             this.callback = callback;
 
             timer = new Timer(frequency_ms);
@@ -40,7 +40,6 @@ namespace MIPSCore.Clock
 
         private void timerCallback(object obj, ElapsedEventArgs target)
         {
-            Console.WriteLine("Callback");
             callback.Invoke("Timer", new EventArgs());
         }
     }

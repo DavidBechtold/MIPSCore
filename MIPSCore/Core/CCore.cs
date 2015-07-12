@@ -33,7 +33,7 @@ namespace MIPSCore.Core
             alu = new CALU(this);
             controlUnit = new CControlUnit(this);
             dataMemory = new CDataMemory(this, MemSize.Size_1kB);
-            clock = new CClock(1, clockTick);
+            clock = new CClock(100, clockTick);
         }
 
         public void startCore()
@@ -80,38 +80,6 @@ namespace MIPSCore.Core
                 }
                 codeCounter++;
             }
-
-
-            /*for (UInt32 i = 0; i < code.Length; i++)
-            {
-                if (code[i].Contains(":\t"))
-                {
-             
-                    if (code.Length >= instructionMemory.getSize)
-                        throw new IndexOutOfRangeException("Codelength is greater than " + instructionMemory.getSize + ".");
-
-                    string maschineCode = code[i].Substring(code[i].IndexOf(':') + 2, 8);
-                    string test = code[i].Substring(2, code[i].IndexOf(':') - 2);
-
-                    Regex rgx = new Regex("([0-9]|[a-f])+(?=\\:)", RegexOptions.IgnoreCase);
-                    MatchCollection matches = rgx.Matches(strCode);
-                    UInt32 address = Convert.ToUInt32(test, 16);
-                    if (codeCounter == 0) //save offsetaddress
-                        instructionMemory.setAddressOffset = new CWord((UInt32) address);
-
-                    if(maschineCode.Contains(' '))
-                        throw new ArithmeticException("Bei der Zeile: " + code[i] + " : konnte der Hexwert nicht gelesen werden");
-
-                    try
-                    {
-                        instructionMemory.programWord(new CWord(Convert.ToUInt32(maschineCode, 16)), address);
-                    }
-                    catch
-                    {
-                        throw new ArithmeticException("Bei der Zeile: " + code[i] + " : konnte der Hexwert nicht gelesen werden");
-                    }
-                }
-            }*/
         }
 
         private void clockTick(object sender, EventArgs e)
@@ -121,6 +89,7 @@ namespace MIPSCore.Core
 
             //for debugging clock all components in one clock
             clock.stop();
+            string test;
             try
             {
                 instructionMemory.clock();
@@ -128,6 +97,14 @@ namespace MIPSCore.Core
                 alu.clock();
                 dataMemory.clock();
                 registerFile.clock();
+                                                                           
+                if (instructionMemory.getProgramCounter.getHexadecimal == "00000014")
+                    test = "0x00000010";
+
+
+                //Console.Write(registerFile.ToString());
+                //Console.Write(instructionMemory.hexdump(0, 98));
+
                 clock.start();
             }
             catch (Exception exeption)

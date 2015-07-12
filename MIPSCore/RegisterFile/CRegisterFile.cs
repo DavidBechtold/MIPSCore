@@ -41,7 +41,7 @@ namespace MIPSCore.RegisterFile
                         write(core.getDataMemory.getLoadedValue);
                         break;
                     case RegisterFileInput.programCounter:
-                        write(core.getInstructionMemory.getProgramCounter / 4 + 4);
+                        write(core.getInstructionMemory.getProgramCounter +  4);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(this.GetType().Name + ": RegisterFileInput out of range");
@@ -93,6 +93,11 @@ namespace MIPSCore.RegisterFile
             if (core.getInstructionMemory.getRt.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": RT number out of Range");
             return registers.readCWord((ushort)core.getInstructionMemory.getRt.getUnsignedDecimal);
+        }
+
+        public override string ToString()
+        {
+            return registers.ToString();
         }
     }
 }

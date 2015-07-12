@@ -217,5 +217,10 @@ namespace MIPSCore.InstructionMemory
                 memory.setOffset = value;
             }
         }
+
+        public string hexdump(UInt32 startaddress, UInt32 bytesToRead)
+        {
+            return memory.hexdump(startaddress, bytesToRead);
+        }
     }
 }
