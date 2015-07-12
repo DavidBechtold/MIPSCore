@@ -43,11 +43,13 @@ namespace MIPSCore.InstructionSet
         private RegisterFileInput regFileInput;
         private ProgramCounterSource pcSource;      //take the source from the programcounter or from the sign extender (jmp,.. instruction)
         private DataMemoryWordSize dataMemWordSize; //how much data must be read from the data memory
+        private bool systemcall;                    //a systemcall occur
 
         public CControlSignals()
         {
             instructionFormat = InstructionFormat.R;
             pcSource = ProgramCounterSource.programCounter;
+            systemcall = false;
         }
 
         protected void prepareControlSignals(CWord opCode, CWord function)
@@ -117,6 +119,7 @@ namespace MIPSCore.InstructionSet
             memRead = false;
             memWrite = false;
             regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
+            systemcall = false;
 
             // check function 
             switch (function.getUnsignedDecimal)
@@ -133,6 +136,11 @@ namespace MIPSCore.InstructionSet
                     regWrite = false;
                     aluControl = ALUControl.stall;
                     pcSource = ProgramCounterSource.register;
+                    break;
+                case 12: //systemcall
+                    regWrite = false;
+                    systemcall = true;
+                    aluControl = ALUControl.stall;
                     break;
                 case 16: //mfhi: move from high
                     regFileInput = RegisterFileInput.aluHI;     //read from hi result
@@ -177,6 +185,7 @@ namespace MIPSCore.InstructionSet
         {
             regDestination = RegisterDestination.rt;
             aluSource = ALUSource.signExtend;
+            systemcall = false;
            
             /* TODO set this per opcode */
             pcSource = ProgramCounterSource.programCounter;
@@ -279,6 +288,7 @@ namespace MIPSCore.InstructionSet
             aluControl = ALUControl.stall;
             memRead = false;
             memWrite = false;
+            systemcall = false;
             
             switch (opCode.getUnsignedDecimal)
             {
@@ -304,5 +314,6 @@ namespace MIPSCore.InstructionSet
         public RegisterFileInput getRegisterFileInput { get { return regFileInput; } }
         public ProgramCounterSource getPcSource { get { return pcSource; } }
         public DataMemoryWordSize getDataMemoryWordSize { get { return dataMemWordSize; } }
+        public bool getSystemcall { get { return systemcall; } }
     }
 }

@@ -13,6 +13,8 @@ namespace MIPSCore
     {
         static void Main(string[] args)
         {
+            /* read config file */
+
             CCore core = new CCore();
 
 

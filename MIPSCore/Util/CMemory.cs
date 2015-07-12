@@ -8,7 +8,7 @@ using MIPSCore.Util;
 
 namespace MIPSCore.Util
 {
-    public enum MemSize { Size_1kB, Size_2kB, Size_4kB, Size_8kB, Size_16kB}
+    public enum MemSize { Size_1kB = 1, Size_2kB, Size_4kB, Size_8kB, Size_16kB}
     public class CMemory
     {
         private Byte[] memory;

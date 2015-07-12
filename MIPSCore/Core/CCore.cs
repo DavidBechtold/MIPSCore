@@ -12,12 +12,23 @@ using MIPSCore.ControlUnit;
 using MIPSCore.RegisterFile;
 using MIPSCore.DataMemory;
 using System.Text.RegularExpressions;
+using System.Configuration;
 
 namespace MIPSCore.Core
 {
     public class CCore
     {
         public const UInt16 CCoreWordLength = CWord.wordLength;
+
+        private const UInt64 stdCoreFrequency_Hz = 100;
+        private const MemSize stdInstructionMemorySize_kB = MemSize.Size_1kB;
+        private const MemSize stdDataMemorySize_kB = MemSize.Size_1kB;
+        private const bool stdInitStackPointer = true;
+
+        private UInt64 coreFrequency_Hz;
+        private MemSize instructionMemorySize_kB;
+        private MemSize dataMemorySize_kB;
+        private bool initStackPointer;
 
         private CClock clock;
         private CInstructionMemory instructionMemory;
@@ -28,12 +39,18 @@ namespace MIPSCore.Core
 
         public CCore()
         {
-            instructionMemory = new CInstructionMemory(this, MemSize.Size_1kB);
+            /* read config file */
+            readConfigFile();
+
+            instructionMemory = new CInstructionMemory(this, instructionMemorySize_kB);
             registerFile = new CRegisterFile(this);
             alu = new CALU(this);
             controlUnit = new CControlUnit(this);
-            dataMemory = new CDataMemory(this, MemSize.Size_1kB);
-            clock = new CClock(100, clockTick);
+            dataMemory = new CDataMemory(this, dataMemorySize_kB);
+            clock = new CClock(coreFrequency_Hz, clockTick);
+
+            if (initStackPointer)
+                registerFile.initStackPointer();
         }
 
         public void startCore()
@@ -97,15 +114,18 @@ namespace MIPSCore.Core
                 alu.clock();
                 dataMemory.clock();
                 registerFile.clock();
-                                                                           
-                if (instructionMemory.getProgramCounter.getHexadecimal == "00000014")
-                    test = "0x00000010";
+
+                if (controlUnit.getSystemcall)
+                    //Systemcall occur => stop the clock 
+                    Console.WriteLine("Systemcall");
+                else
+                    clock.start();
 
 
                 //Console.Write(registerFile.ToString());
                 //Console.Write(instructionMemory.hexdump(0, 98));
 
-                clock.start();
+               
             }
             catch (Exception exeption)
             {
@@ -153,6 +173,55 @@ namespace MIPSCore.Core
             }
         }
 
-        
+        public void readConfigFile()
+        {
+            /* CoreFrequency */
+            try { coreFrequency_Hz = Convert.ToUInt64(ConfigurationManager.AppSettings["CoreFrequency_Hz"]); }
+            catch (FormatException)
+            {
+                Console.WriteLine("Configuration Value " + ConfigurationManager.AppSettings["CoreFrequency_Hz"] + " can not be converted to a CoreFrequency. Standard value of " + stdCoreFrequency_Hz + " Hz is used.");
+                coreFrequency_Hz = stdCoreFrequency_Hz; 
+            }
+    
+            if (coreFrequency_Hz == 0)
+            {
+                Console.WriteLine("Configuration key for the core frequency not found. Standard value of " + stdCoreFrequency_Hz + " Hz is used.");
+                coreFrequency_Hz = stdCoreFrequency_Hz; 
+            }
+
+            /* InstructionMemorySize */
+            try { instructionMemorySize_kB = (MemSize)Enum.Parse(typeof(MemSize), ConfigurationManager.AppSettings["InstructionMemorySize_kB"]); }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("Configuration key for the instruction memory size not found. Standard value of " + stdInstructionMemorySize_kB + " kB is used.");
+                instructionMemorySize_kB = stdInstructionMemorySize_kB;
+            }
+            catch (ArgumentException)
+            { 
+                Console.WriteLine("Configuration Value " + ConfigurationManager.AppSettings["InstructionMemorySize_kB"] + " can not be converted to an instruction memory size. Standard value of " + stdInstructionMemorySize_kB + " kB is used.");
+                instructionMemorySize_kB = stdInstructionMemorySize_kB; 
+            }
+
+            /* DataMemorySize */
+            try { dataMemorySize_kB = (MemSize)Enum.Parse(typeof(MemSize), ConfigurationManager.AppSettings["DataMemorySize_kB"]); }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("Configuration key for the data memory size not found. Standard value of " + stdDataMemorySize_kB + " kB is used.");
+                dataMemorySize_kB = stdDataMemorySize_kB;
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Configuration Value " + ConfigurationManager.AppSettings["DataMemorySize_kB"] + " can not be converted to an data memory size. Standard value of " + stdDataMemorySize_kB + " kB is used.");
+                dataMemorySize_kB = stdDataMemorySize_kB;
+            }
+            
+            /* InitialiseStackPointer */
+            try { initStackPointer = Convert.ToBoolean(ConfigurationManager.AppSettings["InitialiseStackPointer"]); }
+            catch (FormatException)
+            {
+                Console.WriteLine("Configuration Value " + ConfigurationManager.AppSettings["InitialiseStackPointer"] + " can not be converted to an boolean value for InitialiseStackPointer. Standard value " + stdInitStackPointer + " is used.");
+                initStackPointer = stdInitStackPointer;
+            }
+        }        
     }
 }

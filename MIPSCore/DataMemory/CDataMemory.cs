@@ -86,5 +86,13 @@ namespace MIPSCore.DataMemory
                 memory.setOffset = value;
             }
         }
+
+        public UInt32 getEndAddress
+        {
+            get
+            {
+                return memory.getEndByteAddress;
+            }
+        }
     }
 }

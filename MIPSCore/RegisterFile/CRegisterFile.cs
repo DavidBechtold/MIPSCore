@@ -99,5 +99,10 @@ namespace MIPSCore.RegisterFile
         {
             return registers.ToString();
         }
+
+        public void initStackPointer()
+        {
+            registers.write(29, core.getDataMemory.getEndAddress + 1);
+        }
     }
 }
