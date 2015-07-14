@@ -9,11 +9,13 @@ namespace MIPSCore.Util
     public class CRegister : CWord
     {
         private UInt16 regNumber;
+        private string name;
 
-        public CRegister(UInt16 number, UInt32 unsignedDecimal) 
+        public CRegister(UInt16 number, UInt32 unsignedDecimal, string name) 
             : base(unsignedDecimal)
         {
             regNumber = number;
+            this.name = name;
         }
 
         public CRegister(UInt16 number, Int32 signedDecimal)
@@ -27,5 +29,14 @@ namespace MIPSCore.Util
         {
             regNumber = number;
         }
+
+        public string getName
+        {
+            get
+            {
+                return name;
+            }
+        }
+
     }
 }

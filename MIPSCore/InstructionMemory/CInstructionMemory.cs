@@ -31,6 +31,7 @@ namespace MIPSCore.InstructionMemory
         {
             this.core = core;
             programCounter = new CWord(0);
+            nextInstruction = new CWord(0);
             memory = new CMemory(size);
             
             firstCommand = true;

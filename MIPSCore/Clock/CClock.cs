@@ -15,6 +15,8 @@ namespace MIPSCore.Clock
         private EventHandler callback;
         private Timer timer;
 
+        private bool singleStep;
+
         public CClock(UInt64 frequency_Hz, EventHandler callback)
         {
             if (frequency_Hz == 0)
@@ -23,14 +25,21 @@ namespace MIPSCore.Clock
             this.frequency_ns = 1.0 / frequency_Hz * 1E9;
             this.frequency_ms = 1.0 / frequency_Hz * 1E3;
             this.callback = callback;
+            this.singleStep = false;
 
             timer = new Timer(frequency_ms);
             timer.Elapsed += new ElapsedEventHandler(timerCallback);
         }
 
-        public void start()
+        public void step()
         {
             timer.Start();
+        }
+
+        public void start()
+        {
+            if(!singleStep)
+                timer.Start();
         }
 
         public void stop()
@@ -40,7 +49,22 @@ namespace MIPSCore.Clock
 
         private void timerCallback(object obj, ElapsedEventArgs target)
         {
+            if (singleStep)
+                timer.Stop();
+
             callback.Invoke("Timer", new EventArgs());
+        }
+
+        public bool SingleStep
+        {
+            get
+            {
+                return singleStep;
+            }
+            set
+            {
+                singleStep = value;
+            }
         }
     }
 }

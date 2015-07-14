@@ -8,7 +8,7 @@ namespace MIPSCore.Util
 {
     public class CMIPSRegister
     {
-        public const UInt32 numberOfRegisters = 32;
+        public const UInt16 numberOfRegisters = 32;
         private CRegister[] registers;
 
         public CMIPSRegister()
@@ -79,7 +79,7 @@ namespace MIPSCore.Util
         public void flush()
         {
             for(UInt16 i = 0; i < numberOfRegisters; i++)
-                registers[i] = new CRegister(i, (UInt32) 0);
+                registers[i] = new CRegister(i, (UInt32) 0, registerName(i));
         }
 
         private bool checkNumber(UInt16 number)
@@ -98,9 +98,27 @@ namespace MIPSCore.Util
         {
             string allreg = "";
             for (UInt16 i = 0; i < numberOfRegisters; i++)
-                allreg += i +  ". \t" + registerName(i) + "\t:" + registers[i].getSignedDecimal + "\n";
+                allreg += registerToStringDecSigned(i) + "\n";
 
             return allreg;
+        }
+
+        public string registerToStringDecSigned(UInt16 number)
+        {
+            checkNumber(number);
+            return number + ". \t" + registers[number].getName + "\t:" + registers[number].getSignedDecimal;
+        }
+
+        public string registerToStringDecUnsigned(UInt16 number)
+        {
+            checkNumber(number);
+            return number + ". \t" + registers[number].getName + "\t:" + registers[number].getUnsignedDecimal;
+        }
+
+        public string registerToStringHex(UInt16 number)
+        {
+            checkNumber(number);
+            return number + ". \t" + registers[number].getName + "\t:" + registers[number].getHexadecimal;
         }
 
         public string registerName(UInt16 number)

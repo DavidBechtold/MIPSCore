@@ -49,9 +49,9 @@ namespace MIPSCore.RegisterFile
             }
         }
 
-        public void clearAll()
+        public void flush()
         {
-
+            registers.flush();
         }
 
         private void write(CWord word)
@@ -103,6 +103,21 @@ namespace MIPSCore.RegisterFile
         public void initStackPointer()
         {
             registers.write(29, core.getDataMemory.getEndAddress + 1);
+        }
+
+        public string registerToString(UInt16 num)
+        {
+            return registers.registerToStringDecSigned(num);
+        }
+
+        public string registerToStringUnsigned(UInt16 num)
+        {
+            return registers.registerToStringDecUnsigned(num);
+        }
+
+        public string registerToStringHex(UInt16 num)
+        {
+            return registers.registerToStringHex(num);
         }
     }
 }

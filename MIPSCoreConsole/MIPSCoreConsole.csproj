@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8167717C-DF36-4477-AD3F-F655F4C4033E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{E91D25AC-D99C-49E3-BA3B-FE00C71FAA4B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MIPSCore</RootNamespace>
-    <AssemblyName>MIPSCore</AssemblyName>
+    <RootNamespace>MIPSCoreConsole</RootNamespace>
+    <AssemblyName>MIPSCoreConsole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,12 +31,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,23 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ALU\CALU.cs" />
-    <Compile Include="ControlUnit\CControlUnit.cs" />
-    <Compile Include="Core\CCore.cs" />
-    <Compile Include="ICore.cs" />
-    <Compile Include="DataMemory\CDataMemory.cs" />
-    <Compile Include="InstructionSet\CInstruction.cs" />
-    <Compile Include="InstructionSet\CInstructionSet.cs" />
-    <Compile Include="InstructionSet\CControlSignals.cs" />
-    <Compile Include="RegisterFile\CRegisterFile.cs" />
-    <Compile Include="Util\CByte.cs" />
-    <Compile Include="Util\CMemory.cs" />
-    <Compile Include="Util\CMIPSRegister.cs" />
-    <Compile Include="Util\CRegister.cs" />
-    <Compile Include="Util\CWord.cs" />
-    <Compile Include="Clock\CClock.cs" />
-    <Compile Include="InstructionMemory\CInstructionMemory.cs" />
+    <Compile Include="CMIPSCoreConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MIPSCore\MIPSCore.csproj">
+      <Project>{8167717c-df36-4477-ad3f-f655f4c4033e}</Project>
+      <Name>MIPSCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

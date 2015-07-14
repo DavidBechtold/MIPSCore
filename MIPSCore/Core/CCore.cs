@@ -16,10 +16,13 @@ using System.Configuration;
 
 namespace MIPSCore.Core
 {
-    public class CCore
+    public enum ExecutionMode { singleStep, runToCompletion };
+
+    public class CCore : ICore
     {
         public const UInt16 CCoreWordLength = CWord.wordLength;
-
+        public const UInt16 RegisterCount = CMIPSRegister.numberOfRegisters;
+        
         private const UInt64 stdCoreFrequency_Hz = 100;
         private const MemSize stdInstructionMemorySize_kB = MemSize.Size_1kB;
         private const MemSize stdDataMemorySize_kB = MemSize.Size_1kB;
@@ -29,6 +32,7 @@ namespace MIPSCore.Core
         private MemSize instructionMemorySize_kB;
         private MemSize dataMemorySize_kB;
         private bool initStackPointer;
+        private bool programmCompleted;
 
         private CClock clock;
         private CInstructionMemory instructionMemory;
@@ -36,6 +40,9 @@ namespace MIPSCore.Core
         private CALU alu;
         private CControlUnit controlUnit;
         private CDataMemory dataMemory;
+
+        public event EventHandler completed;
+        public event EventHandler clocked;
 
         public CCore()
         {
@@ -48,6 +55,13 @@ namespace MIPSCore.Core
             controlUnit = new CControlUnit(this);
             dataMemory = new CDataMemory(this, dataMemorySize_kB);
             clock = new CClock(coreFrequency_Hz, clockTick);
+            programmCompleted = false;
+        }
+
+        private void initCore()
+        {
+            programmCompleted = false;
+            registerFile.flush();
 
             if (initStackPointer)
                 registerFile.initStackPointer();
@@ -58,8 +72,15 @@ namespace MIPSCore.Core
             clock.start();
         }
 
+        public void stopCore()
+        {
+            clock.stop();
+        }
+
         public void programCore(string path)
         {
+            initCore();
+
             string[] code = System.IO.File.ReadAllLines(path);
 
             if (code.Length >= instructionMemory.getSize)
@@ -71,6 +92,8 @@ namespace MIPSCore.Core
 
         public void programObjdump(string path)
         {
+            initCore();
+
             string strCode = System.IO.File.ReadAllText(path);
             UInt32 codeCounter = 0;
 
@@ -99,14 +122,30 @@ namespace MIPSCore.Core
             }
         }
 
+        public void setMode(ExecutionMode mode)
+        {
+            switch (mode)
+            {
+                case ExecutionMode.singleStep: clock.SingleStep = true;  break;
+                case ExecutionMode.runToCompletion: clock.SingleStep = false; break;
+                default: throw new ArgumentOutOfRangeException(this.GetType().Name + ": Executionmode out of range");
+            }
+        }
+
+        public void singleStep()
+        {  
+            clock.step();
+        }
+
         private void clockTick(object sender, EventArgs e)
         {
             //for debugging and to avoid race conditions at the beginning stop the clock,
             //if we don't stop the clock here, it can happen that the clock interrupt interrupts the next instructions (specially at debugging)
 
-            //for debugging clock all components in one clock
+            if (programmCompleted)
+                return;
+
             clock.stop();
-            string test;
             try
             {
                 instructionMemory.clock();
@@ -115,21 +154,22 @@ namespace MIPSCore.Core
                 dataMemory.clock();
                 registerFile.clock();
 
+                //call event clocked
+                clocked(this, new EventArgs());
+
                 if (controlUnit.getSystemcall)
-                    //Systemcall occur => stop the clock 
-                    Console.WriteLine("Systemcall");
+                {
+                    //Systemcall occur => stop the clock
+                    // TODO check if the exit systemcall has occured
+                    programmCompleted = true;
+                    completed(this, new EventArgs());
+                }
                 else
-                    clock.start();
-
-
-                //Console.Write(registerFile.ToString());
-                //Console.Write(instructionMemory.hexdump(0, 98));
-
-               
+                    clock.start();               
             }
             catch (Exception exeption)
             {
-                Console.WriteLine(exeption.ToString());
+                //Console.WriteLine(exeption.ToString());
             }
         }
 
@@ -222,6 +262,31 @@ namespace MIPSCore.Core
                 Console.WriteLine("Configuration Value " + ConfigurationManager.AppSettings["InitialiseStackPointer"] + " can not be converted to an boolean value for InitialiseStackPointer. Standard value " + stdInitStackPointer + " is used.");
                 initStackPointer = stdInitStackPointer;
             }
-        }        
+        }
+
+        public string readRegister(UInt16 number)
+        {
+            return registerFile.registerToString(number);
+        }
+
+        public string readRegisterUnsigned(UInt16 number)
+        {
+            return registerFile.registerToStringUnsigned(number);
+        }
+
+        public string readRegisterHex(UInt16 number)
+        {
+            return registerFile.registerToStringHex(number);
+        }
+
+        public string actualInstruction()
+        {
+            return instructionMemory.getActualInstruction.getHexadecimal;
+        }
+
+        public string programCounter()
+        {
+            return instructionMemory.getProgramCounter.getUnsignedDecimal + "";
+        }
     }
 }
