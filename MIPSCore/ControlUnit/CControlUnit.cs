@@ -29,5 +29,10 @@ namespace MIPSCore.ControlUnit
             // 2.) interpret the opCode and function
             base.prepareControlSignals(opCode, function);       
         }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

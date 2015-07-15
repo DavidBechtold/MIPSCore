@@ -288,5 +288,10 @@ namespace MIPSCore.Core
         {
             return instructionMemory.getProgramCounter.getUnsignedDecimal + "";
         }
+
+        public string readControlUnitSignals()
+        {
+            return controlUnit.ToString();
+        }
     }
 }

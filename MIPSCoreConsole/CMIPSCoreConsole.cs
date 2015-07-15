@@ -35,7 +35,7 @@ namespace MIPSCoreConsole
         static void clocked(object obj, EventArgs args)
         {
             Console.WriteLine("ProgramCounter:\t" + core.programCounter());
-            Console.WriteLine("Instruction:\t" + core.actualInstruction());
+            Console.WriteLine("Instruction:\t" + core.actualInstruction() + "\n");
         }
 
         static public bool serveStartArguments(string[] args)
@@ -129,10 +129,14 @@ namespace MIPSCoreConsole
                             Console.WriteLine(core.readRegisterHex(registerReadNumber));
                             break;
 
-                        case "usage":
-                            Console.WriteLine(usageCommandLineArguments(null));
+                        case "control":
+                            Console.WriteLine(core.readControlUnitSignals());
                             break;
 
+                        default:
+                        case "usage":
+                            Console.WriteLine(usageCommandLineArguments(null));
+                            break;    
                     }
             }
         }
@@ -172,6 +176,9 @@ namespace MIPSCoreConsole
             usageString += "rreg <number>\tRead register value signed decimal.\n";
             usageString += "rregU <number>\tRead register value unsigned decimal.\n";
             usageString += "rregH <number>\tRead register value hexadecimal.\n";
+            usageString += "control\t\tPrints the control units signals.\n";
+
+           
 
             return usageString;
         }

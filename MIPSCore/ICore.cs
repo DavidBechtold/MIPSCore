@@ -48,5 +48,8 @@ namespace MIPSCore.Core
 
         /* read registervalue hex */
         string readRegisterHex(UInt16 number);
+
+        /* read control unit signals */
+        string readControlUnitSignals();
     }
 }

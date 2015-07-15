@@ -7,27 +7,53 @@ using MIPSCore.Util;
 
 namespace MIPSCore.InstructionSet
 {
-    public enum InstructionFormat {R, I, J}
-    public enum RegisterDestination { rt, rd, ra};
-    public enum ALUSource { regFile, signExtend }
-    public enum ALUControl
-    {
-        and = 0,
-        or = 1,
-        add = 2,
-        addu,
-        sub = 6,
-        setOnLessThan = 7,
-        mult,
-        div,
-        shiftLeft,
-        shiftRight,
-        nor = 12,
-        stall,
+    public enum InstructionFormat {
+        [Text("R")] R,
+        [Text("I")] I,
+        [Text("J")] J
     }
-    public enum RegisterFileInput { aluLO, aluHI, dataMemory, programCounter }
-    public enum ProgramCounterSource { programCounter, signExtendEqual, signExtendUnequal, signExtendLessOrEqualZero, jump, register }
-    public enum DataMemoryWordSize { singleByte, halfWord, word }
+    public enum RegisterDestination { 
+        [Text("rt")] rt,
+        [Text("rd")] rd, 
+        [Text("ra")] ra 
+    }
+    public enum ALUSource { 
+        [Text("register file")] regFile, 
+        [Text("sign extend")] signExtend 
+    }
+    public enum ALUControl {
+        [Text("and 0")] and = 0,
+        [Text("or 1")] or = 1,
+        [Text("add 2")] add = 2,
+        [Text("addu ?")] addu,
+        [Text("sub 6")] sub = 6,
+        [Text("set on less than 7")] setOnLessThan = 7,
+        [Text("multiply 9")] mult,
+        [Text("divide 10")] div,
+        [Text("shift left 3")] shiftLeft,
+        [Text("shift right 4")] shiftRight,
+        [Text("nor 12")] nor = 12,
+        [Text("stall")] stall,
+    }
+    public enum RegisterFileInput { 
+        [Text("alu low register")] aluLO, 
+        [Text("alu high register")] aluHI,
+        [Text("data memory")] dataMemory,
+        [Text("program counter")] programCounter
+    }
+    public enum ProgramCounterSource { 
+        [Text("program counter")] programCounter, 
+        [Text("sign extend equal")] signExtendEqual, 
+        [Text("sign extend unequal")] signExtendUnequal, 
+        [Text("sign extend less or equal zero")] signExtendLessOrEqualZero, 
+        [Text("jump")] jump, 
+        [Text("register")] register 
+    }
+    public enum DataMemoryWordSize { 
+        [Text("byte")] singleByte, 
+        [Text("half word")] halfWord, 
+        [Text("word")] word 
+    }
 
     public class CControlSignals
     {
@@ -305,6 +331,7 @@ namespace MIPSCore.InstructionSet
             }
         }
 
+        public InstructionFormat getInstructionFormat { get { return instructionFormat; } }
         public RegisterDestination getRegDestination { get { return regDestination; } }
         public ALUSource getAluSource { get { return aluSource; } }
         public ALUControl getAluControl { get { return aluControl; } }
@@ -315,5 +342,46 @@ namespace MIPSCore.InstructionSet
         public ProgramCounterSource getPcSource { get { return pcSource; } }
         public DataMemoryWordSize getDataMemoryWordSize { get { return dataMemWordSize; } }
         public bool getSystemcall { get { return systemcall; } }
+
+        public override string ToString()
+        {
+            string rString = "";
+
+            /* INSTRUCTION */
+            rString += "Instruction Format:\t" + instructionFormat.ToText() + "\n";
+            
+            /* REGISTER FILE */
+            rString += "Register Destination:\t";
+            if (regWrite)
+                rString += regDestination.ToText() + "\n";
+            else
+                rString += "no register gets overwritten\n";
+
+            rString += "Register File Input:\t" + regFileInput.ToText() + "\n";
+
+            /* ALU */
+            rString += "ALU Source:\t\t" + aluSource.ToText() + "\n";
+            rString += "ALU Control:\t\t" + aluControl.ToText() + "\n";
+            
+            /* DATA MEMORY */
+            rString += "Data Memory Write:\t";
+            if (memWrite)
+                rString += "yes \n";
+            else
+                rString += "no \n";
+
+            rString += "Data Memory Read:\t";
+            if (memRead)
+                rString += "yes \n";
+            else
+                rString += "no \n";
+
+            rString += "Data Memory Size:\t" + dataMemWordSize.ToText() + "\n";
+
+            /* PROGRAMCOUNTER */
+            rString += "Program Counter Input:\t" + pcSource.ToText() + "\n";
+
+            return rString;
+        }
     }
 }
