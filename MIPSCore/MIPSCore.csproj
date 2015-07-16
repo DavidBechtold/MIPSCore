@@ -50,7 +50,6 @@
     <Compile Include="Core\CCore.cs" />
     <Compile Include="ICore.cs" />
     <Compile Include="DataMemory\CDataMemory.cs" />
-    <Compile Include="InstructionSet\CInstruction.cs" />
     <Compile Include="InstructionSet\CInstructionSet.cs" />
     <Compile Include="InstructionSet\CControlSignals.cs" />
     <Compile Include="RegisterFile\CRegisterFile.cs" />

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MIPSCore.Util;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace MIPSCore.InstructionSet
 {
@@ -22,19 +24,20 @@ namespace MIPSCore.InstructionSet
         [Text("sign extend")] signExtend 
     }
     public enum ALUControl {
-        [Text("and 0")] and = 0,
-        [Text("or 1")] or = 1,
-        [Text("add 2")] add = 2,
-        [Text("addu ?")] addu,
-        [Text("sub 6")] sub = 6,
-        [Text("set on less than 7")] setOnLessThan = 7,
-        [Text("multiply 9")] mult,
-        [Text("divide 10")] div,
-        [Text("shift left 3")] shiftLeft,
-        [Text("shift right 4")] shiftRight,
-        [Text("nor 12")] nor = 12,
+        [Text("and")] and = 0,
+        [Text("or")] or = 1,
+        [Text("add")] add = 2,
+        [Text("addu")] addu,
+        [Text("sub")] sub = 6,
+        [Text("set on less than")] setOnLessThan = 7,
+        [Text("multiply")] mult,
+        [Text("divide")] div,
+        [Text("shift left")] shiftLeft,
+        [Text("shift right")] shiftRight,
+        [Text("nor")] nor = 12,
         [Text("stall")] stall,
     }
+
     public enum RegisterFileInput { 
         [Text("alu low register")] aluLO, 
         [Text("alu high register")] aluHI,
@@ -44,38 +47,16 @@ namespace MIPSCore.InstructionSet
     public enum ProgramCounterSource { 
         [Text("program counter")] programCounter, 
         [Text("sign extend equal")] signExtendEqual, 
-        [Text("sign extend unequal")] signExtendUnequal, 
-        [Text("sign extend less or equal zero")] signExtendLessOrEqualZero, 
+        [Text("sign extend enequal")] signExtendUnequal, 
+        [Text("sign extend less or equal to zero")] signExtendLessOrEqualZero, 
         [Text("jump")] jump, 
         [Text("register")] register 
     }
     public enum DataMemoryWordSize { 
         [Text("byte")] singleByte, 
         [Text("half word")] halfWord, 
-        [Text("word")] word 
+        [Text("word")] word,
     }
-
-    /*public enum IInstructions
-    {
-        [Text("beq: branch on equal")] beq = 4, 
-        [Text("bne: branch on not equal")] bne = 5, 
-        [Text("blez: branch on less than or equal to zero")] blez = 6,
-        [Text("addi: addition imm.")] addi = 8, 
-        [Text("addiu: addition imm. unsigned")] addiu = 9, 
-        [Text("slti: set less than imm.")] slti = 10, 
-        [Text("sltiu: set less than imm. unsigned")] sltiu = 11,
-        [Text("andi: and imm.")] andi = 12,
-        [Text("ori: or imm.")] ori = 13, 
-        [Text("xori: xor imm.")] xori = 14,
-        [Text("lb: load byte")] lb = 32,
-        [Text("lh: load halfword")] lh = 33,
-        [Text("lw: load word")] lw = 35,
-        [Text("lbu: load byte unsigned")] lbu = 36,
-        [Text("lhu: load halfword unsigned")] lhu = 37,
-        [Text("sb: store byte")] sb = 40,
-        [Text("sh: store halfword")] sh = 41,
-        [Text("sw: store word")] sw = 43,
-    }*/
 
     public class CControlSignals
     {
@@ -92,19 +73,45 @@ namespace MIPSCore.InstructionSet
         private ProgramCounterSource pcSource;      //take the source from the programcounter or from the sign extender (jmp,.. instruction)
         private DataMemoryWordSize dataMemWordSize; //how much data must be read from the data memory
         private bool systemcall;                    //a systemcall occur
-        string instruction;
+        string instruction_;
+
+        private CInstructionSet instructionSet;
+        private CInstruction instruction;
 
         public CControlSignals()
         {
             instructionFormat = InstructionFormat.R;
             pcSource = ProgramCounterSource.programCounter;
             systemcall = false;
-            instruction = "";
+            instruction_ = "";
+
+            using (FileStream reader = new FileStream("instructionSet.xml", FileMode.Open))
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(CInstructionSet));
+                instructionSet = ser.Deserialize(reader) as CInstructionSet;
+                reader.Close();
+            }
+
+            instruction = new CInstruction();
         }
 
         protected void prepareControlSignals(CWord opCode, CWord function)
         {
-            switch (getFormat(opCode))
+            instruction = instructionSet.getInstruction(opCode, function);
+
+            instructionFormat = instruction.format;
+            regDestination = instruction.regDestination;
+            aluSource = instruction.aluSource;
+            aluControl = instruction.aluControl;
+            regWrite = instruction.regWrite;
+            memWrite = instruction.memWrite;
+            memRead = instruction.memRead;
+            regFileInput = instruction.regFileInput;
+            pcSource = instruction.pcSource;
+            dataMemWordSize = instruction.dataMemWordSize;
+            systemcall = instruction.systemcall;
+
+            /*switch (getFormat(opCode))
             {
                 case InstructionFormat.R:
                     prepareRFormatControlSignals(function);
@@ -117,7 +124,7 @@ namespace MIPSCore.InstructionSet
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": InstuctionFormat out of range");
-            }
+            }*/
         }
 
         private InstructionFormat getFormat(CWord opCode)
@@ -175,15 +182,15 @@ namespace MIPSCore.InstructionSet
             switch (function.getUnsignedDecimal)
             {
                 case 0: //sll: shift left logical
-                    instruction = "sll: shift left logical";
+                    instruction_ = "sll: shift left logical";
                     aluControl = ALUControl.shiftLeft;
                     break;
                 case 2: //srl: shift right logicl
-                    instruction = "srl: shift right logical";
+                    instruction_ = "srl: shift right logical";
                     aluControl = ALUControl.shiftRight;
                     break;
                 case 8: //jr: jump register
-                    instruction = "jr: jump register";
+                    instruction_ = "jr: jump register";
                     memRead = false;
                     memWrite = false;
                     regWrite = false;
@@ -191,13 +198,13 @@ namespace MIPSCore.InstructionSet
                     pcSource = ProgramCounterSource.register;
                     break;
                 case 12: //systemcall
-                    instruction = "systemcall";
+                    instruction_ = "systemcall";
                     regWrite = false;
                     systemcall = true;
                     aluControl = ALUControl.stall;
                     break;
                 case 16: //mfhi: move from high
-                    instruction = "mfhi: move from high";
+                    instruction_ = "mfhi: move from high";
                     regFileInput = RegisterFileInput.aluHI;     //read from hi result
                     aluControl = ALUControl.stall;
                     break;
@@ -205,36 +212,36 @@ namespace MIPSCore.InstructionSet
                 case 25: //multu
                     throw new NotImplementedException("not implemented");
                 case 32: //add
-                    instruction = "add: addition";
+                    instruction_ = "add: addition";
                     aluControl = ALUControl.add;
                     break;
                 case 33: //addu
-                    instruction = "addu: addition unsigned";
+                    instruction_ = "addu: addition unsigned";
                     aluControl = ALUControl.addu;
                     break;
                 case 34: //sub
-                    instruction = "sub: subtraction";
+                    instruction_ = "sub: subtraction";
                     aluControl = ALUControl.sub;
                     break;
                 case 35: //subu
                     throw new NotImplementedException("not implemented");
                 case 36: //and
-                    instruction = "and";
+                    instruction_ = "and";
                     aluControl = ALUControl.and;
                     break;
                 case 37: //or
-                    instruction = "or";
+                    instruction_ = "or";
                     aluControl = ALUControl.or;
                     break;
                 case 38: //xor
-                    instruction = "xor";
+                    instruction_ = "xor";
                     throw new NotImplementedException("not implemented");
                 case 39: //nor
-                    instruction = "nor";
+                    instruction_ = "nor";
                     aluControl = ALUControl.nor;
                     break;
                 case 42: //slt: set less than
-                    instruction = "slt: set less than";
+                    instruction_ = "slt: set less than";
                     aluControl = ALUControl.setOnLessThan;
                     break;
                 case 43: //sltu:
@@ -257,7 +264,7 @@ namespace MIPSCore.InstructionSet
             switch (opCode.getUnsignedDecimal)
             {
                 case 4: //beq
-                    instruction = "beq: branch on equal";
+                    instruction_ = "beq: branch on equal";
                     regWrite = false;   //don't write value back to the register file
                     memRead = false;    //no need to read from data memory
                     memWrite = false;   //no need to write data to the data memory
@@ -266,7 +273,7 @@ namespace MIPSCore.InstructionSet
                     aluControl = ALUControl.sub;
                     break;
                 case 5: //bne
-                    instruction = "bne: branch on not equal";
+                    instruction_ = "bne: branch on not equal";
                     regWrite = false;   //don't write value back to the register file
                     memRead = false;    //no need to read from data memory
                     memWrite = false;   //no need to write data to the data memory
@@ -275,7 +282,7 @@ namespace MIPSCore.InstructionSet
                     aluControl = ALUControl.sub;
                     break;
                 case 6: //blez: Branch on less than or equal to zero
-                    instruction = "blez: branch on less than or equal to zero";
+                    instruction_ = "blez: branch on less than or equal to zero";
                     regWrite = false;   //don't write value back to the register file
                     memRead = false;    //no need to read from data memory
                     memWrite = false;   //no need to write data to the data memory
