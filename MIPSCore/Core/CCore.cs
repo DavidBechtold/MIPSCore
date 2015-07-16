@@ -132,7 +132,7 @@ namespace MIPSCore.Core
             }
         }
 
-        public void singleStep()
+        public void singleClock()
         {  
             clock.step();
         }
@@ -153,7 +153,7 @@ namespace MIPSCore.Core
                 alu.clock();
                 dataMemory.clock();
                 registerFile.clock();
-
+                 
                 //call event clocked
                 clocked(this, new EventArgs());
 

@@ -30,11 +30,12 @@ namespace MIPSCore.InstructionMemory
         public CInstructionMemory(CCore core, MemSize size)
         {
             this.core = core;
+            memory = new CMemory(size);
+            firstCommand = true;
             programCounter = new CWord(0);
             nextInstruction = new CWord(0);
-            memory = new CMemory(size);
-            
-            firstCommand = true;
+
+            flush();
         }
 
         public void clock()

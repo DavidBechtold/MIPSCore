@@ -11,6 +11,15 @@ namespace MIPSCoreConsole
     {
         private static ICore core;
         private static UInt16 registerReadNumber;
+
+        /* Commands */
+        private static CMIPSCoreConsoleCommand clock;
+        private static CMIPSCoreConsoleCommand readRegister;
+        private static CMIPSCoreConsoleCommand readRegisterUnsigned;
+        private static CMIPSCoreConsoleCommand readRegisterHex;
+        private static CMIPSCoreConsoleCommand controlSignals;
+        private static CMIPSCoreConsoleCommand usage;
+
         static void Main(string[] args)
         {
             /* reads config file and inits all komponents */
@@ -21,6 +30,14 @@ namespace MIPSCoreConsole
             /* install event handler */
             core.completed += new EventHandler(completed);
             core.clocked += new EventHandler(clocked);
+
+            /* init commands */
+            clock = new CMIPSCoreConsoleCommand("clock");
+            readRegister = new CMIPSCoreConsoleCommand("rreg");
+            readRegisterUnsigned = new CMIPSCoreConsoleCommand("rregu");
+            readRegisterHex = new CMIPSCoreConsoleCommand("rregh");
+            controlSignals = new CMIPSCoreConsoleCommand("control");
+            usage = new CMIPSCoreConsoleCommand("usage");
 
             core.startCore();
             
@@ -104,40 +121,35 @@ namespace MIPSCoreConsole
                 string rawCmd = Console.ReadLine();
                 string[] cmd = rawCmd.Split(' ');
 
-                for(int i = 0; i < cmd.Length; i++)
-                    switch (cmd[i])
+                for (int i = 0; i < cmd.Length; i++)
+                {
+                    if (clock.ToString() == cmd[i])
+                        core.singleClock();
+                    else if (readRegister.ToString() == cmd[i])
                     {
-                        case "step":
-                            core.singleStep();
+                        if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
                             break;
-
-                        case "rreg":
-                            if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                                break;
-                            Console.WriteLine(core.readRegister(registerReadNumber));
-                            break;
-
-                        case "rregU":
-                            if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                                break;
-                            Console.WriteLine(core.readRegisterUnsigned(registerReadNumber));
-                            break;
-
-                        case "rregH":
-                            if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                                break;
-                            Console.WriteLine(core.readRegisterHex(registerReadNumber));
-                            break;
-
-                        case "control":
-                            Console.WriteLine(core.readControlUnitSignals());
-                            break;
-
-                        default:
-                        case "usage":
-                            Console.WriteLine(usageCommandLineArguments(null));
-                            break;    
+                        Console.WriteLine(core.readRegister(registerReadNumber));
                     }
+                    else if (readRegisterUnsigned.ToString() == cmd[i])
+                    {
+                        if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                            break;
+                        Console.WriteLine(core.readRegisterUnsigned(registerReadNumber));
+                    }
+                    else if (readRegisterHex.ToString() == cmd[i])
+                    {
+                        if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                            break;
+                        Console.WriteLine(core.readRegisterHex(registerReadNumber));
+                    }
+                    else if (controlSignals.ToString() == cmd[i])
+                        Console.WriteLine(core.readControlUnitSignals());
+                    else if(usage.ToString() == cmd[i])
+                        Console.WriteLine(usageCommandLineArguments(null));
+                    else
+                        Console.WriteLine(usageCommandLineArguments("Unkown command " + cmd[i] + ".\n"));
+                }
             }
         }
 
@@ -153,9 +165,10 @@ namespace MIPSCoreConsole
                 return false;
             }
 
-            if (registerReadNumber > CCore.RegisterCount)
+            if (registerReadNumber >= CCore.RegisterCount)
             {
-                Console.WriteLine(usageCommandLineArguments("Argument " + arg + " of command " + cmd + " must be between 0 and " + CCore.RegisterCount + ".\n"));
+                string error = String.Format("Argument {0} of command {1} must be between 0 and {2}\n", arg, cmd, CCore.RegisterCount - 1);
+                Console.WriteLine(usageCommandLineArguments(error));
                 return false;
             }
 
@@ -171,16 +184,41 @@ namespace MIPSCoreConsole
 
             usageString += "MIPSCoreConsole <command> [args]\n";
             usageString += "------------------------------\n";
-            usageString += "usage\t\tShows this usage message.\n";
-            usageString += "step\t\tIn stepping mode step one instruction further.\n";
-            usageString += "rreg <number>\tRead register value signed decimal.\n";
-            usageString += "rregU <number>\tRead register value unsigned decimal.\n";
-            usageString += "rregH <number>\tRead register value hexadecimal.\n";
-            usageString += "control\t\tPrints the control units signals.\n";
-
-           
+            usageString += usage.ToString() + "\t\tShows this usage message.\n";
+            usageString += clock.ToString() + "\t\tIn stepping mode step one instruction further.\n";
+            usageString += readRegister.ToString() + " <number>\tRead register value signed decimal.\n";
+            usageString += readRegisterUnsigned.ToString() + " <number>\tRead register value unsigned decimal.\n";
+            usageString += readRegisterHex.ToString() + " <number>\tRead register value hexadecimal.\n";
+            usageString += controlSignals.ToString() + "\t\tPrints the control units signals.\n";
 
             return usageString;
+        }
+    }
+
+    public class CMIPSCoreConsoleCommand
+    {
+        private readonly string command;
+        public CMIPSCoreConsoleCommand(string cmd)
+        {
+            command = cmd;
+        }
+
+        public string getCommand
+        {
+            get
+            {
+                return command;
+            }
+        }
+
+        public override string ToString()
+        {
+            return command;
+        }
+
+        public string toString()
+        {
+            return command;
         }
     }
 }

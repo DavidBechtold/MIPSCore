@@ -21,7 +21,7 @@ namespace MIPSCore.Core
         void setMode(ExecutionMode mode);
 
         /* perform one clock in singleStep mode */ 
-        void singleStep();
+        void singleClock();
 
         /* programms the core with an objdump file 
          * the registers are flushed and the sp gets initialised if it is declared in the config file 
