@@ -1,0 +1,132 @@
+<!-- Use this xml file to add instructions -->
+<CInstructionSet>
+
+  <!-- R INSTRUCTIONS -->
+  <CInstruction>
+    <name>addition</name>
+    <assembler>add</assembler>
+    <meaning>rd = rs + rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>33</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInut>aluLO</regFileInut>
+    <aluSource>regFile</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+  
+  <!-- I INSTRUCTIONS -->
+  <CInstruction>
+    <name>addition imm. unsigned</name>
+    <assembler>addi</assembler>
+    <meaning>rd = rs + imm</meaning>
+    <format>I</format>
+    <opcode>8</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInut>aluLO</regFileInut>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <!--  Explanation:
+        
+        name:           the friendly user name of the instruction 
+        assembler:      the assembler macro of the instruction
+        meaning:        the meaning of the instruction
+        
+        format:         the instruction format
+                        R...Instruction format R (only register operands)
+                        I...Instruction format I (immediate)
+                        J...Instruction format J (jump)
+                        
+        opcode:         the opcode of the instruction (UInt)
+        function:       the function code of the instruction (UInt)
+        
+        regWrite:       declares if a value has to be written to a register in the registerfile
+                        true...specified register in the registerfile gets overwritten (rd = rs + rt => rd gets overwritten)
+                        false...no register in the registerfile gets overwritten
+                        
+        regDestination: which register in the register file needs to be overwritten 
+                        (regWrite needs to be true to overwrite a register in the registerfile)
+                        rt...specified rt register gets overwritten
+                        rd...specified rd register gets overwritten
+                        ra...specified ra register gets overwritten
+                        
+        regFileInput:   from where the comes the value which overrides the register in the registerfile
+                        (regWrite needs to be true to overwrite a register in the registerfile)
+                        aluLO...overwrite the register value with the alu low register
+                        aluHI...overwrite the register value with the alu high register
+                        dataMemory...overwrite the register value with the value from the data memory
+                        programCounter...overwrite the register value with the value of the program counter (rd = pc + 4)
+                        
+       aluSource:       from where the alu should the value to calculate the result
+                        regFile...take the values from the register file (rd = rs + rt => alu takes the rs and rt register to calculate the value)
+                        signExtend...take the value from register and signExtender (rt = rs + imm. => alu takes rs and imm. to calculate the value)
+                        
+       aluControl:      which action the alu should perform
+                        and...simple and
+                        or...simple or
+                        add...addition
+                        addu...addition unsigned
+                        sub...subtraction
+                        setOnLessThan...set on less than
+                        mult...multiply
+                        div...divide
+                        shiftLeft...shift left
+                        shiftRight...shift right
+                        nor...not or
+                        stall...stall the alu => no action performed
+                        
+      memWrite:         true if we need to write to the data memory
+      
+      memRead:          true if we need to read from the data memory
+      
+      memWordSize:      how much data we need to read/write from the data memory
+                        singleByte...one byte
+                        halfWord...half word
+                        word...word
+      
+      pcSource:         from where should the program counter take the next value
+                        programCounter...take the value from the program counter (pc = pc + 4)
+                        signExtendEqual...take the value from the sign extender, but only if the zero flag of the alu is set (pc += imm. * 4 + 4 else pc += 4)
+                        signExtendUnequal...take the value from the sign extender, but only if the zero flag of the alu is not set (pc += imm. * 4 + 4 else pc += 4)
+                        signExtendLessOrEqualZero...take the value form the sing extender, but only if the zero flag of the alu is not set or the alu result is 1 (pc += imm. * 4 + 4 else pc += 4)
+                        jump...take the value from the jumpTarget(24 bit) (pc = jumpTarget * 4)
+                        register...take the value from the rs register (pc = rs)
+    
+    systemcall:         true if the instruction is a systemcall
+    -->
+
+  <!-- J INSTRUCTIONS -->
+  <CInstruction>
+    <name>jump and link</name>
+    <assembler>jal</assembler>
+    <meaning>ra = pc + 4; pc = addr * 4</meaning>
+    <format>J</format>
+    <opcode>3</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <registerDestination>ra</registerDestination>
+    <registerFileInut>programCounter</registerFileInut>
+    <aluSource>regFile</aluSource>
+    <aluControl>stall</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>jump</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+</CInstructionSet>

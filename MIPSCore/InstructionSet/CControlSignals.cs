@@ -85,7 +85,7 @@ namespace MIPSCore.InstructionSet
             systemcall = false;
             instruction_ = "";
 
-            using (FileStream reader = new FileStream("instructionSet.xml", FileMode.Open))
+            using (FileStream reader = new FileStream("InstructionSet/instructionSet.xml", FileMode.Open))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(CInstructionSet));
                 instructionSet = ser.Deserialize(reader) as CInstructionSet;
