@@ -604,7 +604,7 @@
     <function>0</function>
     <regWrite>true</regWrite>
     <regDestination>rt</regDestination>
-    <regFileInput>aluLO</regFileInput>
+    <regFileInput>dataMemory</regFileInput>
     <aluSource>signExtend</aluSource>
     <aluControl>add</aluControl>
     <memWrite>false</memWrite>
@@ -624,7 +624,7 @@
     <function>0</function>
     <regWrite>true</regWrite>
     <regDestination>rt</regDestination>
-    <regFileInput>aluLO</regFileInput>
+    <regFileInput>dataMemory</regFileInput>
     <aluSource>signExtend</aluSource>
     <aluControl>add</aluControl>
     <memWrite>false</memWrite>
@@ -636,7 +636,7 @@
 
   <CInstruction>
     <name>load word</name>
-    <assembler>lh</assembler>
+    <assembler>lw</assembler>
     <example>lw rt, imm(rs)</example>
     <meaning>rt = Mem[rs + imm]</meaning>
     <format>I</format>
@@ -644,7 +644,7 @@
     <function>0</function>
     <regWrite>true</regWrite>
     <regDestination>rt</regDestination>
-    <regFileInput>aluLO</regFileInput>
+    <regFileInput>dataMemory</regFileInput>
     <aluSource>signExtend</aluSource>
     <aluControl>add</aluControl>
     <memWrite>false</memWrite>
@@ -664,7 +664,7 @@
     <function>0</function>
     <regWrite>true</regWrite>
     <regDestination>rt</regDestination>
-    <regFileInput>aluLO</regFileInput>
+    <regFileInput>dataMemory</regFileInput>
     <aluSource>signExtend</aluSource>
     <aluControl>addu</aluControl>
     <memWrite>false</memWrite>
@@ -684,7 +684,7 @@
     <function>0</function>
     <regWrite>true</regWrite>
     <regDestination>rt</regDestination>
-    <regFileInput>aluLO</regFileInput>
+    <regFileInput>dataMemory</regFileInput>
     <aluSource>signExtend</aluSource>
     <aluControl>addu</aluControl>
     <memWrite>false</memWrite>

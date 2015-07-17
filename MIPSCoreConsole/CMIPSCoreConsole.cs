@@ -14,7 +14,6 @@ namespace MIPSCoreConsole
 
         /* Commands */
         private static CMIPSCoreConsoleCommand clock;
-
         private static CMIPSCoreConsoleCommand readAllRegister;
         private static CMIPSCoreConsoleCommand readRegister;
         private static CMIPSCoreConsoleCommand readRegisterUnsigned;
