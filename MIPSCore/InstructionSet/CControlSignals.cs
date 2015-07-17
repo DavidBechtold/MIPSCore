@@ -24,17 +24,21 @@ namespace MIPSCore.InstructionSet
         [Text("sign extend")] signExtend 
     }
     public enum ALUControl {
-        [Text("and")] and = 0,
-        [Text("or")] or = 1,
-        [Text("add")] add = 2,
+        [Text("and")] and,
+        [Text("or")] or,
+        [Text("add")] add,
         [Text("addu")] addu,
-        [Text("sub")] sub = 6,
-        [Text("set on less than")] setOnLessThan = 7,
+        [Text("xor")] xor,
+        [Text("sub")] sub,
+        [Text("sub unsigned")] subu,
+        [Text("set less than")] setLessThan,
+        [Text("set less than unsigned")] setLessThanU,
         [Text("multiply")] mult,
+        [Text("multiply unsigned")] multu,
         [Text("divide")] div,
         [Text("shift left")] shiftLeft,
         [Text("shift right")] shiftRight,
-        [Text("nor")] nor = 12,
+        [Text("nor")] nor,
         [Text("stall")] stall,
     }
 
@@ -73,7 +77,6 @@ namespace MIPSCore.InstructionSet
         private ProgramCounterSource pcSource;      //take the source from the programcounter or from the sign extender (jmp,.. instruction)
         private DataMemoryWordSize dataMemWordSize; //how much data must be read from the data memory
         private bool systemcall;                    //a systemcall occur
-        string instruction_;
 
         private CInstructionSet instructionSet;
         private CInstruction instruction;
@@ -83,15 +86,13 @@ namespace MIPSCore.InstructionSet
             instructionFormat = InstructionFormat.R;
             pcSource = ProgramCounterSource.programCounter;
             systemcall = false;
-            instruction_ = "";
 
-            using (FileStream reader = new FileStream("InstructionSet/instructionSet.xml", FileMode.Open))
-            {
-                XmlSerializer ser = new XmlSerializer(typeof(CInstructionSet));
-                instructionSet = ser.Deserialize(reader) as CInstructionSet;
-                reader.Close();
-            }
-
+            FileStream reader = new FileStream("InstructionSet/instructionSet.xml", FileMode.Open);
+            XmlSerializer ser = new XmlSerializer(typeof(CInstructionSet));
+            instructionSet = ser.Deserialize(reader) as CInstructionSet;
+            reader.Close();
+            reader = null;
+         
             instruction = new CInstruction();
         }
 
@@ -110,271 +111,6 @@ namespace MIPSCore.InstructionSet
             pcSource = instruction.pcSource;
             dataMemWordSize = instruction.dataMemWordSize;
             systemcall = instruction.systemcall;
-
-            /*switch (getFormat(opCode))
-            {
-                case InstructionFormat.R:
-                    prepareRFormatControlSignals(function);
-                    break;
-                case InstructionFormat.I:
-                    prepareIFormatControlSignals(opCode);
-                    break;
-                case InstructionFormat.J:
-                    prepareJFormatControlSignals(opCode);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": InstuctionFormat out of range");
-            }*/
-        }
-
-        private InstructionFormat getFormat(CWord opCode)
-        {
-            switch (opCode.getUnsignedDecimal)
-            {
-                /* R-Format */
-                case 0:
-                    instructionFormat = InstructionFormat.R;
-                    return InstructionFormat.R;
-      
-                /* I-Format */
-                case 4: //beq
-                case 5: //bne
-                case 6: //blez: Branch on less than or equal to zero
-                case 8: //addi
-                case 9: //addiu
-                case 12://andi
-                case 32: //lb: load byte
-                case 36: //lbu: load byte unsigned
-                case 33: //lh: load half word
-                case 37: //lhu: load half word unsigned
-                case 35: //lw: load word
-                case 13: //ori
-                case 40: //sb: store byte
-                case 41: //sh: store halfword
-                case 10: //slti: set less than imm.
-                case 11: //sltiu: set less than imm. unsigned
-                case 43: //sw: store word
-                case 14: //xori: xor imm.
-                    instructionFormat = InstructionFormat.I;
-                    return InstructionFormat.I;
-                /* J-Format */
-                case 2: //j: jump
-                case 3: //jal: jump and link
-                    instructionFormat = InstructionFormat.J;
-                    return InstructionFormat.J;
-                default:
-                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode " + opCode.getUnsignedDecimal + " out of range");
-            }
-        }
-
-        private void prepareRFormatControlSignals(CWord function)
-        {
-            regDestination = RegisterDestination.rd;
-            aluSource = ALUSource.regFile;  
-            pcSource = ProgramCounterSource.programCounter;
-            regWrite = true;
-            memRead = false;
-            memWrite = false;
-            regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
-            systemcall = false;
-
-            // check function 
-            switch (function.getUnsignedDecimal)
-            {
-                case 0: //sll: shift left logical
-                    instruction_ = "sll: shift left logical";
-                    aluControl = ALUControl.shiftLeft;
-                    break;
-                case 2: //srl: shift right logicl
-                    instruction_ = "srl: shift right logical";
-                    aluControl = ALUControl.shiftRight;
-                    break;
-                case 8: //jr: jump register
-                    instruction_ = "jr: jump register";
-                    memRead = false;
-                    memWrite = false;
-                    regWrite = false;
-                    aluControl = ALUControl.stall;
-                    pcSource = ProgramCounterSource.register;
-                    break;
-                case 12: //systemcall
-                    instruction_ = "systemcall";
-                    regWrite = false;
-                    systemcall = true;
-                    aluControl = ALUControl.stall;
-                    break;
-                case 16: //mfhi: move from high
-                    instruction_ = "mfhi: move from high";
-                    regFileInput = RegisterFileInput.aluHI;     //read from hi result
-                    aluControl = ALUControl.stall;
-                    break;
-                case 24: //mult
-                case 25: //multu
-                    throw new NotImplementedException("not implemented");
-                case 32: //add
-                    instruction_ = "add: addition";
-                    aluControl = ALUControl.add;
-                    break;
-                case 33: //addu
-                    instruction_ = "addu: addition unsigned";
-                    aluControl = ALUControl.addu;
-                    break;
-                case 34: //sub
-                    instruction_ = "sub: subtraction";
-                    aluControl = ALUControl.sub;
-                    break;
-                case 35: //subu
-                    throw new NotImplementedException("not implemented");
-                case 36: //and
-                    instruction_ = "and";
-                    aluControl = ALUControl.and;
-                    break;
-                case 37: //or
-                    instruction_ = "or";
-                    aluControl = ALUControl.or;
-                    break;
-                case 38: //xor
-                    instruction_ = "xor";
-                    throw new NotImplementedException("not implemented");
-                case 39: //nor
-                    instruction_ = "nor";
-                    aluControl = ALUControl.nor;
-                    break;
-                case 42: //slt: set less than
-                    instruction_ = "slt: set less than";
-                    aluControl = ALUControl.setOnLessThan;
-                    break;
-                case 43: //sltu:
-                    throw new NotImplementedException("not implemented");
-                default:
-                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": function out of range");
-            }
-        }
-
-        private void prepareIFormatControlSignals(CWord opCode)
-        {
-            regDestination = RegisterDestination.rt;
-            aluSource = ALUSource.signExtend;
-            systemcall = false;
-           
-            /* TODO set this per opcode */
-            pcSource = ProgramCounterSource.programCounter;
-            
-            // check function 
-            switch (opCode.getUnsignedDecimal)
-            {
-                case 4: //beq
-                    instruction_ = "beq: branch on equal";
-                    regWrite = false;   //don't write value back to the register file
-                    memRead = false;    //no need to read from data memory
-                    memWrite = false;   //no need to write data to the data memory
-                    pcSource = ProgramCounterSource.signExtendEqual; //it's a branch command => if result are equal jump
-                    aluSource = ALUSource.regFile;
-                    aluControl = ALUControl.sub;
-                    break;
-                case 5: //bne
-                    instruction_ = "bne: branch on not equal";
-                    regWrite = false;   //don't write value back to the register file
-                    memRead = false;    //no need to read from data memory
-                    memWrite = false;   //no need to write data to the data memory
-                    pcSource = ProgramCounterSource.signExtendUnequal; //it's a branch command => if result are unequal jump
-                    aluSource = ALUSource.regFile;
-                    aluControl = ALUControl.sub;
-                    break;
-                case 6: //blez: Branch on less than or equal to zero
-                    instruction_ = "blez: branch on less than or equal to zero";
-                    regWrite = false;   //don't write value back to the register file
-                    memRead = false;    //no need to read from data memory
-                    memWrite = false;   //no need to write data to the data memory
-                    pcSource = ProgramCounterSource.signExtendLessOrEqualZero; //it's a branch command => if result are unequal jump
-                    aluSource = ALUSource.regFile;
-                    aluControl = ALUControl.setOnLessThan;
-                    break; 
-                case 8: //addi
-                    regWrite = true;                        //write result back to the register file
-                    memRead = false;                        //no need to read from data memory
-                    memWrite = false;                       //no need to write data to the data memory
-                    regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
-                    aluControl = ALUControl.add;
-                    break;
-                case 9: //addiu
-                    regWrite = true;                        //write result back to the register file
-                    memRead = false;                        //no need to read from data memory
-                    memWrite = false;                       //no need to write data to the data memory
-                    regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
-                    aluControl = ALUControl.addu;
-                    break;
-                case 12://andi
-                    throw new NotImplementedException();
-                case 32: //lb: load byte
-                    regWrite = true;                                // need to write data back to the register file
-                    memRead = true;                                 //read value from data memory
-                    regFileInput = RegisterFileInput.dataMemory;    //save the result from the data memory to the register                        
-                    aluControl = ALUControl.add;                    //add baseregister to the offset
-                    dataMemWordSize = DataMemoryWordSize.word;      //write a word size to the datamemory
-                    break;
-                case 36: //lbu: load byte unsigned
-                    dataMemWordSize = DataMemoryWordSize.singleByte;
-                    break;
-                case 33: //lh: load half word
-                    dataMemWordSize = DataMemoryWordSize.halfWord;
-                    break;
-                case 37: //lhu: load half word unsigned
-                case 35: //lw: load word
-                    regWrite = true;                                //no need to write data back to the register file
-                    memRead = true;                                 //read value from data memory
-                    memWrite = false;                               
-                    regFileInput = RegisterFileInput.dataMemory;    //save the result from the data memory to the register    
-                    aluControl = ALUControl.add;                    //add baseregister to the offset
-                    dataMemWordSize = DataMemoryWordSize.word;      //write a word size to the datamemory
-                    break;
-                case 13: //ori
-                case 40: //sb: store byte
-                case 41: //sh: store halfword
-                    throw new NotImplementedException();
-                case 10: //slti: set less than imm.
-                    regWrite = true;
-                    memRead = false;
-                    memWrite = false;
-                    regFileInput = RegisterFileInput.aluLO;   //save the result from the alu to the register
-                    aluControl = ALUControl.setOnLessThan;
-                    break;
-                case 11: //sltiu: set less than imm. unsigned
-                    throw new NotImplementedException();
-                case 43: //sw: store word
-                    regWrite = false;                           //no need to write data back to the register file
-                    memWrite = true;                            //we need to write to the data memory
-                    aluControl = ALUControl.add;                //add baseregister to the offset
-                    dataMemWordSize = DataMemoryWordSize.word;  //write a word size to the datamemory
-                    break;
-                case 14: //xori: xor imm.
-                default:
-                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
-            }
-        }
-
-        private void prepareJFormatControlSignals(CWord opCode)
-        {
-            pcSource = ProgramCounterSource.jump;   //take the jump address for the source of the pc
-            aluSource = ALUSource.regFile;
-            aluControl = ALUControl.stall;
-            memRead = false;
-            memWrite = false;
-            systemcall = false;
-            
-            switch (opCode.getUnsignedDecimal)
-            {
-                case 2: //j: jump
-                    regWrite = false;   //no need to write a register
-                    break;
-                case 3: //jal: jump and link
-                    regWrite = true;                            //need to write the program counter to $ra
-                    regDestination = RegisterDestination.ra;    //save the program counter to the ra register
-                    regFileInput = RegisterFileInput.programCounter; 
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(this.GetType().Name + ": opCode out of range");
-            }
         }
 
         public InstructionFormat getInstructionFormat { get { return instructionFormat; } }
@@ -394,8 +130,15 @@ namespace MIPSCore.InstructionSet
             string rString = "";
 
             /* INSTRUCTION */
+            rString += "Instruction:\t\t" + instruction.name + "\n";
             rString += "Instruction Format:\t" + instructionFormat.ToText() + "\n";
-            
+
+            if(instruction.format == InstructionFormat.R)
+                rString += "Function:\t\t" + instruction.function + "\n";
+            else
+                rString += "OpCode:\t\t\t" + instruction.opcode + "\n";
+            rString += repeatString("-", 80);
+         
             /* REGISTER FILE */
             rString += "Register Destination:\t";
             if (regWrite)
@@ -404,11 +147,13 @@ namespace MIPSCore.InstructionSet
                 rString += "no register gets overwritten\n";
 
             rString += "Register File Input:\t" + regFileInput.ToText() + "\n";
+            rString += repeatString("-", 80);
 
             /* ALU */
             rString += "ALU Source:\t\t" + aluSource.ToText() + "\n";
             rString += "ALU Control:\t\t" + aluControl.ToText() + "\n";
-            
+            rString += repeatString("-", 80);
+
             /* DATA MEMORY */
             rString += "Data Memory Write:\t";
             if (memWrite)
@@ -421,12 +166,20 @@ namespace MIPSCore.InstructionSet
                 rString += "yes \n";
             else
                 rString += "no \n";
-
             rString += "Data Memory Size:\t" + dataMemWordSize.ToText() + "\n";
+            rString += repeatString("-", 80);
 
             /* PROGRAMCOUNTER */
             rString += "Program Counter Input:\t" + pcSource.ToText() + "\n";
 
+            return rString;
+        }
+
+        public string repeatString(string s, int count)
+        {
+            string rString = "";
+            for (int i = 0; i < count; i++)
+                rString += s;
             return rString;
         }
     }

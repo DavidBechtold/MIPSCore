@@ -63,6 +63,9 @@ namespace MIPSCore.InstructionSet
         [XmlElement("assembler")]
         public string assembler;
 
+        [XmlElement("example")]
+        public string example;
+
         [XmlElement("meaning")]
         public string meaning;
 

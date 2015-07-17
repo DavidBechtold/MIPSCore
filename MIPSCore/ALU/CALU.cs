@@ -42,9 +42,13 @@ namespace MIPSCore.ALU
                 case ALUControl.addu:           performAddU();          break;
                 case ALUControl.and:            performAnd();           break;
                 case ALUControl.or:             performOr();            break;
+                case ALUControl.xor:            performXor();           break;
                 case ALUControl.sub:            performSub();           break;
-                case ALUControl.setOnLessThan:  performSetOnLessThen(); break;
+                case ALUControl.subu:           performSubU();          break;
+                case ALUControl.setLessThan:    performSetOnLessThen(); break;
+                case ALUControl.setLessThanU:   performSetOnLessThenU();break;
                 case ALUControl.mult:           performMult();          break;
+                case ALUControl.multu:          performMultU();         break;
                 case ALUControl.div:            performDiv();           break;
                 case ALUControl.shiftLeft:      performShift(true);     break;
                 case ALUControl.shiftRight:     performShift(false);    break;
@@ -81,9 +85,21 @@ namespace MIPSCore.ALU
             resultLO.set((UInt32)arg1.getUnsignedDecimal | arg2.getUnsignedDecimal);
         }
 
+        private void performXor()
+        {
+            resultLO.set((UInt32)arg1.getUnsignedDecimal ^ arg2.getUnsignedDecimal);
+        }
+
+
         private void performSub()
         {
             try { resultLO.set(checked((Int32)arg1.getSignedDecimal - arg2.getSignedDecimal)); }
+            catch (System.OverflowException) { overflow = true; }
+        }
+
+        private void performSubU()
+        {
+            try { resultLO.set(checked((UInt32)arg1.getUnsignedDecimal - arg2.getUnsignedDecimal)); }
             catch (System.OverflowException) { overflow = true; }
         }
 
@@ -93,6 +109,14 @@ namespace MIPSCore.ALU
                 resultLO.set((Int32)1);
             else
                 resultLO.set((Int32)0);
+        }
+
+        private void performSetOnLessThenU()
+        {
+            if (arg1.getUnsignedDecimal < arg2.getUnsignedDecimal)
+                resultLO.set((UInt32)1);
+            else
+                resultLO.set((UInt32)0);
         }
 
         private void performShift(bool left)
@@ -119,9 +143,16 @@ namespace MIPSCore.ALU
 
         private void performMult()
         {
+            Int64 res = arg1.getSignedDecimal * arg2.getSignedDecimal;
+            resultLO.set((Int32) res);
+            resultHI.set((Int32) (res >> 32));
+        }
+
+        private void performMultU()
+        {
             UInt64 res = arg1.getUnsignedDecimal * arg2.getUnsignedDecimal;
-            resultLO.set((UInt32) res);
-            resultHI.set((UInt32) (res >> 32));
+            resultLO.set((UInt32)res);
+            resultHI.set((UInt32)(res >> 32));
         }
 
         private void performDiv()

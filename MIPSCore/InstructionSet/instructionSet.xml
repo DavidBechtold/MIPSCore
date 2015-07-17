@@ -1,47 +1,5 @@
 <!-- Use this xml file to add instructions -->
-<CInstructionSet>
-
-  <!-- R INSTRUCTIONS -->
-  <CInstruction>
-    <name>addition</name>
-    <assembler>add</assembler>
-    <meaning>rd = rs + rt</meaning>
-    <format>R</format>
-    <opcode>0</opcode>
-    <function>33</function>
-    <regWrite>true</regWrite>
-    <regDestination>rd</regDestination>
-    <regFileInut>aluLO</regFileInut>
-    <aluSource>regFile</aluSource>
-    <aluControl>add</aluControl>
-    <memWrite>false</memWrite>
-    <memRead>false</memRead>
-    <memWordSize>singleByte</memWordSize>
-    <pcSource>programCounter</pcSource>
-    <systemcall>false</systemcall>
-  </CInstruction>
-  
-  <!-- I INSTRUCTIONS -->
-  <CInstruction>
-    <name>addition imm. unsigned</name>
-    <assembler>addi</assembler>
-    <meaning>rd = rs + imm</meaning>
-    <format>I</format>
-    <opcode>8</opcode>
-    <function>0</function>
-    <regWrite>true</regWrite>
-    <regDestination>rt</regDestination>
-    <regFileInut>aluLO</regFileInut>
-    <aluSource>signExtend</aluSource>
-    <aluControl>add</aluControl>
-    <memWrite>false</memWrite>
-    <memRead>false</memRead>
-    <memWordSize>singleByte</memWordSize>
-    <pcSource>programCounter</pcSource>
-    <systemcall>false</systemcall>
-  </CInstruction>
-
-  <!--  Explanation:
+<!--  Explanation:
         
         name:           the friendly user name of the instruction 
         assembler:      the assembler macro of the instruction
@@ -79,10 +37,12 @@
        aluControl:      which action the alu should perform
                         and...simple and
                         or...simple or
+                        xor...exlusive or
                         add...addition
                         addu...addition unsigned
                         sub...subtraction
-                        setOnLessThan...set on less than
+                        setLessThan...set on less than
+                        setLessThanU...set on less than unsigned
                         mult...multiply
                         div...divide
                         shiftLeft...shift left
@@ -110,17 +70,722 @@
     systemcall:         true if the instruction is a systemcall
     -->
 
+<CInstructionSet>
+
+  <!-- R INSTRUCTIONS -->
+  <CInstruction>
+    <name>shift left logical</name>
+    <assembler>sll</assembler>
+    <example>sll rd, rt, shamt</example>
+    <meaning>rd = rt&lt;&lt;shamt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>shiftLeft</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>shift right logical</name>
+    <assembler>srl</assembler>
+    <example>srl rd, rt, shamt</example>
+    <meaning>rd = rt&gt;&gt;shamt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>2</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>shiftRight</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>jump register</name>
+    <assembler>jr</assembler>
+    <example>jr register</example>
+    <meaning>pc = register</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>8</function>
+    <regWrite>false</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>stall</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>register</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>sytemcall</name>
+    <assembler>syscall</assembler>
+    <example></example>
+    <meaning></meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>12</function>
+    <regWrite>false</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>stall</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>register</pcSource>
+    <systemcall>true</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>move from alu high register</name>
+    <assembler>mfhi</assembler>
+    <example>mfhi register</example>
+    <meaning>rd = aluHI</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>16</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluHI</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>stall</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>register</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>multiply</name>
+    <assembler>mult</assembler>
+    <example>mult rd, rs, rt</example>
+    <meaning>rd = rs * rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>24</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>mult</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>multiply unsigned</name>
+    <assembler>multu</assembler>
+    <example>multu rd, rs, rt</example>
+    <meaning>rd = rs * rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>25</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>multu</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+  
+  <CInstruction>
+    <name>addition</name>
+    <assembler>add</assembler>
+    <example>add rd, rs, rt</example>
+    <meaning>rd = rs + rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>32</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>addition unsigned</name>
+    <assembler>addu</assembler>
+    <example>addu rd, rs, rt</example>
+    <meaning>rd = rs + rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>33</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>addu</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>subtraction</name>
+    <assembler>sub</assembler>
+    <example>sub rd, rs, rt</example>
+    <meaning>rd = rs - rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>34</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>sub</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>subtraction unsigned</name>
+    <assembler>subu</assembler>
+    <example>subu rd, rs, rt</example>
+    <meaning>rd = rs - rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>35</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>subu</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>and</name>
+    <assembler>and</assembler>
+    <example>and rd, rs, rt</example>
+    <meaning>rd = rs and rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>36</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>and</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>or</name>
+    <assembler>or</assembler>
+    <example>or rd, rs, rt</example>
+    <meaning>rd = rs or rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>37</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>or</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>exclusice or</name>
+    <assembler>xor</assembler>
+    <example>xor rd, rs, rt</example>
+    <meaning>rd = rs xor rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>38</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>xor</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>not or</name>
+    <assembler>nor</assembler>
+    <example>nor rd, rs, rt</example>
+    <meaning>rd = rs nor rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>39</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>nor</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>set less than</name>
+    <assembler>slt</assembler>
+    <example>slt rd, rs, rt</example>
+    <meaning>if rs&lt;rt: rd=1 else= rd=0</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>42</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>setLessThan</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>set less than unsigned</name>
+    <assembler>sltu</assembler>
+    <example>sltu rd, rs, rt</example>
+    <meaning>if rs&lt;rt: rd=1 else= rd=0</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>43</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>setLessThanU</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <!-- I INSTRUCTIONS -->
+  <CInstruction>
+    <name>branch on equal</name>
+    <assembler>beq</assembler>
+    <example>beq rs, rt, imm</example>
+    <meaning>if rs==rt: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>4</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>sub</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>signExtendEqual</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>branch on not equal</name>
+    <assembler>beq</assembler>
+    <example>beq rs, rt, imm</example>
+    <meaning>if rs!=rt: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>5</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>sub</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>signExtendUnequal</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>branch on less than or equal to zero</name>
+    <assembler>blez</assembler>
+    <example>beq rs, rt, imm</example>
+    <meaning>if rs&lt;=rt: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>6</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>setLessThan</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>signExtendLessOrEqualZero</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>addition imm. unsigned</name>
+    <assembler>addi</assembler>
+    <example>addi rt, rs, imm</example>
+    <meaning>rt = rs + imm</meaning>
+    <format>I</format>
+    <opcode>8</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>addition imm. unsigned</name>
+    <assembler>addiu</assembler>
+    <example>addiu rt, rs, imm</example>
+    <meaning>rt = rs + imm</meaning>
+    <format>I</format>
+    <opcode>9</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>addu</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>set less than imm.</name>
+    <assembler>slti</assembler>
+    <example>slti rt, rs, imm</example>
+    <meaning>if rs&lt;imm: rt=1 else rt=0</meaning>
+    <format>I</format>
+    <opcode>10</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>setLessThan</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>set less than imm. unsigned</name>
+    <assembler>sltiu</assembler>
+    <example>sltiu rt, rs, imm</example>
+    <meaning>if rs&lt;imm: rt=1 else rt=0</meaning>
+    <format>I</format>
+    <opcode>11</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>setLessThanU</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>or imm.</name>
+    <assembler>ori</assembler>
+    <example>ori rt, rs, imm</example>
+    <meaning>rt = rs or imm</meaning>
+    <format>I</format>
+    <opcode>13</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>or</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>xor imm.</name>
+    <assembler>xori</assembler>
+    <example>xori rt, rs, imm</example>
+    <meaning>rt = rs xor imm</meaning>
+    <format>I</format>
+    <opcode>14</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>xor</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>load byte</name>
+    <assembler>lb</assembler>
+    <example>lb rt, imm(rs)</example>
+    <meaning>rt = Mem[rs + imm]</meaning>
+    <format>I</format>
+    <opcode>32</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>true</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>load half word</name>
+    <assembler>lh</assembler>
+    <example>lh rt, imm(rs)</example>
+    <meaning>rt = Mem[rs + imm]</meaning>
+    <format>I</format>
+    <opcode>33</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>true</memRead>
+    <memWordSize>halfWord</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>load word</name>
+    <assembler>lh</assembler>
+    <example>lw rt, imm(rs)</example>
+    <meaning>rt = Mem[rs + imm]</meaning>
+    <format>I</format>
+    <opcode>35</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>true</memRead>
+    <memWordSize>word</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>load byte unsigned</name>
+    <assembler>lbu</assembler>
+    <example>lbu rt, imm(rs)</example>
+    <meaning>rt = Mem[rs + imm]</meaning>
+    <format>I</format>
+    <opcode>36</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>addu</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>true</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>load half word unsigned</name>
+    <assembler>lhu</assembler>
+    <example>lhu rt, imm(rs)</example>
+    <meaning>rt = Mem[rs + imm]</meaning>
+    <format>I</format>
+    <opcode>37</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>addu</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>true</memRead>
+    <memWordSize>halfWord</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>store byte</name>
+    <assembler>sb</assembler>
+    <example>sb rt, imm(rs)</example>
+    <meaning>Mem[rs + imm] = rt</meaning>
+    <format>I</format>
+    <opcode>40</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>true</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>store half word</name>
+    <assembler>sh</assembler>
+    <example>sh rt, imm(rs)</example>
+    <meaning>Mem[rs + imm] = rt</meaning>
+    <format>I</format>
+    <opcode>41</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>true</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>halfWord</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>store word</name>
+    <assembler>sw</assembler>
+    <example>sw rt, imm(rs)</example>
+    <meaning>Mem[rs + imm] = rt</meaning>
+    <format>I</format>
+    <opcode>43</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>add</aluControl>
+    <memWrite>true</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>word</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
   <!-- J INSTRUCTIONS -->
+  <CInstruction>
+    <name>jump</name>
+    <assembler>j</assembler>
+    <example>j addr</example>
+    <meaning>pc = addr * 4</meaning>
+    <format>J</format>
+    <opcode>2</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>ra</regDestination>
+    <regFileInput>programCounter</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>stall</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>jump</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
   <CInstruction>
     <name>jump and link</name>
     <assembler>jal</assembler>
+    <example>jal addr</example>
     <meaning>ra = pc + 4; pc = addr * 4</meaning>
     <format>J</format>
     <opcode>3</opcode>
     <function>0</function>
-    <regWrite>false</regWrite>
-    <registerDestination>ra</registerDestination>
-    <registerFileInut>programCounter</registerFileInut>
+    <regWrite>true</regWrite>
+    <regDestination>ra</regDestination>
+    <regFileInput>programCounter</regFileInput>
     <aluSource>regFile</aluSource>
     <aluControl>stall</aluControl>
     <memWrite>false</memWrite>

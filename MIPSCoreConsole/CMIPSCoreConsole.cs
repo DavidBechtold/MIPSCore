@@ -14,6 +14,8 @@ namespace MIPSCoreConsole
 
         /* Commands */
         private static CMIPSCoreConsoleCommand clock;
+
+        private static CMIPSCoreConsoleCommand readAllRegister;
         private static CMIPSCoreConsoleCommand readRegister;
         private static CMIPSCoreConsoleCommand readRegisterUnsigned;
         private static CMIPSCoreConsoleCommand readRegisterHex;
@@ -30,12 +32,14 @@ namespace MIPSCoreConsole
             /* install event handler */
             core.completed += new EventHandler(completed);
             core.clocked += new EventHandler(clocked);
+            core.exception += new EventHandler(exception);
 
             /* init commands */
             clock = new CMIPSCoreConsoleCommand("clock");
+            readAllRegister = new CMIPSCoreConsoleCommand("rregAll");
             readRegister = new CMIPSCoreConsoleCommand("rreg");
-            readRegisterUnsigned = new CMIPSCoreConsoleCommand("rregu");
-            readRegisterHex = new CMIPSCoreConsoleCommand("rregh");
+            readRegisterUnsigned = new CMIPSCoreConsoleCommand("rregU");
+            readRegisterHex = new CMIPSCoreConsoleCommand("rregH");
             controlSignals = new CMIPSCoreConsoleCommand("control");
             usage = new CMIPSCoreConsoleCommand("usage");
 
@@ -53,6 +57,11 @@ namespace MIPSCoreConsole
         {
             Console.WriteLine("ProgramCounter:\t" + core.programCounter());
             Console.WriteLine("Instruction:\t" + core.actualInstruction() + "\n");
+        }
+
+        static void exception(object obj, EventArgs args)
+        {
+            Console.WriteLine(core.getExceptionString());
         }
 
         static public bool serveStartArguments(string[] args)
@@ -123,29 +132,29 @@ namespace MIPSCoreConsole
 
                 for (int i = 0; i < cmd.Length; i++)
                 {
+                    cmd[i] = cmd[i].ToLower();
                     if (clock.ToString() == cmd[i])
                         core.singleClock();
+                    else if (readAllRegister.ToString() == cmd[i])
+                        Console.WriteLine(core.readAllRegisters());
                     else if (readRegister.ToString() == cmd[i])
                     {
-                        if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            break;
-                        Console.WriteLine(core.readRegister(registerReadNumber));
+                        if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                            Console.WriteLine(core.readRegister(registerReadNumber));
                     }
                     else if (readRegisterUnsigned.ToString() == cmd[i])
                     {
-                        if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            break;
-                        Console.WriteLine(core.readRegisterUnsigned(registerReadNumber));
+                        if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                            Console.WriteLine(core.readRegisterUnsigned(registerReadNumber));
                     }
                     else if (readRegisterHex.ToString() == cmd[i])
                     {
-                        if (!checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            break;
-                        Console.WriteLine(core.readRegisterHex(registerReadNumber));
+                        if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                            Console.WriteLine(core.readRegisterHex(registerReadNumber));
                     }
                     else if (controlSignals.ToString() == cmd[i])
                         Console.WriteLine(core.readControlUnitSignals());
-                    else if(usage.ToString() == cmd[i])
+                    else if (usage.ToString() == cmd[i])
                         Console.WriteLine(usageCommandLineArguments(null));
                     else
                         Console.WriteLine(usageCommandLineArguments("Unkown command " + cmd[i] + ".\n"));
@@ -186,6 +195,7 @@ namespace MIPSCoreConsole
             usageString += "------------------------------\n";
             usageString += usage.ToString() + "\t\tShows this usage message.\n";
             usageString += clock.ToString() + "\t\tIn stepping mode step one instruction further.\n";
+            usageString += readAllRegister.ToString() + "\t\tReads all registers\n";
             usageString += readRegister.ToString() + " <number>\tRead register value signed decimal.\n";
             usageString += readRegisterUnsigned.ToString() + " <number>\tRead register value unsigned decimal.\n";
             usageString += readRegisterHex.ToString() + " <number>\tRead register value hexadecimal.\n";
@@ -213,12 +223,7 @@ namespace MIPSCoreConsole
 
         public override string ToString()
         {
-            return command;
-        }
-
-        public string toString()
-        {
-            return command;
+            return command.ToLower();
         }
     }
 }

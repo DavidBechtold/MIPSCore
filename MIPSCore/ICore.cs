@@ -34,11 +34,19 @@ namespace MIPSCore.Core
         /* clock performed */
         event EventHandler clocked;
 
+        /* exception event */
+        event EventHandler exception;
+
+        string getExceptionString();
+
         /* get actual Instruction */
         string actualInstruction();
 
         /* get program counter */
         string programCounter();
+
+        /* read all register values decimal signed*/
+        string readAllRegisters();
 
         /* read registervalue decimal signed */
         string readRegister(UInt16 number);

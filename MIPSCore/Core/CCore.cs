@@ -43,6 +43,8 @@ namespace MIPSCore.Core
 
         public event EventHandler completed;
         public event EventHandler clocked;
+        public event EventHandler exception;
+        private string excetpionString;
 
         public CCore()
         {
@@ -56,6 +58,7 @@ namespace MIPSCore.Core
             dataMemory = new CDataMemory(this, dataMemorySize_kB);
             clock = new CClock(coreFrequency_Hz, clockTick);
             programmCompleted = false;
+            excetpionString = "";
         }
 
         private void initCore()
@@ -97,7 +100,7 @@ namespace MIPSCore.Core
             string strCode = System.IO.File.ReadAllText(path);
             UInt32 codeCounter = 0;
 
-            Regex rgx = new Regex("([0-9]|[a-f])+(?=\\:)|(?!\t{1})([0-9]|[a-f]){8}(?= \t)", RegexOptions.IgnoreCase);
+            Regex rgx = new Regex("([0-9]|[a-f])+(?=\\:)|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
             MatchCollection match = rgx.Matches(strCode);
             rgx = null;
             strCode = null;
@@ -169,7 +172,8 @@ namespace MIPSCore.Core
             }
             catch (Exception exeption)
             {
-                //Console.WriteLine(exeption.ToString());
+                excetpionString = exeption.ToString();
+                exception(this, new EventArgs());
             }
         }
 
@@ -264,6 +268,11 @@ namespace MIPSCore.Core
             }
         }
 
+        public string readAllRegisters()
+        {
+            return registerFile.ToString();
+        }
+
         public string readRegister(UInt16 number)
         {
             return registerFile.registerToString(number);
@@ -286,12 +295,17 @@ namespace MIPSCore.Core
 
         public string programCounter()
         {
-            return instructionMemory.getProgramCounter.getUnsignedDecimal + "";
+            return instructionMemory.getProgramCounter.getHexadecimal + "";
         }
 
         public string readControlUnitSignals()
         {
             return controlUnit.ToString();
+        }
+
+        public string getExceptionString()
+        {
+            return excetpionString;
         }
     }
 }
