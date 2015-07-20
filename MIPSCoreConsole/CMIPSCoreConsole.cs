@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MIPSCore.Core;
+using MIPSCore;
 
 namespace MIPSCoreConsole
 {
@@ -135,21 +135,21 @@ namespace MIPSCoreConsole
                     if (clock.ToString() == cmd[i])
                         core.singleClock();
                     else if (readAllRegister.ToString() == cmd[i])
-                        Console.WriteLine(core.readAllRegisters());
+                        Console.WriteLine(core.toStringAllRegisters());
                     else if (readRegister.ToString() == cmd[i])
                     {
                         if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            Console.WriteLine(core.readRegister(registerReadNumber));
+                            Console.WriteLine(core.toStringRegister(registerReadNumber));
                     }
                     else if (readRegisterUnsigned.ToString() == cmd[i])
                     {
                         if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            Console.WriteLine(core.readRegisterUnsigned(registerReadNumber));
+                            Console.WriteLine(core.toStringRegisterUnsigned(registerReadNumber));
                     }
                     else if (readRegisterHex.ToString() == cmd[i])
                     {
                         if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            Console.WriteLine(core.readRegisterHex(registerReadNumber));
+                            Console.WriteLine(core.toStringRegisterHex(registerReadNumber));
                     }
                     else if (controlSignals.ToString() == cmd[i])
                         Console.WriteLine(core.readControlUnitSignals());

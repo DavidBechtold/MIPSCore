@@ -64,7 +64,6 @@ namespace MIPSCore.InstructionSet
 
     public class CControlSignals
     {
-        
         /* control signals */
         private InstructionFormat instructionFormat;
         private RegisterDestination regDestination; //which register will be written

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MIPSCore.Core;
+using MIPSCore;
 using MIPSCore.Util;
 using MIPSCore.InstructionMemory;
 using MIPSCore.InstructionSet;

@@ -94,6 +94,26 @@ namespace MIPSCore.Util
                 return false;
         }
 
+        public Int32[] readRegisters()
+        {
+            Int32[] allReg = new Int32[numberOfRegisters];
+            for(int i = 0; i < numberOfRegisters; i++)
+                allReg[i] = registers[i].getSignedDecimal;
+            return allReg;
+        }
+
+        public Int32 readRegister(UInt16 num)
+        {
+            checkNumber(num);
+            return registers[num].getSignedDecimal;
+        }
+
+        public UInt32 readRegisterUnsigned(UInt16 num)
+        {
+            checkNumber(num);
+            return registers[num].getUnsignedDecimal;
+        }
+
         public override string ToString()
         {
             string allreg = "";

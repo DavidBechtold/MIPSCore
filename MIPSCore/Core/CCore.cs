@@ -14,7 +14,7 @@ using MIPSCore.DataMemory;
 using System.Text.RegularExpressions;
 using System.Configuration;
 
-namespace MIPSCore.Core
+namespace MIPSCore
 {
     public enum ExecutionMode { singleStep, runToCompletion };
 
@@ -268,24 +268,44 @@ namespace MIPSCore.Core
             }
         }
 
-        public string readAllRegisters()
+        public UInt32 dataMemorySize()
+        {
+            return dataMemory.getEndAddress;
+        }
+
+        public Int32[] readAllRegisters()
+        {
+            return registerFile.readAllRegister();
+        }
+
+        public string toStringAllRegisters()
         {
             return registerFile.ToString();
         }
 
-        public string readRegister(UInt16 number)
+        public Int32 readRegister(UInt16 number)
         {
-            return registerFile.registerToString(number);
+            return registerFile.readRegister(number);
         }
 
-        public string readRegisterUnsigned(UInt16 number)
+        public string toStringRegister(UInt16 number)
         {
-            return registerFile.registerToStringUnsigned(number);
+            return registerFile.toStringRegister(number);
         }
 
-        public string readRegisterHex(UInt16 number)
+        public UInt32 readRegisterUnsigned(UInt16 number)
         {
-            return registerFile.registerToStringHex(number);
+            return registerFile.readRegisterUnsigned(number);
+        }
+
+        public string toStringRegisterUnsigned(UInt16 number)
+        {
+            return registerFile.toStringRegisterUnsigned(number);
+        }
+
+        public string toStringRegisterHex(UInt16 number)
+        {
+            return registerFile.toStringRegisterHex(number);
         }
 
         public string actualInstruction()

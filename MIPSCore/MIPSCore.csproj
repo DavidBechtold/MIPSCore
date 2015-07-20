@@ -50,7 +50,7 @@
     <Compile Include="ALU\CALU.cs" />
     <Compile Include="ControlUnit\CControlUnit.cs" />
     <Compile Include="Core\CCore.cs" />
-    <Compile Include="ICore.cs" />
+    <Compile Include="Core\ICore.cs" />
     <Compile Include="DataMemory\CDataMemory.cs" />
     <Compile Include="InstructionSet\CInstructionSet.cs" />
     <Compile Include="InstructionSet\CControlSignals.cs" />

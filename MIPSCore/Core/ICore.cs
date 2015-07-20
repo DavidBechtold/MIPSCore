@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MIPSCore;
 
-namespace MIPSCore.Core
+namespace MIPSCore
 {
     public interface ICore
     {
@@ -45,17 +46,23 @@ namespace MIPSCore.Core
         /* get program counter */
         string programCounter();
 
+        /* get data memory size */
+        UInt32 dataMemorySize();
+
         /* read all register values decimal signed*/
-        string readAllRegisters();
+        Int32[] readAllRegisters();
+        string toStringAllRegisters();
 
         /* read registervalue decimal signed */
-        string readRegister(UInt16 number);
+        Int32 readRegister(UInt16 number);
+        string toStringRegister(UInt16 number);
 
         /*read registervalue decimal unsigned */
-        string readRegisterUnsigned(UInt16 number);
+        UInt32 readRegisterUnsigned(UInt16 number);
+        string toStringRegisterUnsigned(UInt16 number);
 
         /* read registervalue hex */
-        string readRegisterHex(UInt16 number);
+        string toStringRegisterHex(UInt16 number);
 
         /* read control unit signals */
         string readControlUnitSignals();

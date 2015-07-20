@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MIPSCore.Core;
+using MIPSCore;
 using MIPSCore.Util;
 using MIPSCore.ControlUnit;
 using MIPSCore.InstructionSet;
@@ -105,17 +105,32 @@ namespace MIPSCore.RegisterFile
             registers.write(29, core.getDataMemory.getEndAddress + 1);
         }
 
-        public string registerToString(UInt16 num)
+        public Int32[] readAllRegister()
+        {
+            return registers.readRegisters();
+        }
+
+        public Int32 readRegister(UInt16 num)
+        {
+            return registers.readRegister(num);
+        }
+
+        public UInt32 readRegisterUnsigned(UInt16 num)
+        {
+            return registers.readRegisterUnsigned(num);
+        }
+
+        public string toStringRegister(UInt16 num)
         {
             return registers.registerToStringDecSigned(num);
         }
 
-        public string registerToStringUnsigned(UInt16 num)
+        public string toStringRegisterUnsigned(UInt16 num)
         {
             return registers.registerToStringDecUnsigned(num);
         }
 
-        public string registerToStringHex(UInt16 num)
+        public string toStringRegisterHex(UInt16 num)
         {
             return registers.registerToStringHex(num);
         }
