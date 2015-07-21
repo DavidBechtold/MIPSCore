@@ -47,7 +47,10 @@ namespace MIPSCore
         string programCounter();
 
         /* get data memory size */
-        UInt32 dataMemorySize();
+        UInt32 dataMemorySizeBytes();
+
+        Int32 readWordDataMemory(UInt32 byteAddr);
+        UInt32 readWordDataMemoryUnsigned(UInt32 byteAddr);
 
         /* read all register values decimal signed*/
         Int32[] readAllRegisters();

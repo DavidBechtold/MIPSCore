@@ -240,9 +240,19 @@ namespace MIPSCore
             }
         }
 
-        public UInt32 dataMemorySize()
+        public UInt32 dataMemorySizeBytes()
         {
             return dataMemory.sizeBytes;
+        }
+
+        public Int32 readWordDataMemory(UInt32 byteAddr)
+        {
+            return dataMemory.readWord(byteAddr).getSignedDecimal;
+        }
+
+        public UInt32 readWordDataMemoryUnsigned(UInt32 byteAddr)
+        {
+            return dataMemory.readWord(byteAddr).getUnsignedDecimal;
         }
 
         public Int32[] readAllRegisters()

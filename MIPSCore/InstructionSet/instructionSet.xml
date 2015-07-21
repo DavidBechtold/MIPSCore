@@ -152,7 +152,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>singleByte</memWordSize>
-    <pcSource>register</pcSource>
+    <pcSource>programCounter</pcSource>
     <systemcall>true</systemcall>
   </CInstruction>
 
@@ -172,7 +172,27 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>singleByte</memWordSize>
-    <pcSource>register</pcSource>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>move from alu low register</name>
+    <assembler>mflo</assembler>
+    <example>mflo register</example>
+    <meaning>rd = aluLO</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>18</function>
+    <regWrite>true</regWrite>
+    <regDestination>rd</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>stall</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
 

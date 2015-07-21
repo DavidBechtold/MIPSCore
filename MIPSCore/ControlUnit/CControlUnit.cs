@@ -27,7 +27,14 @@ namespace MIPSCore.ControlUnit
             CWord function = core.getInstructionMemory.getFunction;
 
             // 2.) interpret the opCode and function
-            base.prepareControlSignals(opCode, function);       
+            try
+            {
+                base.prepareControlSignals(opCode, function);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                throw new ArgumentOutOfRangeException(this.GetType().Name + ": ProgramCounter: " + core.programCounter() + " no instruction for opcode " + opCode.getUnsignedDecimal + " and function " + function.getUnsignedDecimal + " found");
+            }
         }
 
         public override string ToString()
