@@ -43,10 +43,12 @@
                         sub...subtraction
                         setLessThan...set on less than
                         setLessThanU...set on less than unsigned
+                        setLessThanZero...set on less than zero
                         mult...multiply
                         div...divide
                         shiftLeft...shift left
                         shiftRight...shift right
+                        shiftLeft16...shift immediate 16 bits left
                         nor...not or
                         stall...stall the alu => no action performed
                         
@@ -63,6 +65,7 @@
                         programCounter...take the value from the program counter (pc = pc + 4)
                         signExtendEqual...take the value from the sign extender, but only if the zero flag of the alu is set (pc += imm. * 4 + 4 else pc += 4)
                         signExtendUnequal...take the value from the sign extender, but only if the zero flag of the alu is not set (pc += imm. * 4 + 4 else pc += 4)
+                        signExtendLessThanZero...take the value from the sign extender, if aluLO result is 1 (pc += imm. * 4 + 4 else pc += 4)
                         signExtendLessOrEqualZero...take the value form the sing extender, but only if the zero flag of the alu is not set or the alu result is 1 (pc += imm. * 4 + 4 else pc += 4)
                         jump...take the value from the jumpTarget(24 bit) (pc = jumpTarget * 4)
                         register...take the value from the rs register (pc = rs)
@@ -415,6 +418,26 @@
 
   <!-- I INSTRUCTIONS -->
   <CInstruction>
+    <name>branch on less than zero</name>
+    <assembler>bltz</assembler>
+    <example>bltz rs, imm</example>
+    <meaning>if rs&lt;0: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>1</opcode>
+    <function>0</function>
+    <regWrite>false</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>regFile</aluSource>
+    <aluControl>setLessThanZero</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>signExtendLessThanZero</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+    
+  <CInstruction>
     <name>branch on equal</name>
     <assembler>beq</assembler>
     <example>beq rs, rt, imm</example>
@@ -587,6 +610,26 @@
     <regFileInput>aluLO</regFileInput>
     <aluSource>signExtend</aluSource>
     <aluControl>xor</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>singleByte</memWordSize>
+    <pcSource>programCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+  
+  <CInstruction>
+    <name>load upper immediate</name>
+    <assembler>lui</assembler>
+    <example>lui register, imm</example>
+    <meaning>regiter = imm &lt;&lt; 16</meaning>
+    <format>I</format>
+    <opcode>15</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>rt</regDestination>
+    <regFileInput>aluLO</regFileInput>
+    <aluSource>signExtend</aluSource>
+    <aluControl>shiftLeft16</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>singleByte</memWordSize>

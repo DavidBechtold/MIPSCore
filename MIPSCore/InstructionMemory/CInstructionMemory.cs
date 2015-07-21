@@ -9,10 +9,9 @@ using MIPSCore.Util;
 
 namespace MIPSCore.InstructionMemory
 {
-    public class CInstructionMemory
+    public class CInstructionMemory : CMemory
     {
         private CCore core;
-        private CMemory memory;
         private bool firstCommand;
         private CWord nextInstruction;
         private CWord programCounter;
@@ -28,9 +27,9 @@ namespace MIPSCore.InstructionMemory
         private CWord jumpTarget;
 
         public CInstructionMemory(CCore core, MemSize size)
+            : base(size)
         {
             this.core = core;
-            memory = new CMemory(size);
             firstCommand = true;
             programCounter = new CWord(0);
             nextInstruction = new CWord(0);
@@ -85,6 +84,12 @@ namespace MIPSCore.InstructionMemory
                     else
                         programCounter += 4;
                     break;
+                case ProgramCounterSource.signExtendLessThanZero:
+                    if(core.getAlu.getResultLO.getUnsignedDecimal == 1)
+                        programCounter += immediate * 4 + 4;
+                    else
+                        programCounter += 4;
+                    break;
                 case ProgramCounterSource.signExtendLessOrEqualZero:
                     if (!core.getAlu.zeroFlag || core.getAlu.getResultLO.getUnsignedDecimal == 1)
                         programCounter += immediate * 4 + 4;
@@ -102,7 +107,7 @@ namespace MIPSCore.InstructionMemory
             }
         }
 
-        public void flush()
+        public override void flush()
         {
             opCode = new CWord((UInt32)0);
             function = new CWord((UInt32)0);
@@ -112,24 +117,13 @@ namespace MIPSCore.InstructionMemory
             rs = new CWord((UInt32)0);
             rt = new CWord((UInt32)0);
             jumpTarget = new CWord((UInt32)0);
+
+            base.flush();
         }
 
         public CWord readNextInstuction()
         {
-            return memory.readWord(programCounter);
-        }
-
-        public void programWord(CWord word, UInt32 address)
-        {
-            memory.writeWord(word, address);
-        }
-
-        public UInt32 getSize
-        {
-            get
-            {
-                return memory.getEndByteAddress;
-            }
+            return readWord(programCounter);
         }
 
         public CWord getOpCode
@@ -216,13 +210,8 @@ namespace MIPSCore.InstructionMemory
         {
             set
             {
-                memory.setOffset = value;
+                base.setOffset = value;
             }
-        }
-
-        public string hexdump(UInt32 startaddress, UInt32 bytesToRead)
-        {
-            return memory.hexdump(startaddress, bytesToRead);
         }
     }
 }

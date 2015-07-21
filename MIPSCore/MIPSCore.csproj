@@ -56,13 +56,15 @@
     <Compile Include="InstructionSet\CControlSignals.cs" />
     <Compile Include="RegisterFile\CRegisterFile.cs" />
     <Compile Include="Util\CByte.cs" />
-    <Compile Include="Util\CMemory.cs" />
+    <Compile Include="Util\Memory\CMemory.cs" />
+    <Compile Include="Util\CMIPSProgrammer.cs" />
     <Compile Include="Util\CMIPSRegister.cs" />
     <Compile Include="Util\CRegister.cs" />
     <Compile Include="Util\CWord.cs" />
     <Compile Include="Clock\CClock.cs" />
     <Compile Include="InstructionMemory\CInstructionMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\Memory\IMemory.cs" />
     <Compile Include="Util\TextAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

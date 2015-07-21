@@ -9,7 +9,7 @@ using MIPSCore.Util;
 namespace MIPSCore.Util
 {
     public enum MemSize { Size_1kB = 1, Size_2kB, Size_4kB, Size_8kB, Size_16kB}
-    public class CMemory
+    public class CMemory : IMemory
     {
         private Byte[] memory;
         private MemSize size;
@@ -146,7 +146,7 @@ namespace MIPSCore.Util
         }
 
 
-        public UInt32 getEndByteAddress
+        public UInt32 getLastByteAddress
         {
             get
             {
@@ -154,7 +154,15 @@ namespace MIPSCore.Util
             }
         }
 
-        public void flush()
+        public UInt32 sizeBytes
+        {
+            get
+            {
+                return endByteAddress + 1;
+            }
+        }
+
+        public virtual void flush()
         {
             for (UInt32 i = 0; i < endByteAddress; i += 4)
                 writeWord(new CWord(0), i);

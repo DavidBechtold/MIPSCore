@@ -52,6 +52,10 @@
       <Project>{8167717c-df36-4477-ad3f-f655f4c4033e}</Project>
       <Name>MIPSCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SystemTest\SystemTest.csproj">
+      <Project>{0faf18dd-1c7d-4067-8f3d-0165abcf57e5}</Project>
+      <Name>SystemTest</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

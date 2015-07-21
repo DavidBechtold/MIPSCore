@@ -33,11 +33,13 @@ namespace MIPSCore.InstructionSet
         [Text("sub unsigned")] subu,
         [Text("set less than")] setLessThan,
         [Text("set less than unsigned")] setLessThanU,
+        [Text("set less than zero")] setLessThanZero,
         [Text("multiply")] mult,
         [Text("multiply unsigned")] multu,
         [Text("divide")] div,
         [Text("shift left")] shiftLeft,
         [Text("shift right")] shiftRight,
+        [Text("shift 16 left")] shiftLeft16,
         [Text("nor")] nor,
         [Text("stall")] stall,
     }
@@ -51,8 +53,9 @@ namespace MIPSCore.InstructionSet
     public enum ProgramCounterSource { 
         [Text("program counter")] programCounter, 
         [Text("sign extend equal")] signExtendEqual, 
-        [Text("sign extend enequal")] signExtendUnequal, 
-        [Text("sign extend less or equal to zero")] signExtendLessOrEqualZero, 
+        [Text("sign extend unequal")] signExtendUnequal,
+        [Text("sign extend on less than zero")]signExtendLessThanZero, 
+        [Text("sign extend on less or equal than zero")] signExtendLessOrEqualZero, 
         [Text("jump")] jump, 
         [Text("register")] register 
     }

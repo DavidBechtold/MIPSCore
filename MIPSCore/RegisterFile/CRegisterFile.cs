@@ -102,7 +102,7 @@ namespace MIPSCore.RegisterFile
 
         public void initStackPointer()
         {
-            registers.write(29, core.getDataMemory.getEndAddress + 1);
+            registers.write(29, core.getDataMemory.sizeBytes);
         }
 
         public Int32[] readAllRegister()

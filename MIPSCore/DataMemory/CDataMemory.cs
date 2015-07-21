@@ -9,16 +9,15 @@ using MIPSCore.InstructionSet;
 
 namespace MIPSCore.DataMemory
 {
-    public class CDataMemory 
+    public class CDataMemory : CMemory
     {
         CCore core;
-        CMemory memory;
         CWord loadedValue;
 
         public CDataMemory(CCore core, MemSize size)
+         : base(size)
         {
             this.core = core;
-            memory = new CMemory(size);
             loadedValue = new CWord(0);
         }
 
@@ -38,13 +37,13 @@ namespace MIPSCore.DataMemory
             switch (core.getControlUnit.getDataMemoryWordSize)
             {
                 case DataMemoryWordSize.singleByte:
-                    loadedValue = memory.readByte(address);
+                    loadedValue = readByte(address);
                     break;
                 case DataMemoryWordSize.halfWord:
-                    loadedValue =  memory.readHalfWord(address);
+                    loadedValue =  readHalfWord(address);
                     break;
                 case DataMemoryWordSize.word:
-                    loadedValue = memory.readWord(address);
+                    loadedValue = readWord(address);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": DataMemoryWordSize out of range");
@@ -58,13 +57,13 @@ namespace MIPSCore.DataMemory
             switch (core.getControlUnit.getDataMemoryWordSize)
             {
                 case DataMemoryWordSize.singleByte:
-                    memory.writeByte(valueToStore, address);
+                    writeByte(valueToStore, address);
                     break;
                 case DataMemoryWordSize.halfWord:
-                    memory.writeHalfWord(valueToStore, address);
+                    writeHalfWord(valueToStore, address);
                     break;
                 case DataMemoryWordSize.word:
-                    memory.writeWord(valueToStore, address);
+                    writeWord(valueToStore, address);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(this.GetType().Name + ": DataMemoryWordSize out of range");
@@ -83,16 +82,9 @@ namespace MIPSCore.DataMemory
         {
             set
             {
-                memory.setOffset = value;
+                base.setOffset = value;
             }
         }
 
-        public UInt32 getEndAddress
-        {
-            get
-            {
-                return memory.getEndByteAddress;
-            }
-        }
     }
 }

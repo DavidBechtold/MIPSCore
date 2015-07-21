@@ -11,7 +11,7 @@ using MIPSCore.InstructionMemory;
 using MIPSCore.ControlUnit;
 using MIPSCore.RegisterFile;
 using MIPSCore.DataMemory;
-using System.Text.RegularExpressions;
+
 using System.Configuration;
 
 namespace MIPSCore
@@ -40,6 +40,7 @@ namespace MIPSCore
         private CALU alu;
         private CControlUnit controlUnit;
         private CDataMemory dataMemory;
+        private CMIPSProgrammer programmer;
 
         public event EventHandler completed;
         public event EventHandler clocked;
@@ -57,6 +58,7 @@ namespace MIPSCore
             controlUnit = new CControlUnit(this);
             dataMemory = new CDataMemory(this, dataMemorySize_kB);
             clock = new CClock(coreFrequency_Hz, clockTick);
+            programmer = new CMIPSProgrammer(this);
             programmCompleted = false;
             excetpionString = "";
         }
@@ -80,48 +82,18 @@ namespace MIPSCore
             clock.stop();
         }
 
-        public void programCore(string path)
-        {
-            initCore();
-
-            string[] code = System.IO.File.ReadAllLines(path);
-
-            if (code.Length >= instructionMemory.getSize)
-                throw new IndexOutOfRangeException("Codelength is greater than " + instructionMemory.getSize + ".");
-
-            for (UInt32 i = 0; i < code.Length; i++)
-                instructionMemory.programWord(new CWord(Convert.ToUInt32(code[i], 16)), i * 4);
-        }
-
         public void programObjdump(string path)
         {
             initCore();
 
-            string strCode = System.IO.File.ReadAllText(path);
-            UInt32 codeCounter = 0;
-
-            Regex rgx = new Regex("([0-9]|[a-f])+(?=\\:)|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
-            MatchCollection match = rgx.Matches(strCode);
-            rgx = null;
-            strCode = null;
-
-            if (match.Count / 2 * 4 >= instructionMemory.getSize)
-                throw new IndexOutOfRangeException("Codelength is greater than " + instructionMemory.getSize + ".");
-
-            UInt32 address = 0;
-            UInt32 instruction = 0;
-            foreach (Match codeMatch in match)
+            try
             {
-                string stringMatch = codeMatch.Value;
-                
-                if (codeCounter % 2 == 0)
-                    address = Convert.ToUInt32(stringMatch, 16);
-                else
-                {
-                    instruction = Convert.ToUInt32(stringMatch, 16);
-                    instructionMemory.programWord(new CWord((UInt32)instruction), address);
-                }
-                codeCounter++;
+                programmer.programObjdump(path);
+            }
+            catch (Exception exeption)
+            {
+                excetpionString = exeption.ToString();
+                exception(this, new EventArgs());
             }
         }
 
@@ -270,7 +242,7 @@ namespace MIPSCore
 
         public UInt32 dataMemorySize()
         {
-            return dataMemory.getEndAddress;
+            return dataMemory.sizeBytes;
         }
 
         public Int32[] readAllRegisters()

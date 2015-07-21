@@ -47,11 +47,13 @@ namespace MIPSCore.ALU
                 case ALUControl.subu:           performSubU();          break;
                 case ALUControl.setLessThan:    performSetOnLessThen(); break;
                 case ALUControl.setLessThanU:   performSetOnLessThenU();break;
+                case ALUControl.setLessThanZero:performSetOnLessThanZ();break;
                 case ALUControl.mult:           performMult();          break;
                 case ALUControl.multu:          performMultU();         break;
                 case ALUControl.div:            performDiv();           break;
                 case ALUControl.shiftLeft:      performShift(true);     break;
                 case ALUControl.shiftRight:     performShift(false);    break;
+                case ALUControl.shiftLeft16:    performShiftLeft16();   break;
                 case ALUControl.nor:
                     throw new NotImplementedException();
                 
@@ -119,10 +121,31 @@ namespace MIPSCore.ALU
                 resultLO.set((UInt32)0);
         }
 
+        private void performSetOnLessThanZ()
+        {
+            if (arg1.getSignedDecimal < 0)
+                resultLO.set((UInt32)1);
+            else
+                resultLO.set((UInt32)0);
+        }
+
+
         private void performShift(bool left)
         {
             UInt32 shiftAmount = core.getInstructionMemory.getShiftAmount.getUnsignedDecimal;
             UInt32 valueToShift = arg2.getUnsignedDecimal;
+            shift(left, valueToShift, shiftAmount);
+        }
+
+        private void performShiftLeft16()
+        {
+            UInt32 shiftAmount = 16;
+            UInt32 valueToShift = arg2.getUnsignedDecimal;
+            shift(true, valueToShift, shiftAmount);
+        }
+
+        private void shift(bool left, UInt32 valueToShift, UInt32 shiftAmount)
+        {
             for (int i = 0; i < shiftAmount; i++)
             {
                 if (left)
