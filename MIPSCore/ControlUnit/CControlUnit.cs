@@ -31,7 +31,7 @@ namespace MIPSCore.ControlUnit
             {
                 base.prepareControlSignals(opCode, function);
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException)
             {
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": ProgramCounter: " + core.programCounter() + " no instruction for opcode " + opCode.getUnsignedDecimal + " and function " + function.getUnsignedDecimal + " found");
             }

@@ -1,0 +1,53 @@
+a.out:     file format elf32-littlemips
+
+
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	24040004	li	a0,4
+   4:	0c000006 	jal	18 <fib>
+   8:	00000000 	nop
+   c:	00405821 	move	t3,v0
+  10:	2402000a 	li	v0,10
+  14:	0000000c 	syscall
+
+00000018 <fib>:
+  18:	1080001b 	beqz	a0,88 <zero>
+  1c:	00000000 	nop
+  20:	24010001 	li	at,1
+  24:	1081001b 	beq	a0,at,94 <one>
+  28:	00000000 	nop
+  2c:	23bdfffc 	addi	sp,sp,-4
+  30:	afbf0000 	sw	ra,0(sp)
+  34:	2084ffff 	addi	a0,a0,-1
+  38:	0c000006 	jal	18 <fib>
+  3c:	00000000 	nop
+  40:	20840001 	addi	a0,a0,1
+  44:	8fbf0000 	lw	ra,0(sp)
+  48:	23bd0004 	addi	sp,sp,4
+  4c:	23bdfffc 	addi	sp,sp,-4
+  50:	afa20000 	sw	v0,0(sp)
+  54:	23bdfffc 	addi	sp,sp,-4
+  58:	afbf0000 	sw	ra,0(sp)
+  5c:	2084fffe 	addi	a0,a0,-2
+  60:	0c000006 	jal	18 <fib>
+  64:	00000000 	nop
+  68:	20840002 	addi	a0,a0,2
+  6c:	8fbf0000 	lw	ra,0(sp)
+  70:	23bd0004 	addi	sp,sp,4
+  74:	8fb70000 	lw	s7,0(sp)
+  78:	23bd0004 	addi	sp,sp,4
+  7c:	00571020 	add	v0,v0,s7
+  80:	03e00008 	jr	ra
+  84:	00000000 	nop
+
+00000088 <zero>:
+  88:	24020000 	li	v0,0
+  8c:	03e00008 	jr	ra
+  90:	00000000 	nop
+
+00000094 <one>:
+  94:	24020001 	li	v0,1
+  98:	03e00008 	jr	ra
+  9c:	00000000 	nop
+

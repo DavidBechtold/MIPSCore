@@ -1,0 +1,54 @@
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	3c160000 	lui	s6,0x0
+   4:	26d60000 	addiu	s6,s6,0
+   8:	24100000 	li	s0,0
+
+0000000c <loop>:
+   c:	8ec80000 	lw	t0,0(s6)
+  10:	8ec90004 	lw	t1,4(s6)
+  14:	00000000 	nop
+  18:	0520000a 	bltz	t1,44 <redo>
+  1c:	00000000 	nop
+  20:	0128082a 	slt	at,t1,t0
+  24:	10200004 	beqz	at,38 <next>
+  28:	00000000 	nop
+  2c:	aec90000 	sw	t1,0(s6)
+  30:	aec80004 	sw	t0,4(s6)
+  34:	24100001 	li	s0,1
+
+00000038 <next>:
+  38:	22d60004 	addi	s6,s6,4
+  3c:	08000003 	j	c <loop>
+  40:	00000000 	nop
+
+00000044 <redo>:
+  44:	12000005 	beqz	s0,5c <done>
+  48:	00000000 	nop
+  4c:	3c160000 	lui	s6,0x0
+  50:	26d60000 	addiu	s6,s6,0
+  54:	08000000 	j	0 <main>
+  58:	00000000 	nop
+
+0000005c <done>:
+  5c:	2402000a 	li	v0,10
+  60:	0000000c 	syscall
+
+Disassembly of section .data:
+
+00000000 <mem>:
+   0:	00000004 	sllv	zero,zero,zero
+   4:	00000005 	0x5
+   8:	00000003 	sra	zero,zero,0x0
+   c:	00000002 	srl	zero,zero,0x0
+  10:	00000001 	0x1
+  14:	00000008 	jr	zero
+  18:	00000002 	srl	zero,zero,0x0
+  1c:	00000002 	srl	zero,zero,0x0
+  20:	00000004 	sllv	zero,zero,zero
+  24:	00000056 	0x56
+  28:	0000005f 	0x5f
+  2c:	0000007b 	0x7b
+  30:	00000004 	sllv	zero,zero,zero
+  34:	ffffffff 	0xffffffff

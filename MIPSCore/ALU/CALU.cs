@@ -223,7 +223,7 @@ namespace MIPSCore.ALU
         {
             get
             {
-                return zero;
+                return overflow;
             }
         }
 

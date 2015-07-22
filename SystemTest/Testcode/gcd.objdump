@@ -1,0 +1,25 @@
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	240400a8 	li	a0,168
+   4:	24050400 	li	a1,1024
+
+00000008 <loop>:
+   8:	1085000a 	beq	a0,a1,34 <exit>
+   c:	00000000 	nop
+  10:	0085402a 	slt	t0,a0,a1
+  14:	15000004 	bnez	t0,28 <label>
+  18:	00000000 	nop
+  1c:	00852022 	sub	a0,a0,a1
+  20:	08000002 	j	8 <loop>
+  24:	00000000 	nop
+
+00000028 <label>:
+  28:	00a42822 	sub	a1,a1,a0
+  2c:	08000002 	j	8 <loop>
+  30:	00000000 	nop
+
+00000034 <exit>:
+  34:	00041820 	add	v1,zero,a0
+  38:	2402000a 	li	v0,10
+  3c:	0000000c 	syscall
