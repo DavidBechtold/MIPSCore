@@ -145,7 +145,6 @@ namespace MIPSCore.Util
             return realAddress;
         }
 
-
         public UInt32 getLastByteAddress
         {
             get
