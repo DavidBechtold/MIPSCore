@@ -26,26 +26,28 @@ namespace MIPSCoreUI
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private CCore core;
-        private ControlUnit control;
         public event PropertyChangedEventHandler PropertyChanged;
+        private CCoreUI coreUI;        
+       
         public MainWindow()
         {
             InitializeComponent();
             core = new CCore();
-            control = new ControlUnit(core.getControlUnit);
-            this.DataContext = control;
+            coreUI = new CCoreUI();
+            this.DataContext = coreUI;
         }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            control.RegisterWrite = new SolidColorBrush(Colors.Blue);
+            //control.RegisterWrite = new SolidColorBrush(Colors.Blue);
+            //coreUI.
         }
 
         // Create the OnPropertyChanged method to raise the event
         protected void OnPropertyChanged(string name)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
+            PropertyChangedEventHandler handler = PropertyChanged;  
             {
                 handler(this, new PropertyChangedEventArgs(name));
             }
@@ -55,16 +57,23 @@ namespace MIPSCoreUI
         {
             string test = "";
         }
+
     }
 
-    public class ControlUnit: INotifyPropertyChanged
+    public class CCoreUI: INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private CControlUnit control;
         private SolidColorBrush registerWrite;
-        public ControlUnit(CControlUnit control)
+
+        private double adderWidth = 30;
+        private double adderHeight = 30;
+        private double rectangleHeight = 140;
+        private double rectangleWidth = 100;
+        private double rectangleSpaceBetween = 50;
+
+        public CCoreUI()
         {
-            this.control = control;
             registerWrite = new SolidColorBrush(Colors.Black);
         }
 
@@ -91,6 +100,18 @@ namespace MIPSCoreUI
             {
                 return registerWrite;
             }
+        }
+
+        public double RectangleWidth
+        {
+            get { return rectangleWidth; }
+            set { rectangleWidth = value;  OnPropertyChanged("RectangleWidth"); }
+        }
+
+        public double RectangleHeight 
+        {
+            get {return rectangleHeight;}
+            set { rectangleHeight = value;  OnPropertyChanged("RectangleHeight"); }
         }
 
         // Create the OnPropertyChanged method to raise the event
