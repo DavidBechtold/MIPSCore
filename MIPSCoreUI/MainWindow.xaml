@@ -26,7 +26,7 @@
     <core:Double x:Key="arrowLength">6</core:Double>
   </Window.Resources>
   <Grid>
-    <Grid Margin="116,48,284,118">
+    <Grid Margin="206,133,194,33">
 
       <!-- Program counter Adder -->
       <Grid Height="60" Width="35" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,240,0,0">
@@ -52,7 +52,7 @@
       <BaseObjects:ArrowPolyline Points="555,480 555,443 580,443" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
       <BaseObjects:ArrowPolyline Points="555,480 880,480 880,310 900,310" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
       <TextBlock Text="PC+4" Margin="64,245,0,0" FontSize="{StaticResource rectFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-      <BaseObjects:ArrowPolyline Points="615,424 630,424 630,460 80,460 80,281 95,281" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="615,424 630,424 630,460 80,460 80,281 95,281" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" Margin="0,-1,0,1"/>
 
 
       <!-- Branch Mux -->
@@ -91,13 +91,13 @@
       <!-- Sign extender line -->
 
       <!-- Control Lines -->
-      <BaseObjects:ArrowPolyline Points="380,70 106,70 106,250" Stroke="{StaticResource controlLineColor}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="380,85 157,85 157,250" Stroke="{StaticResource controlLineColor}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="380,130 360,130 360,255 380,255" Stroke="{StaticResource controlLineColor}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,130 531,130 531,283" Stroke="{StaticResource controlLineColor}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,116 545,116 545,230 580,230" Stroke="{StaticResource controlLineColor}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,102 740,102 740,230 760,230" Stroke="{StaticResource controlLineColor}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,88 910,88 910,260" Stroke="{StaticResource controlLineColor}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="380,70 106,70 106,250" Stroke="{Binding BranchControlLine}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="380,85 157,85 157,250" Stroke="{Binding JumpControlLine}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="380,130 360,130 360,255 380,255" Stroke="{Binding RegFileWriteControlLine}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="480,130 531,130 531,283" Stroke="{Binding ALUSourceControlLine}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="480,116 545,116 545,230 580,230" Stroke="{Binding ALUOperationControlLine}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="480,102 740,102 740,230 760,230" Stroke="{Binding DataMemoryControlLine}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
+      <BaseObjects:ArrowPolyline Points="480,88 910,88 910,260" Stroke="{Binding RegFileInputControlLine}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
       
       <!-- Reg File Lines -->
       <Polyline Points="300,272 340,272" Stroke="Black" StrokeThickness="{StaticResource pathThickness}"/>
@@ -138,7 +138,7 @@
         </Border.Style>
         <Grid>
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Register File</TextBlock>
-          <TextBlock Text="write" Margin="0,-30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{StaticResource controlLineColor}" />
+          <TextBlock Text="write" Margin="0,-30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding RegFileWriteControlLine}" />
           <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}">rs</TextBlock>
           <TextBlock Text="rd" Margin="0,30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
           <TextBlock Text="rt" Margin="0,60,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
@@ -163,15 +163,15 @@
         </Border.Style>
         <Grid>
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Control Unit</TextBlock>
-          <TextBlock Text="branch" Margin="0,0,0,60" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{StaticResource controlLineColor}"/>
-          <TextBlock Text="jump" Margin="0,0,0,45" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{StaticResource controlLineColor}"/>
+          <TextBlock Text="branch" Margin="0,0,0,60" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding BranchControlLine}"/>
+          <TextBlock Text="jump" Margin="0,0,0,45" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding JumpControlLine}"/>
           <TextBlock Text="op code" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
           <TextBlock Text="function." Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="write" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="{StaticResource controlLineColor}" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="aluSrc" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="{StaticResource controlLineColor}" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="aluOp" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="{StaticResource controlLineColor}" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="r/w" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="{StaticResource controlLineColor}" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="regFileInput" Margin="0,0,0,45" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="{StaticResource controlLineColor}" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="write" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding RegFileWriteControlLine}" />
+          <TextBlock Text="aluSrc" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding ALUSourceControlLine}"/>
+          <TextBlock Text="aluOp" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding ALUOperationControlLine}"/>
+          <TextBlock Text="r/w" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding DataMemoryControlLine}"/>
+          <TextBlock Text="regFileInput" Margin="0,0,0,45" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding RegFileInputControlLine}"/>
         
         </Grid>
       </Border>
@@ -252,7 +252,7 @@
           <TextBlock Text="read2" Margin="0,81,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
           <TextBlock Text="zero" Margin="0,35,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
           <TextBlock Text="result" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="aluOperation" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{StaticResource controlLineColor}" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="aluOperation" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding ALUOperationControlLine}" FontSize="{StaticResource rectFontSize}"/>
         </Grid>
       </Border>
 
@@ -274,7 +274,7 @@
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Data Memory</TextBlock>
           <TextBlock Text="address" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
           <TextBlock Text="data" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="r/w" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{StaticResource controlLineColor}" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="r/w" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding DataMemoryControlLine}" FontSize="{StaticResource rectFontSize}"/>
         </Grid>
       </Border>
        <BaseObjects:ArrowPolyline Points="680,271 720,271" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="0"/>
@@ -291,6 +291,7 @@
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,40,0,0">2</TextBlock>
       </Grid>
     </Grid>
+    <Button Content="Clock" HorizontalAlignment="Left" Margin="374,26,0,0" VerticalAlignment="Top" Width="75" Click="ButtonClock_Click"/>
   </Grid>
 
 </Window>
