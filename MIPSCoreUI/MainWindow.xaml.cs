@@ -17,6 +17,7 @@ using MIPSCore;
 using MIPSCore.InstructionSet;
 
 using MIPSCore.ControlUnit;
+using System.Windows.Threading;
 
 namespace MIPSCoreUI
 {
@@ -66,14 +67,29 @@ namespace MIPSCoreUI
     public class CCoreUI: INotifyPropertyChanged
     {
         private CCore core;
-        private BackgroundWorker worker;
         private enum Events{clocked, exception, completed};
        
+        /* executed command */
+        private string executedInstructionName;
+        private string executedInstructionExample;
+        private string executedInstructionMeaning;
+        private string executedInstructionFormat;
+        private string executedInstructionFunction;
+        private string executedInstructionOpCode;
+        
         /* colors */
         private SolidColorBrush instructionMemoryActive;
         private SolidColorBrush registerFileActive;
         private SolidColorBrush aluActive;
         private SolidColorBrush dataMemoryActive;
+
+        /* lines */
+        private SolidColorBrush lineInactive = new SolidColorBrush(Colors.Black);
+        private SolidColorBrush lineActive = new SolidColorBrush(Colors.Blue);
+        private SolidColorBrush jumpRegisterLine;
+        private SolidColorBrush jumpRegisterAluRead1Line;
+        private SolidColorBrush programCounterLine;
+        private SolidColorBrush programCounterOrRegisterFileInputLine;
 
         /* control line colors */
         private SolidColorBrush controlLineInactive = new SolidColorBrush(Colors.LightBlue);
@@ -102,17 +118,14 @@ namespace MIPSCoreUI
             core.completed += new EventHandler(completedEvent);
             core.exception += new EventHandler(exceptionEvent);
 
-            worker = new BackgroundWorker();
-            worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = true;
-            worker.DoWork +=new DoWorkEventHandler(worker_doWork);
-            worker.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(worker_runWorkerCompleted);
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_progressChanged);
+            ExecutedInstructionName = "";
+
+            jumpRegisterLine = JumpRegisterAluRead1Line = ProgramCounterLine = ProgramCounterOrRegisterFileInputLine = lineInactive;
+
 
             branchControlLine = jumpControlLine = aluOperationControlLine = dataMemoryControlLine = aluSourceControlLine = regFileWriteControlLine = regFileInputControlLine = controlLineInactive;
 
-
-            core.programObjdump("Testcode//bubblesort.objdump");
+            core.programObjdump("C://Users//david//Dropbox//Bachelor Arbeit//MIPSCore//SystemTest//Testcode//bubblesort.objdump");
             core.startCore();
         }
 
@@ -123,14 +136,11 @@ namespace MIPSCoreUI
 
         private void clockedEvent(Object obj, EventArgs args)
         {
-            /* let the work do from an background worker because the clocked event is not the wpf gui thread */
-            if (worker.IsBusy != true)
+            /* invoke the wpf thread */
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
             {
-                worker.RunWorkerAsync();
-            }
-            
-
-
+                refreshGUI();
+            }));
         }
 
         private void completedEvent(Object obj, EventArgs args)
@@ -141,31 +151,154 @@ namespace MIPSCoreUI
         {
         }
 
-        private void worker_doWork(Object obj, EventArgs args)
+        private void refreshGUI()
         {
+            fillExecutedInstructionGroupBox();
+            
             /* Control Lines */
             if (core.getControlUnit.getAluControl == ALUControl.stall)
-                this.ALUOperationControlLine = controlLineInactive;
+                aluOperationControlLine = controlLineInactive;
+            else
+                aluOperationControlLine = controlLineActive;
+
+            /* Memory Lines */
+            if (core.getControlUnit.getMemRead == true || core.getControlUnit.getMemWrite == true)
+                dataMemoryControlLine = controlLineActive;
+            else
+                dataMemoryControlLine = controlLineInactive;
+
+            /* Branch Lines */
+            if (core.getControlUnit.getPcSource == ProgramCounterSource.programCounter)
+            {
+                branchControlLine = controlLineInactive;
+                jumpControlLine = controlLineInactive;
+
+                programCounterLine = lineActive;
+                programCounterOrRegisterFileInputLine = lineActive;
+                jumpRegisterLine = lineInactive;
+                JumpRegisterAluRead1Line = lineInactive;
+            }
+            else if (core.getControlUnit.getPcSource == ProgramCounterSource.jump)
+            {
+                branchControlLine = controlLineInactive;
+                jumpControlLine = controlLineActive;
+
+                programCounterLine = lineInactive;
+                programCounterOrRegisterFileInputLine = lineInactive;
+                jumpRegisterLine = lineInactive;
+                JumpRegisterAluRead1Line = lineInactive;
+            }
+            else if (core.getControlUnit.getPcSource == ProgramCounterSource.register)
+            {
+                branchControlLine = controlLineInactive;
+                jumpControlLine = controlLineActive;
+
+                programCounterLine = lineInactive;
+                programCounterOrRegisterFileInputLine = lineInactive;
+                jumpRegisterLine = lineActive;
+                JumpRegisterAluRead1Line = lineActive;
+            }
             else
             {
-                this.aluOperationControlLine = new SolidColorBrush(Colors.Blue);
-                OnPropertyChanged("ALUOperationControlLine");
+                branchControlLine = controlLineActive;
+                jumpControlLine = controlLineInactive;
+
+                programCounterLine = lineInactive;
+                programCounterOrRegisterFileInputLine = lineInactive;
+                jumpRegisterLine = lineInactive;
+                JumpRegisterAluRead1Line = lineInactive;
             }
 
-            if (core.getControlUnit.getMemRead == true || core.getControlUnit.getMemWrite == true)
-                this.DataMemoryControlLine = controlLineActive;
-            else
-                this.DataMemoryControlLine = controlLineInactive;
+            OnPropertyChanged("ALUOperationControlLine");
+            OnPropertyChanged("DataMemoryControlLine");
+            OnPropertyChanged("BranchControlLine");
+            OnPropertyChanged("JumpControlLine");
+
+            OnPropertyChanged("ProgramCounterLine");
+            OnPropertyChanged("ProgramCounterOrRegisterFileInputLine");
+            OnPropertyChanged("JumpRegisterLine");
+            OnPropertyChanged("JumpRegisterAluRead1Line");
         }
 
-        private void worker_runWorkerCompleted(Object obj, EventArgs args)
+        private void fillExecutedInstructionGroupBox()
         {
+            executedInstructionName = core.getControlUnit.GetInstructionAssemblerName + ": " + core.getControlUnit.GetInstructionFriendlyName;
+            executedInstructionExample = core.getControlUnit.GetInstructionExample;
+            executedInstructionMeaning = core.getControlUnit.GetInstructionMeaning;
+            executedInstructionFormat = core.getControlUnit.GetInstructionFormat;
+            executedInstructionFunction = core.getControlUnit.GetInstructionFunction;
+            executedInstructionOpCode = core.getControlUnit.GetInstructionOpCode;
+            OnPropertyChanged("ExecutedInstructionName");
+            OnPropertyChanged("ExecutedInstructionExample");
+            OnPropertyChanged("ExecutedInstructionMeaning");
+            OnPropertyChanged("ExecutedInstructionFormat");
+            OnPropertyChanged("ExecutedInstructionFunction");
+            OnPropertyChanged("ExecutedInstructionOpCode");
         }
-
-        private void worker_progressChanged(Object obj, EventArgs args)
+        
+        /* Executed Command */
+        public String ExecutedInstructionName
         {
+            set { executedInstructionName = value; OnPropertyChanged("ExecutedCommandName"); }
+            get { return executedInstructionName; }
         }
 
+        public String ExecutedInstructionExample
+        {
+            set { executedInstructionExample = value; OnPropertyChanged("ExecutedInstructionExample"); }
+            get { return executedInstructionExample; }
+        }
+
+        public String ExecutedInstructionMeaning
+        {
+            set { executedInstructionMeaning = value; OnPropertyChanged("ExecutedInstructionMeaning"); }
+            get { return executedInstructionMeaning; }
+        }
+
+        public String ExecutedInstructionFormat
+        {
+            set { executedInstructionFormat = value; OnPropertyChanged("ExecutedInstructionFormat"); }
+            get { return executedInstructionFormat; }
+        }
+
+        public String ExecutedInstructionFunction
+        {
+            set { executedInstructionFunction = value; OnPropertyChanged("ExecutedInstructionFunction"); }
+            get { return executedInstructionFunction; }
+        }
+
+        public String ExecutedInstructionOpCode
+        {
+            set { executedInstructionOpCode = value; OnPropertyChanged("ExecutedInstructionOpCode"); }
+            get { return executedInstructionOpCode; }
+        }
+
+        /* Lines */
+        public SolidColorBrush JumpRegisterLine
+        {
+            set { jumpRegisterLine = value; OnPropertyChanged("JumpRegisterLine"); }
+            get { return jumpRegisterLine; }
+        }
+
+        public SolidColorBrush JumpRegisterAluRead1Line
+        {
+            set { jumpRegisterAluRead1Line = value; OnPropertyChanged("JumpRegisterAluRead1Line"); }
+            get { return jumpRegisterAluRead1Line; }
+        }
+
+        public SolidColorBrush ProgramCounterLine
+        {
+            set { programCounterLine = value; OnPropertyChanged("ProgramCounterLine"); }
+            get { return programCounterLine; }
+        }
+
+        public SolidColorBrush ProgramCounterOrRegisterFileInputLine
+        {
+            set { programCounterOrRegisterFileInputLine = value; OnPropertyChanged("ProgramCounterOrRegisterFileInputLine"); }
+            get { return programCounterOrRegisterFileInputLine; }
+        }
+
+        /* Control Lines */
         public SolidColorBrush BranchControlLine
         {
             set { branchControlLine = value; OnPropertyChanged("BranchControlLine"); }

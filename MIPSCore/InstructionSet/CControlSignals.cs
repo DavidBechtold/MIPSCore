@@ -67,6 +67,14 @@ namespace MIPSCore.InstructionSet
 
     public class CControlSignals
     {
+        public string GetInstructionFriendlyName { get; private set; }
+        public string GetInstructionAssemblerName { get; private set; }
+        public string GetInstructionExample { get; private set; }
+        public string GetInstructionMeaning { get; private set; }
+        public string GetInstructionFormat { get; private set; }
+        public string GetInstructionOpCode { get; private set; }
+        public string GetInstructionFunction { get; private set; }
+        
         /* control signals */
         private InstructionFormat instructionFormat;
         private RegisterDestination regDestination; //which register will be written
@@ -101,6 +109,14 @@ namespace MIPSCore.InstructionSet
         protected void prepareControlSignals(CWord opCode, CWord function)
         {
             instruction = instructionSet.getInstruction(opCode, function);
+
+            GetInstructionFriendlyName = instruction.name;
+            GetInstructionAssemblerName = instruction.assembler;
+            GetInstructionExample = instruction.example;
+            GetInstructionMeaning = instruction.meaning;
+            GetInstructionFormat = instruction.format.ToText();
+            GetInstructionOpCode = instruction.opcode.ToString();
+            GetInstructionFunction = instruction.function.ToString();
 
             instructionFormat = instruction.format;
             regDestination = instruction.regDestination;

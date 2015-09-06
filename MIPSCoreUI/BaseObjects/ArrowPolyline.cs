@@ -1,6 +1,3 @@
-//----------------------------------------------
-// ArrowPolyline.cs (c) 2007 by Charles Petzold
-//----------------------------------------------
 using System;
 using System.Windows;
 using System.Windows.Media;

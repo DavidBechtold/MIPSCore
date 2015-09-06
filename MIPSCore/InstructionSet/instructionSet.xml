@@ -641,7 +641,7 @@
     <name>load upper immediate</name>
     <assembler>lui</assembler>
     <example>lui register, imm</example>
-    <meaning>regiter = imm &lt;&lt; 16</meaning>
+    <meaning>register = imm &lt;&lt; 16</meaning>
     <format>I</format>
     <opcode>15</opcode>
     <function>0</function>
