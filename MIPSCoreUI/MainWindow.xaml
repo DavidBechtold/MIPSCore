@@ -3,334 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:core="clr-namespace:System;assembly=mscorlib"
         xmlns:BaseObjects="clr-namespace:MIPSCoreUI.BaseObjects"
+        xmlns:View="clr-namespace:MIPSCoreUI.View"
         Title="MainWindow" Height="700" Width="1400"  
     WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
-  <Window.Resources>
-    <core:Double x:Key="windowHeight">400</core:Double>
-    <core:Double x:Key="windowWidth">700</core:Double>
-
-    <core:Double x:Key="secLineStart_Y">200</core:Double>
-    <core:Double x:Key="secLineMid_Y">240</core:Double>
-
-    <core:Double x:Key="pathThickness">1.5</core:Double>
-
-    <core:Double x:Key="rectHeight">140</core:Double>
-    <core:Double x:Key="rectHeightHalf">70</core:Double>
-    <core:Double x:Key="rectWidth">100</core:Double>
-    <core:Double x:Key="rectSpace">50</core:Double>
-    <Thickness x:Key="borderThickness">2</Thickness>
-    <core:Double x:Key="rectFontSizeHeader">14</core:Double>
-    <core:Double x:Key="rectFontSize">12</core:Double>
-    <core:Double x:Key="pathFontSize">10</core:Double>
-    <SolidColorBrush x:Key="controlLineColor">Blue</SolidColorBrush>
-    <core:Double x:Key="arrowLength">6</core:Double>
-  </Window.Resources>
   <Grid>
- 
-  <Button Content="Clock" HorizontalAlignment="Left" Margin="1000,26,0,0" VerticalAlignment="Top" Width="75" Click="ButtonClock_Click"/>
-    
 
-  <StackPanel Orientation="Vertical"></StackPanel> 
-  <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="231,11,0,0" VerticalAlignment="Top" MinWidth="250">
-    <StackPanel>
-      <DockPanel>
-        <Label Content="Name:" Width="60"/>
-        <TextBox Text="{Binding ExecutedInstructionName}" Height="22" HorizontalAlignment="Stretch"/>
-      </DockPanel>
-      <DockPanel>
-        <Label Content="Example:" Width="60"/>
-        <TextBox Text="{Binding ExecutedInstructionExample}" Height="22" HorizontalAlignment="Stretch"/>
-      </DockPanel>
-      <DockPanel>
-        <Label Content="Meaning:" Width="60"/>
-        <TextBox Text="{Binding ExecutedInstructionMeaning}" Height="22" HorizontalAlignment="Stretch"/>
-      </DockPanel>
-      <DockPanel>
-        <Label Content="Format:" Width="60"/>
-        <TextBox Text="{Binding ExecutedInstructionFormat}" Height="22" HorizontalAlignment="Stretch"/>
-      </DockPanel>
-      <DockPanel>
-        <Label Content="Function:" Width="60"/>
-        <TextBox Text="{Binding ExecutedInstructionFunction}" Height="22" HorizontalAlignment="Stretch"/>
-      </DockPanel>
-      <DockPanel>
-        <Label Content="OpCode:" Width="60"/>
-        <TextBox Text="{Binding ExecutedInstructionOpCode}" Height="22" HorizontalAlignment="Stretch"/>
-      </DockPanel>
-    </StackPanel>
-  </GroupBox>  
+    <View:MIPSCore Margin="112,126,342,60"></View:MIPSCore>
 
 
 
-  <Grid Margin="114,137,286,29">
+    <Button Content="Clock" HorizontalAlignment="Left" Margin="531,23,0,0" VerticalAlignment="Top" Width="75" Command="{Binding Clock}"/>
 
-      <!-- Program counter Adder -->
-      <Grid Height="60" Width="35" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,240,0,0">
-        <Polyline Stroke="{Binding ProgramCounterLine, FallbackValue=Black}" StrokeThickness="2" Points="1,1 1,20 11,30 1,40 1,59 34,45 34,15 0,1"/>
-        <TextBlock Text="Add" FontSize="{StaticResource rectFontSize}" Margin="0,21,2,23" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-      </Grid>
-
-      <!-- Program counter lines -->
-      <BaseObjects:ArrowPolyline Points="180,270 180,230 0,230 0,250 25,250" Stroke="{Binding ProgramCounterLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <TextBlock Text="31:0" Margin="1,238,0,0" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-      <BaseObjects:ArrowPolyline Points="0,290 25,290" Stroke="{Binding ProgramCounterLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <TextBlock Text="4" Margin="7,278,0,0" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-      <BaseObjects:ArrowPolyline Points="60,261 68,261" Stroke="{Binding ProgramCounterOrRegisterFileInputLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="0"/>
-      <BaseObjects:ArrowPolyline Points="68,261 95,261" Stroke="{Binding ProgramCounterLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-
-      <!-- Branch Mux -->
-      <Grid Width="20" Height="40" Margin="96,250,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Polyline Points="1,1 1,39 19,37 19,3 0,1" StrokeThickness="2" Stroke="Black" Grid.ColumnSpan="2" />
-        <TextBlock Text="0" Margin="2,2,0,0" Foreground="{Binding ProgramCounterLine, FallbackValue=Black}" FontSize="{StaticResource rectFontSizeHeader}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBlock Text="1" Margin="2,21,0,0" FontSize="{StaticResource rectFontSizeHeader}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-      </Grid>
-
-      <BaseObjects:ArrowPolyline Points="68,261 68,480 555,480" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="0" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="555,480 555,443 580,443" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="555,480 880,480 880,310 900,310" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <TextBlock Text="PC+4" Margin="64,245,0,0" FontSize="{StaticResource rectFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-      <BaseObjects:ArrowPolyline Points="615,424 630,424 630,460 80,460 80,281 95,281" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" Margin="0,-1,0,1"/>
-
-
-      <!-- Branch Mux -->
-      <Grid Width="20" Height="60" Margin="147,240,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Polyline Points="1,1 1,59 19,57 19,3 0,1" StrokeThickness="2" Stroke="Black" Grid.ColumnSpan="2" />
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,2,0,0" Foreground="{Binding JumpRegisterLine}">0</TextBlock>
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding ProgramCounterLine, FallbackValue=Black}" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,21,0,0">1</TextBlock>
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,40,0,0">2</TextBlock>
-      </Grid> 
-
-      <BaseObjects:ArrowPolyline Points="115,270 146,270" Stroke="{Binding ProgramCounterLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="340,405 130,405 130,290 146,290" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <TextBlock HorizontalAlignment="Left" Margin="319,392,0,0" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"><Run Language="de-at" Text="2"/><Run Text="5:"/><Run Language="de-at" Text="0"/></TextBlock>
-      <BaseObjects:ArrowPolyline Points="167,270 200,270" Stroke="{Binding ProgramCounterLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-
-      <!--= Instruction Memory -->
-      <Border BorderThickness="{StaticResource borderThickness}" Background="White" Margin="200,200,0,0" Width="{StaticResource rectWidth}" Height="{StaticResource rectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Border.Style>
-          <Style TargetType="Border">
-            <Style.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="LightBlue"/>
-              </Trigger>
-              <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="BorderBrush" Value="Black"/>
-              </Trigger>
-            </Style.Triggers>
-          </Style>
-        </Border.Style>
-        <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Instruction Memory</TextBlock>
-          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}">Addr.</TextBlock>
-          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}">Inst.</TextBlock>
-        </Grid>
-      </Border>
-
-      <!-- Sign extender line -->
-
-      <!-- Control Lines -->
-      <BaseObjects:ArrowPolyline Points="380,70 106,70 106,250" Stroke="{Binding BranchControlLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="380,85 157,85 157,240" Stroke="{Binding JumpControlLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="380,130 360,130 360,255 380,255" Stroke="{Binding RegFileWriteControlLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,130 531,130 531,283" Stroke="{Binding ALUSourceControlLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,116 545,116 545,230 580,230" Stroke="{Binding ALUOperationControlLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,102 740,102 740,230 760,230" Stroke="{Binding DataMemoryControlLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="480,88 910,88 910,260" Stroke="{Binding RegFileInputControlLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      
-      <!-- Reg File Lines -->
-      <Polyline Points="300,272 340,272" Stroke="Black" StrokeThickness="{StaticResource pathThickness}"/>
-      <BaseObjects:ArrowPolyline Points="340,272 340,115" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="0"/>
-      <BaseObjects:ArrowPolyline Points="340,116 380,116" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="340,116 340,101 380,101" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="340,272 380,272" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="340,272 340,287 380,287" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="340,272 340,302 380,302" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="340,272 340,405 380,405" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <TextBlock HorizontalAlignment="Left" Margin="341,392,0,0" Text="15:0" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"/>
-      <BaseObjects:ArrowPolyline Points="910,290 940,290 940,360 350,360 350,317 370,317" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" Margin="10,0,-10,0"/>
-
-      <BaseObjects:ArrowPolyline Points="480,247 490,247" Stroke="{Binding JumpRegisterAluRead1Line, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="0"/>      
-      <BaseObjects:ArrowPolyline Points="490,247 580,247" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>      
-      <BaseObjects:ArrowPolyline Points="490,247 490,190 130,190 130,251 146,251" Stroke="{Binding JumpRegisterLine, FallbackValue=Black}" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="480,293 520,293" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-      <BaseObjects:ArrowPolyline Points="540,293 580,293" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" />
-
-      <TextBlock HorizontalAlignment="Left" Margin="300,259,0,0" Text="31:0" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"/>
-      <TextBlock HorizontalAlignment="Left" Margin="341,88,0,0" Text="31:26" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"/>
-      <TextBlock HorizontalAlignment="Left" Margin="341,103,0,0" Text="5:0" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"/>
-      <TextBlock HorizontalAlignment="Left" Margin="341,259,0,0" Text="25:21" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"/>
-      <TextBlock HorizontalAlignment="Left" Margin="341,274,0,0" Text="20:16" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"/>
-      <TextBlock HorizontalAlignment="Left" Margin="341,289,0,0" Text="15:11" FontSize="{StaticResource pathFontSize}" VerticalAlignment="Top"/>
-
-      <!-- Register File -->
-      <Border BorderThickness="{StaticResource borderThickness}" Background="White" Margin="380,200,0,0" Width="{StaticResource rectWidth}" Height="{StaticResource rectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown"  VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Border.Style>
-          <Style TargetType="Border">
-            <Style.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="LightBlue"/>
-              </Trigger>
-              <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="BorderBrush" Value="Black"/>
-              </Trigger>
-            </Style.Triggers>
-          </Style>
-        </Border.Style>
-        <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Register File</TextBlock>
-          <TextBlock Text="write" Margin="0,-30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding RegFileWriteControlLine}" />
-          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}">rs</TextBlock>
-          <TextBlock Text="rd" Margin="0,30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="rt" Margin="0,60,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="Write" Margin="0,90,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="rs" Margin="0,35,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="rt" Margin="0,81,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
-        </Grid>
-      </Border>
-
-      <Border CornerRadius="7" BorderThickness="{StaticResource borderThickness}" Background="White" Margin="380,0,0,0" Width="{StaticResource rectWidth}" Height="{StaticResource rectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Border.Style>
-          <Style TargetType="Border">
-            <Style.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="LightBlue"/>
-              </Trigger>
-              <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="BorderBrush" Value="Black"/>
-              </Trigger>
-            </Style.Triggers>
-          </Style>
-        </Border.Style>
-        <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Control Unit</TextBlock>
-          <TextBlock Text="branch" Margin="0,0,0,60" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding BranchControlLine}"/>
-          <TextBlock Text="jump" Margin="0,0,0,45" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding JumpControlLine}"/>
-          <TextBlock Text="op code" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="function." Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="write" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding RegFileWriteControlLine}" />
-          <TextBlock Text="aluSrc" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding ALUSourceControlLine}"/>
-          <TextBlock Text="aluOp" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding ALUOperationControlLine}"/>
-          <TextBlock Text="r/w" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding DataMemoryControlLine}"/>
-          <TextBlock Text="regFileInput" Margin="0,0,0,45" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}" Foreground="{Binding RegFileInputControlLine}"/>
-        
-        </Grid>
-      </Border>
-
-      <!-- Sign Extender Block -->
-      <Border BorderThickness="{StaticResource borderThickness}" CornerRadius="12" Background="White" Margin="380,380,0,0" Width="50" Height="50" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Border.Style>
-          <Style TargetType="Border">
-            <Style.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="LightBlue"/>
-              </Trigger>
-              <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="BorderBrush" Value="Black"/>
-              </Trigger>
-            </Style.Triggers>
-          </Style>
-        </Border.Style>
-        <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Sign Extend</TextBlock>
-        </Grid>
-      </Border>
-
-      <Polyline Points="430,405 455,405" Stroke="Black" StrokeThickness="{StaticResource pathThickness}"/>
-      <BaseObjects:ArrowPolyline Points="455,405 480,405" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="455,405 455,370 500,370 500,312 520,312" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      <BaseObjects:ArrowPolyline Points="530,405 580,405" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-
-      <!--  Shifter * 4-->
-      <Border BorderThickness="{StaticResource borderThickness}" Background="White" Margin="480,380,0,0" Width="50" Height="50" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Border.Style>
-          <Style TargetType="Border">
-            <Style.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="LightBlue"/>
-              </Trigger>
-              <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="BorderBrush" Value="Black"/>
-              </Trigger>
-            </Style.Triggers>
-          </Style>
-        </Border.Style>
-        <Grid>
-          <TextBlock Text=">>2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap"/>
-        </Grid>
-      </Border>
-
-      <!-- Program counter Adder -->
-      <Grid Height="60" Width="35" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="580,394,0,0">
-        <Polyline Stroke="Black" StrokeThickness="2" Points="1,1 1,20 11,30 1,40 1,59 34,45 34,15 0,1"/>
-        <TextBlock Text="Add" FontSize="{StaticResource rectFontSize}" Margin="0,21,2,23" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-      </Grid>
-
-      <!-- Mux -->
-      <Grid Width="20" Height="40" Margin="521,281,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Polyline Points="1,1 1,39 19,37 19,3 0,1" StrokeThickness="2" Stroke="Black" Grid.ColumnSpan="2" />
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,2,0,0">0</TextBlock>
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,21,0,0">1</TextBlock>
-      </Grid>
-
-      <!-- ALU -->
-      <Border BorderThickness="{StaticResource borderThickness}" Background="White" Margin="580,200,0,0" Width="{StaticResource rectWidth}" Height="{StaticResource rectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Border.Style>
-          <Style TargetType="Border">
-            <Style.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="LightBlue"/>
-              </Trigger>
-              <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="BorderBrush" Value="Black"/>
-              </Trigger>
-            </Style.Triggers>
-          </Style>
-        </Border.Style>
-        <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">ALU</TextBlock>
-          <TextBlock Text="read1" Margin="0,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="read2" Margin="0,81,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="zero" Margin="0,35,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="result" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="aluOperation" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding ALUOperationControlLine}" FontSize="{StaticResource rectFontSize}"/>
-        </Grid>
-      </Border>
-
-      <!-- data memory -->
-      <Border BorderThickness="{StaticResource borderThickness}" Background="White" Margin="760,200,0,0" Width="{StaticResource rectWidth}" Height="{StaticResource rectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Border.Style>
-          <Style TargetType="Border">
-            <Style.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="LightBlue"/>
-              </Trigger>
-              <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="BorderBrush" Value="Black"/>
-              </Trigger>
-            </Style.Triggers>
-          </Style>
-        </Border.Style>
-        <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Data Memory</TextBlock>
-          <TextBlock Text="address" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="data" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="r/w" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding DataMemoryControlLine}" FontSize="{StaticResource rectFontSize}"/>
-        </Grid>
-      </Border>
-       <BaseObjects:ArrowPolyline Points="680,271 720,271" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="0"/>
-       <BaseObjects:ArrowPolyline Points="720,271 760,271" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-       <BaseObjects:ArrowPolyline Points="720,271 720,350 870,350 870,290 900,290" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}" CircleStart="True"/>
-      
-       <BaseObjects:ArrowPolyline Points="860,271 900,271" Stroke="Black" StrokeThickness="{StaticResource pathThickness}" ArrowLength="{StaticResource arrowLength}"/>
-       
-      <!-- Mux -->
-      <Grid Width="20" Height="60" Margin="900,260,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Polyline Points="1,1 1,59 19,57 19,3 0,1" StrokeThickness="2" Stroke="Black" Grid.ColumnSpan="2" />
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,2,0,0">0</TextBlock>
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,21,0,0">1</TextBlock>
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSizeHeader}" Margin="2,40,0,0">2</TextBlock>
-      </Grid>
-    </Grid>
+    <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="231,11,0,0" VerticalAlignment="Top" MinWidth="250">
+      <StackPanel>
+        <DockPanel>
+          <Label Content="Name:" Width="60"/>
+          <TextBox Text="{Binding ExecutedInstructionName}" Height="22" HorizontalAlignment="Stretch"/>
+        </DockPanel>
+        <DockPanel>
+          <Label Content="Example:" Width="60"/>
+          <TextBox Text="{Binding ExecutedInstructionExample}" Height="22" HorizontalAlignment="Stretch"/>
+        </DockPanel>
+        <DockPanel>
+          <Label Content="Meaning:" Width="60"/>
+          <TextBox Text="{Binding ExecutedInstructionMeaning}" Height="22" HorizontalAlignment="Stretch"/>
+        </DockPanel>
+        <DockPanel>
+          <Label Content="Format:" Width="60"/>
+          <TextBox Text="{Binding ExecutedInstructionFormat}" Height="22" HorizontalAlignment="Stretch"/>
+        </DockPanel>
+        <DockPanel>
+          <Label Content="Function:" Width="60"/>
+          <TextBox Text="{Binding ExecutedInstructionFunction}" Height="22" HorizontalAlignment="Stretch"/>
+        </DockPanel>
+        <DockPanel>
+          <Label Content="OpCode:" Width="60"/>
+          <TextBox Text="{Binding ExecutedInstructionOpCode}" Height="22" HorizontalAlignment="Stretch"/>
+        </DockPanel>
+      </StackPanel>
+    </GroupBox>
   </Grid>
 
 </Window>
