@@ -14,6 +14,7 @@ namespace MIPSCore.RegisterFile
     {
         private CCore core;
         public const UInt16 RegisterNumber_ra = 31;
+        public const UInt16 RegisterCount = CMIPSRegister.numberOfRegisters;
 
         /* register */
         private CMIPSRegister registers;
@@ -93,6 +94,13 @@ namespace MIPSCore.RegisterFile
             if (core.getInstructionMemory.getRt.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
                 throw new ArgumentOutOfRangeException(this.GetType().Name + ": RT number out of Range");
             return registers.readCWord((ushort)core.getInstructionMemory.getRt.getUnsignedDecimal);
+        }
+
+        public CWord readRd()
+        {
+            if (core.getInstructionMemory.getRd.getUnsignedDecimal >= CMIPSRegister.numberOfRegisters)
+                throw new ArgumentOutOfRangeException(this.GetType().Name + ": RD number out of Range");
+            return registers.readCWord((ushort)core.getInstructionMemory.getRd.getUnsignedDecimal);
         }
 
         public override string ToString()

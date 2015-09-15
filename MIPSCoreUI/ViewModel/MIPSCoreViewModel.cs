@@ -1,31 +1,18 @@
-﻿using MIPSCore;
+﻿using System;
+using System.Windows.Threading;
+using System.Windows.Media;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore.ControlUnit;
 using MIPSCore.InstructionSet;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MIPSCoreViewModel: INotifyPropertyChanged, IMIPSCoreViewModel
+    public class MIPSCoreViewModel : NotificationObject, IMIPSViewModel
     {
         private CControlUnit controlUnit;
-        private enum Events{clocked, exception, completed};
-       
-        /* executed command */
-        private string executedInstructionName;
-        private string executedInstructionExample;
-        private string executedInstructionMeaning;
-        private string executedInstructionFormat;
-        private string executedInstructionFunction;
-        private string executedInstructionOpCode;
-        
+        private Dispatcher dispatcher;
+ 
         /* colors */
         private SolidColorBrush instructionMemoryActive;
         private SolidColorBrush registerFileActive;
@@ -79,20 +66,19 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush aluSourceControlLine;
         private SolidColorBrush regFileInputControlLine;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private double adderWidth = 30;
         private double adderHeight = 30;
         private double rectangleHeight = 140;
         private double rectangleWidth = 100;
         private double rectangleSpaceBetween = 50;
 
-        public MIPSCoreViewModel(CControlUnit controlUnit)
+        public MIPSCoreViewModel(CControlUnit controlUnit, Dispatcher dispatcher)
         {
             if (controlUnit == null) throw new ArgumentNullException("controlUnit");
+            if (dispatcher == null) throw new ArgumentNullException("dispatcher");
             this.controlUnit = controlUnit;
+            this.dispatcher = dispatcher;
 
-            ExecutedInstructionName = "";
             JumpLine = JumpRegisterLine = JumpRegisterAluRead1Line = ProgramCounterLine = 
                 BranchLine = ImmediateOrBranchLine = InstructionMemoryLine =
                 ProgramCounterOrRegisterFileInputLine = lineInactive;
@@ -103,10 +89,10 @@ namespace MIPSCoreUI.ViewModel
             RegisterFileWriteBackLine = BranchControlLine = JumpControlLine = ALUOperationControlLine = DataMemoryControlLine = ALUSourceControlLine = RegFileWriteControlLine = RegFileInputControlLine = controlLineInactive;
         }
 
-        public void clocked()
+        public void refresh()
         {
             /* invoke the wpf thread */
-            Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+            dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
             {
                 refreshGUI();
             }));
@@ -114,494 +100,393 @@ namespace MIPSCoreUI.ViewModel
 
         private void refreshGUI()
         {
-            fillExecutedInstructionGroupBox();
+            string test;
+            if (controlUnit.GetInstructionAssemblerName == "jr")
+                test = "";
+            ALUOperationControlLine = controlLineInactive;
+            BranchControlLine = controlLineInactive;
+            JumpControlLine = controlLineInactive;
+            ALUSourceControlLine = controlLineInactive;
+            RegFileWriteControlLine = controlLineInactive;
+            DataMemoryControlLine = controlLineInactive;
 
-            aluOperationControlLine = controlLineInactive;
-            branchControlLine = controlLineInactive;
-            jumpControlLine = controlLineInactive;
-            aluSourceControlLine = controlLineInactive;
-            regFileWriteControlLine = controlLineInactive;
-
-            aluSourceMux = lineInactive;
-            jumpMux = lineActive;
-            jumpMuxLine = lineActive;
-            aluSourceMux = lineActive;
-            instructionMemoryLine = lineActive;
+            AluSourceMux = lineInactive;
+            JumpMux = lineActive;
+            JumpMuxLine = lineActive;
+            AluSourceMux = lineActive;
+            InstructionMemoryLine = lineActive;
             DataMemoryMux = lineInactive;
 
-            jumpLine = lineInactive;
-            branchLine = lineInactive;
-            immediateOrBranchLine = lineInactive;
-            branchMux = lineInactive;
-            branchMuxLine = lineInactive;
-            programCounterLine = lineInactive;
-            programCounterOrRegisterFileInputLine = lineInactive;
-            jumpRegisterLine = lineInactive;
-            jumpRegisterAluRead1Line = lineInactive;
-            jumpBranchLine = lineInactive;
-            registerFileRsLine = lineInactive;
-            registerFileRdLine = lineInactive;
-            registerFileRtLine = lineInactive; 
-            registerFileRsRdLine = lineInactive;
-            registerFileRsRdRtLine= lineInactive;
-            immediateLine = lineInactive;
-            aluRead1Line = lineInactive;
-            aluRead2Line = lineInactive;
-            registerFileRtOutLine = lineInactive;
-            dataMemoryOutLine = lineInactive;
-            aluResultLine = lineInactive;
-            writeAluResultLine = lineInactive;
-            writePcToRegisterLine = lineInactive;
-            dataMemoryAddressLine = lineInactive;
-            registerFileWriteBackLine = lineInactive;
+            JumpLine = lineInactive;
+            BranchLine = lineInactive;
+            ImmediateOrBranchLine = lineInactive;
+            BranchMux = lineInactive;
+            BranchMuxLine = lineInactive;
+            ProgramCounterLine = lineInactive;
+            ProgramCounterOrRegisterFileInputLine = lineInactive;
+            JumpRegisterLine = lineInactive;
+            JumpRegisterAluRead1Line = lineInactive;
+            JumpBranchLine = lineInactive;
+            RegisterFileRsLine = lineInactive;
+            RegisterFileRdLine = lineInactive;
+            RegisterFileRtLine = lineInactive; 
+            RegisterFileRsRdLine = lineInactive;
+            RegisterFileRsRdRtLine= lineInactive;
+            ImmediateLine = lineInactive;
+            AluRead1Line = lineInactive;
+            AluRead2Line = lineInactive;
+            RegisterFileRtOutLine = lineInactive;
+            DataMemoryOutLine = lineInactive;
+            AluResultLine = lineInactive;
+            WriteAluResultLine = lineInactive;
+            WritePcToRegisterLine = lineInactive;
+            DataMemoryAddressLine = lineInactive;
+            RegisterFileWriteBackLine = lineInactive;
 
             /* Control Lines */
             if (controlUnit.getAluControl != ALUControl.stall)
             {
-                aluOperationControlLine = controlLineActive;
-                aluRead1Line = lineActive;
-                aluRead2Line = lineActive;
-                jumpRegisterAluRead1Line = lineActive;
+                ALUOperationControlLine = controlLineActive;
+                AluRead1Line = lineActive;
+                AluRead2Line = lineActive;
+                JumpRegisterAluRead1Line = lineActive;
             }
 
             if (controlUnit.getRegWrite)
             {
-                regFileWriteControlLine = controlLineActive;
-                dataMemoryMux = lineActive;
-                aluResultLine = lineActive;
-                registerFileWriteBackLine = lineActive;
+                RegFileWriteControlLine = controlLineActive;
+                DataMemoryMux = lineActive;
+                AluResultLine = lineActive;
+                RegisterFileWriteBackLine = lineActive;
 
                 if (controlUnit.getRegisterFileInput == RegisterFileInput.aluLO)
                 {
-                    writeAluResultLine = lineActive;
+                    WriteAluResultLine = lineActive;
                     
                 }
                 else if (controlUnit.getRegisterFileInput == RegisterFileInput.programCounter)
-                    writePcToRegisterLine = lineActive;
+                    WritePcToRegisterLine = lineActive;
                 else if (controlUnit.getRegisterFileInput == RegisterFileInput.dataMemory)
                 {
-                    dataMemoryAddressLine = lineActive;
-                    dataMemoryOutLine = lineActive;
+                    DataMemoryAddressLine = lineActive;
+                    DataMemoryOutLine = lineActive;
                 }
             }
 
             /* Memory Lines */
             if (controlUnit.getMemRead == true || controlUnit.getMemWrite == true)
             {
-                dataMemoryControlLine = controlLineActive;
-                dataMemoryAddressLine = lineActive;
-                aluResultLine = lineActive;
+                DataMemoryControlLine = controlLineActive;
+                DataMemoryAddressLine = lineActive;
+                AluResultLine = lineActive;
             }
             else if (controlUnit.getMemRead)
             {
-                dataMemoryMux = lineActive;
-                dataMemoryOutLine = lineActive;
+                DataMemoryMux = lineActive;
+                DataMemoryOutLine = lineActive;
             }
-
-            
-
 
             /* Branch Lines */
             if (controlUnit.getPcSource == ProgramCounterSource.programCounter)
             {
-                branchMux = lineActive;
-                branchMuxLine = lineActive;
-                programCounterLine = lineActive;
-                programCounterOrRegisterFileInputLine = lineActive;
+                BranchMux = lineActive;
+                BranchMuxLine = lineActive;
+                ProgramCounterLine = lineActive;
+                ProgramCounterOrRegisterFileInputLine = lineActive;
             }
             else if (controlUnit.getPcSource == ProgramCounterSource.jump)
             {
-                jumpControlLine = controlLineActive;
+                JumpControlLine = controlLineActive;
 
-                jumpLine = lineActive;
-                registerFileRsRdLine = lineActive;
-                registerFileRsRdRtLine= lineActive;
-                jumpBranchLine= lineActive;
-                aluSourceMux = lineInactive;
+                JumpLine = lineActive;
+                RegisterFileRsRdLine = lineActive;
+                RegisterFileRsRdRtLine= lineActive;
+                JumpBranchLine= lineActive;
+                AluSourceMux = lineInactive;
 
             }
             else if (controlUnit.getPcSource == ProgramCounterSource.register)
             {
-                jumpControlLine = controlLineActive;
+                JumpControlLine = controlLineActive;
 
-                jumpRegisterLine = lineActive;
-                jumpRegisterAluRead1Line = lineActive;
-                aluSourceMux = lineInactive;
+                JumpRegisterLine = lineActive;
+                JumpRegisterAluRead1Line = lineActive;
+                AluSourceMux = lineInactive;
             }
             else //branch
             {
-                branchControlLine = controlLineActive;
+                BranchControlLine = controlLineActive;
 
-                branchLine = lineActive;
-                immediateOrBranchLine = lineActive;
-                branchMux = lineActive;
-                branchMuxLine = lineActive;
-                programCounterOrRegisterFileInputLine = lineActive;
-                registerFileRsRdLine = lineActive;
-                registerFileRsRdRtLine= lineActive;
-                jumpBranchLine= lineActive;
-                registerFileRtOutLine = lineActive;
+                BranchLine = lineActive;
+                ImmediateOrBranchLine = lineActive;
+                BranchMux = lineActive;
+                BranchMuxLine = lineActive;
+                ProgramCounterOrRegisterFileInputLine = lineActive;
+                RegisterFileRsRdLine = lineActive;
+                RegisterFileRsRdRtLine= lineActive;
+                JumpBranchLine= lineActive;
+                RegisterFileRtOutLine = lineActive;
             }
 
             /* instruction memory lines */
             if (controlUnit.getInstructionFormat == InstructionFormat.R)
             {
-                registerFileRsLine = lineActive;
-                registerFileRdLine = lineActive;
-                registerFileRtLine = lineActive;
-                registerFileRsRdLine = lineActive;
-                registerFileRsRdRtLine = lineActive;
-                registerFileRtOutLine = lineActive;
+                RegisterFileRsLine = lineActive;
+                RegisterFileRdLine = lineActive;
+                RegisterFileRtLine = lineActive;
+                RegisterFileRsRdLine = lineActive;
+                RegisterFileRsRdRtLine = lineActive;
+                if (JumpRegisterLine != lineActive)
+                    RegisterFileRtOutLine = lineActive;
             }
-            else if (controlUnit.getInstructionFormat == InstructionFormat.I && branchLine == lineInactive)
+            else if (controlUnit.getInstructionFormat == InstructionFormat.I && BranchLine == lineInactive)
             {
-                registerFileRsLine = lineActive;
-                registerFileRtLine = lineActive;
-                registerFileRsRdLine = lineActive;
-                registerFileRsRdRtLine = lineActive;
-                jumpBranchLine = lineActive;
-                immediateOrBranchLine = lineActive;
-                immediateLine = lineActive;
-                aluSourceControlLine = controlLineActive;
+                RegisterFileRsLine = lineActive;
+                RegisterFileRtLine = lineActive;
+                RegisterFileRsRdLine = lineActive;
+                RegisterFileRsRdRtLine = lineActive;
+                JumpBranchLine = lineActive;
+                ImmediateOrBranchLine = lineActive;
+                ImmediateLine = lineActive;
+                ALUSourceControlLine = controlLineActive;
             }
-            
-            OnPropertyChanged("ALUOperationControlLine");
-            OnPropertyChanged("DataMemoryControlLine");
-            OnPropertyChanged("BranchControlLine");
-            OnPropertyChanged("JumpControlLine");
-            OnPropertyChanged("AluSourceControlLine");
-            OnPropertyChanged("RegFileWriteControlLine");
-
-            OnPropertyChanged("BranchMux");
-            OnPropertyChanged("JumpMux");
-            OnPropertyChanged("JumpLine");
-            OnPropertyChanged("ProgramCounterLine");
-            OnPropertyChanged("ProgramCounterOrRegisterFileInputLine");
-            OnPropertyChanged("JumpRegisterLine");
-            OnPropertyChanged("JumpRegisterAluRead1Line");
-            OnPropertyChanged("BranchLine");
-            OnPropertyChanged("ImmediateOrBranchLine");
-            OnPropertyChanged("BranchMuxLine");
-            OnPropertyChanged("JumpMuxLine");
-            OnPropertyChanged("InstructionMemoryLine");
-            OnPropertyChanged("RegisterFileRsLine");
-            OnPropertyChanged("RegisterFileRdLine");
-            OnPropertyChanged("RegisterFileRtLine");
-            OnPropertyChanged("RegisterFileRsRdLine");
-            OnPropertyChanged("RegisterFileRsRdRtLine");
-            OnPropertyChanged("JumpBranchLine");
-            OnPropertyChanged("ImmediateLine");
-            OnPropertyChanged("AluRead1Line");
-            OnPropertyChanged("AluRead2Line");
-            OnPropertyChanged("RegisterFileRtOutLine");
-            OnPropertyChanged("AluSourceMux");
-            OnPropertyChanged("DataMemoryMux");
-            OnPropertyChanged("DataMemoryOutLine");
-            OnPropertyChanged("AluResultLine");
-            OnPropertyChanged("WriteAluResultLine");
-            OnPropertyChanged("WritePcToRegisterLine");
-            OnPropertyChanged("DataMemoryAddressLine");
-            OnPropertyChanged("RegisterFileWriteBackLine");
-        }
-
-        private void fillExecutedInstructionGroupBox()
-        {
-            executedInstructionName = controlUnit.GetInstructionAssemblerName + ": " + controlUnit.GetInstructionFriendlyName;
-            executedInstructionExample = controlUnit.GetInstructionExample;
-            executedInstructionMeaning = controlUnit.GetInstructionMeaning;
-            executedInstructionFormat = controlUnit.GetInstructionFormat;
-            executedInstructionFunction = controlUnit.GetInstructionFunction;
-            executedInstructionOpCode = controlUnit.GetInstructionOpCode;
-            OnPropertyChanged("ExecutedInstructionName");
-            OnPropertyChanged("ExecutedInstructionExample");
-            OnPropertyChanged("ExecutedInstructionMeaning");
-            OnPropertyChanged("ExecutedInstructionFormat");
-            OnPropertyChanged("ExecutedInstructionFunction");
-            OnPropertyChanged("ExecutedInstructionOpCode");
-        }
-        
-        /* Executed Command */
-        public String ExecutedInstructionName
-        {
-            set { executedInstructionName = value; OnPropertyChanged("ExecutedCommandName"); }
-            get { return executedInstructionName; }
-        }
-
-        public String ExecutedInstructionExample
-        {
-            set { executedInstructionExample = value; OnPropertyChanged("ExecutedInstructionExample"); }
-            get { return executedInstructionExample; }
-        }
-
-        public String ExecutedInstructionMeaning
-        {
-            set { executedInstructionMeaning = value; OnPropertyChanged("ExecutedInstructionMeaning"); }
-            get { return executedInstructionMeaning; }
-        }
-
-        public String ExecutedInstructionFormat
-        {
-            set { executedInstructionFormat = value; OnPropertyChanged("ExecutedInstructionFormat"); }
-            get { return executedInstructionFormat; }
-        }
-
-        public String ExecutedInstructionFunction
-        {
-            set { executedInstructionFunction = value; OnPropertyChanged("ExecutedInstructionFunction"); }
-            get { return executedInstructionFunction; }
-        }
-
-        public String ExecutedInstructionOpCode
-        {
-            set { executedInstructionOpCode = value; OnPropertyChanged("ExecutedInstructionOpCode"); }
-            get { return executedInstructionOpCode; }
         }
 
         /* Lines */
         public SolidColorBrush JumpLine
         {
-            set { jumpLine = value; OnPropertyChanged("JumpLine"); }
+            set { jumpLine = value; RaisePropertyChanged(() => JumpLine); }
             get { return jumpLine; }
         }
 
         public SolidColorBrush JumpRegisterLine
         {
-            set { jumpRegisterLine = value; OnPropertyChanged("JumpRegisterLine"); }
+            set { jumpRegisterLine = value; RaisePropertyChanged(() => JumpRegisterLine); }
             get { return jumpRegisterLine; }
         }
 
         public SolidColorBrush JumpRegisterAluRead1Line
         {
-            set { jumpRegisterAluRead1Line = value; OnPropertyChanged("JumpRegisterAluRead1Line"); }
+            set { jumpRegisterAluRead1Line = value; RaisePropertyChanged(() => JumpRegisterAluRead1Line); }
             get { return jumpRegisterAluRead1Line; }
         }
 
         public SolidColorBrush ProgramCounterLine
         {
-            set { programCounterLine = value; OnPropertyChanged("ProgramCounterLine"); }
+            set { programCounterLine = value; RaisePropertyChanged(() => ProgramCounterLine); }
             get { return programCounterLine; }
         }
 
         public SolidColorBrush ProgramCounterOrRegisterFileInputLine
         {
-            set { programCounterOrRegisterFileInputLine = value; OnPropertyChanged("ProgramCounterOrRegisterFileInputLine"); }
+            set { programCounterOrRegisterFileInputLine = value; RaisePropertyChanged(() => ProgramCounterOrRegisterFileInputLine); }
             get { return programCounterOrRegisterFileInputLine; }
         }
 
         public SolidColorBrush BranchLine
         {
-            set { branchLine = value; OnPropertyChanged("BranchLine"); }
+            set { branchLine = value; RaisePropertyChanged(() => BranchLine); }
             get { return branchLine; }
         }
 
         public SolidColorBrush ImmediateOrBranchLine
         {
-            set { immediateOrBranchLine = value; OnPropertyChanged("ImmediateOrBranchLine"); }
+            set { immediateOrBranchLine = value; RaisePropertyChanged(() => ImmediateOrBranchLine); }
             get { return immediateOrBranchLine; }
         }
 
         public SolidColorBrush BranchMuxLine
         {
-            set { branchMuxLine = value; OnPropertyChanged("BranchMuxLine"); }
+            set { branchMuxLine = value; RaisePropertyChanged(() => BranchMuxLine); }
             get { return branchMuxLine; }
         }
 
         public SolidColorBrush JumpMuxLine
         {
-            set { jumpMuxLine = value; OnPropertyChanged("JumpMuxLine"); }
+            set { jumpMuxLine = value; RaisePropertyChanged(() => JumpMuxLine); }
             get { return jumpMuxLine; }
         }
 
         public SolidColorBrush InstructionMemoryLine
         {
-            set { instructionMemoryLine = value; OnPropertyChanged("InstructionMemoryLine"); }
+            set { instructionMemoryLine = value; RaisePropertyChanged(() => InstructionMemoryLine); }
             get { return instructionMemoryLine; }
         }
 
         public SolidColorBrush RegisterFileRsLine
         {
-            set { registerFileRsLine = value; OnPropertyChanged("RegisterFileRsLine"); }
+            set { registerFileRsLine = value; RaisePropertyChanged(() => RegisterFileRsLine); }
             get { return registerFileRsLine; }
         }
 
         public SolidColorBrush RegisterFileRdLine
         {
-            set { registerFileRdLine = value; OnPropertyChanged("RegisterFileRdLine"); }
+            set { registerFileRdLine = value; RaisePropertyChanged(() => RegisterFileRdLine); }
             get { return registerFileRdLine; }
         }
 
         public SolidColorBrush RegisterFileRtLine
         {
-            set { registerFileRtLine = value; OnPropertyChanged("RegisterFileRtLine"); }
+            set { registerFileRtLine = value; RaisePropertyChanged(() => RegisterFileRtLine); }
             get { return registerFileRtLine; }
         }
 
         public SolidColorBrush RegisterFileRsRdLine
         {
-            set { registerFileRsRdLine = value; OnPropertyChanged("RegisterFileRsRdLine"); }
+            set { registerFileRsRdLine = value; RaisePropertyChanged(() => RegisterFileRsRdLine); }
             get { return registerFileRsRdLine; }
         }
 
         public SolidColorBrush RegisterFileRsRdRtLine
         {
-            set { registerFileRsRdRtLine = value; OnPropertyChanged("RegisterFileRsRdRtLine"); }
+            set { registerFileRsRdRtLine = value; RaisePropertyChanged(() => RegisterFileRsRdRtLine); }
             get { return registerFileRsRdRtLine; }
         }
 
         public SolidColorBrush JumpBranchLine
         {
-            set { jumpBranchLine = value; OnPropertyChanged("JumpBranchLine"); }
+            set { jumpBranchLine = value; RaisePropertyChanged(() => JumpBranchLine); }
             get { return jumpBranchLine; }
         }
 
         public SolidColorBrush ImmediateLine
         {
-            set { immediateLine = value; OnPropertyChanged("ImmediateLine"); }
+            set { immediateLine = value; RaisePropertyChanged(() => ImmediateLine); }
             get { return immediateLine; }
         }
 
         public SolidColorBrush AluRead1Line
         {
-            set { aluRead1Line = value; OnPropertyChanged("AluRead1Line"); }
+            set { aluRead1Line = value; RaisePropertyChanged(() => AluRead1Line); }
             get { return aluRead1Line; }
         }
 
         public SolidColorBrush AluRead2Line
         {
-            set { aluRead2Line = value; OnPropertyChanged("AluRead2Line"); }
+            set { aluRead2Line = value; RaisePropertyChanged(() => AluRead2Line); }
             get { return aluRead2Line; }
         }
 
         public SolidColorBrush RegisterFileRtOutLine
         {
-            set { registerFileRtOutLine = value; OnPropertyChanged("RegisterFileRtOutLine"); }
+            set { registerFileRtOutLine = value; RaisePropertyChanged(() => RegisterFileRtOutLine); }
             get { return registerFileRtOutLine; }
         }
 
         public SolidColorBrush DataMemoryOutLine
         {
-            set { dataMemoryOutLine = value; OnPropertyChanged("DataMemoryOutLine"); }
+            set { dataMemoryOutLine = value; RaisePropertyChanged(() => DataMemoryOutLine); }
             get { return dataMemoryOutLine; }
         }    
 
         public SolidColorBrush AluResultLine
         {
-            set { aluResultLine = value; OnPropertyChanged("AluResultLine"); }
+            set { aluResultLine = value; RaisePropertyChanged(() => AluResultLine); }
             get { return aluResultLine; }
         }
 
         public SolidColorBrush WriteAluResultLine
         {
-            set { writeAluResultLine = value; OnPropertyChanged("WriteAluResultLine"); }
+            set { writeAluResultLine = value; RaisePropertyChanged(() => WriteAluResultLine); }
             get { return writeAluResultLine; }
         }
 
         public SolidColorBrush WritePcToRegisterLine
         {
-            set { writePcToRegisterLine = value; OnPropertyChanged("WritePcToRegisterLine"); }
+            set { writePcToRegisterLine = value; RaisePropertyChanged(() => WritePcToRegisterLine); }
             get { return writePcToRegisterLine; }
         }
 
         public SolidColorBrush DataMemoryAddressLine
         {
-            set { dataMemoryAddressLine = value; OnPropertyChanged("DataMemoryAddressLine"); }
+            set { dataMemoryAddressLine = value; RaisePropertyChanged(() => DataMemoryAddressLine); }
             get { return dataMemoryAddressLine; }
         }
 
         public SolidColorBrush RegisterFileWriteBackLine
         {
-            set { registerFileWriteBackLine = value; OnPropertyChanged("RegisterFileWriteBackLine"); }
+            set { registerFileWriteBackLine = value; RaisePropertyChanged(() => RegisterFileWriteBackLine); }
             get { return registerFileWriteBackLine; }
         }
 
         /* Muxes */
         public SolidColorBrush BranchMux
         {
-            set { branchMux = value; OnPropertyChanged("BranchMux"); }
+            set { branchMux = value; RaisePropertyChanged(() => BranchMux); }
             get { return branchMux; }
         }
 
         public SolidColorBrush JumpMux
         {
-            set { jumpMux = value; OnPropertyChanged("JumpMux"); }
+            set { jumpMux = value; RaisePropertyChanged(() => JumpMux); }
             get { return jumpMux; }
         }
 
         public SolidColorBrush AluSourceMux
         {
-            set { aluSourceMux = value; OnPropertyChanged("AluSourceMux"); }
+            set { aluSourceMux = value; RaisePropertyChanged(() => AluSourceMux); }
             get { return aluSourceMux; }
         }
 
         public SolidColorBrush DataMemoryMux
         {
-            set { dataMemoryMux = value; OnPropertyChanged("DataMemoryMux"); }
+            set { dataMemoryMux = value; RaisePropertyChanged(() => DataMemoryMux); }
             get { return dataMemoryMux; }
         }
 
         /* Control Lines */
         public SolidColorBrush BranchControlLine
         {
-            set { branchControlLine = value; OnPropertyChanged("BranchControlLine"); }
+            set { branchControlLine = value; RaisePropertyChanged(() => BranchControlLine); }
             get { return branchControlLine; }
         }
 
         public SolidColorBrush JumpControlLine
         {
-            set { jumpControlLine = value; OnPropertyChanged("JumpControlLine"); }
+            set { jumpControlLine = value; RaisePropertyChanged(() => JumpControlLine); }
             get { return jumpControlLine; }
         }
 
         public SolidColorBrush ALUSourceControlLine
         {
-            set { aluSourceControlLine = value; OnPropertyChanged("ALUSourceControlLine"); }
+            set { aluSourceControlLine = value; RaisePropertyChanged(() => ALUSourceControlLine); }
             get { return aluSourceControlLine; }
         }
 
         public SolidColorBrush ALUOperationControlLine
         {
-            set { aluSourceControlLine = value; OnPropertyChanged("ALUOperationControlLine"); }
+            set { aluOperationControlLine = value; RaisePropertyChanged(() => ALUOperationControlLine); }
             get { return aluOperationControlLine; }
         }
 
         public SolidColorBrush DataMemoryControlLine
         {
-            set { dataMemoryControlLine = value; OnPropertyChanged("DataMemoryControlLine"); }
+            set { dataMemoryControlLine = value; RaisePropertyChanged(() => DataMemoryControlLine); }
             get { return dataMemoryControlLine; }
         }
 
         public SolidColorBrush RegFileInputControlLine
         {
-            set { regFileInputControlLine = value; OnPropertyChanged("RegFileInputControlLine"); }
+            set { regFileInputControlLine = value; RaisePropertyChanged(() => RegFileInputControlLine); }
             get { return regFileInputControlLine; }
         }
 
         public SolidColorBrush RegFileWriteControlLine
         {
-            set { regFileWriteControlLine = value; OnPropertyChanged("RegFileWriteControlLine"); }
+            set { regFileWriteControlLine = value; RaisePropertyChanged(() => RegFileWriteControlLine); }
             get { return regFileWriteControlLine; }
         }
 
         public double RectangleWidth
         {
             get { return rectangleWidth; }
-            set { rectangleWidth = value;  OnPropertyChanged("RectangleWidth"); }
+            set { rectangleWidth = value; RaisePropertyChanged(() => RectangleWidth); }
         }
 
         public double RectangleHeight 
         {
             get {return rectangleHeight;}
-            set { rectangleHeight = value;  OnPropertyChanged("RectangleHeight"); }
-        }
-
-        // Create the OnPropertyChanged method to raise the event
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
+            set { rectangleHeight = value; RaisePropertyChanged(() => RectangleHeight); }
         }
     }
 }

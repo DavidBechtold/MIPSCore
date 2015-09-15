@@ -83,12 +83,19 @@
     <Compile Include="Services\IOpenFileDialogService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="Services\OpenFileDialogService.cs" />
-    <Compile Include="ViewModel\DelegateCommand.cs" />
-    <Compile Include="ViewModel\IMIPSCoreViewModel.cs" />
+    <Compile Include="ViewModel\IMIPSViewModel.cs" />
     <Compile Include="ViewModel\MIPSCoreViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\MIPSMemoryViewModel.cs" />
+    <Compile Include="ViewModel\MIPSRegisterViewModel.cs" />
     <Compile Include="View\MIPSCore.xaml.cs">
       <DependentUpon>MIPSCore.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MIPSMemory.xaml.cs">
+      <DependentUpon>MIPSMemory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MIPSRegister.xaml.cs">
+      <DependentUpon>MIPSRegister.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -112,6 +119,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\MIPSMemory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MIPSRegister.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -131,7 +146,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="Configurations\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -139,7 +154,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Configurations\App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MIPSCore\MIPSCore.csproj">

@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="MIPSCoreUI.View.MIPSMemory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Loaded="Window_Loaded">
+    <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-28">
+        <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray">
+            <TabControl>
+                <TabItem Header="Instruction">
+                    <ScrollViewer>
+                        <TextBlock Text="{Binding MIPSInstructionMemory}"/>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Data">
+                    <ScrollViewer>
+                        <TextBlock Text="{Binding MIPSDataMemory}"/>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </GroupBox>
+    </Grid>
+</UserControl>

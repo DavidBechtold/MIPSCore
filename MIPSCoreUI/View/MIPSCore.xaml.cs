@@ -1,4 +1,5 @@
-﻿using MIPSCoreUI.ViewModel;
+﻿using MIPSCoreUI.Bootstrapper;
+using MIPSCoreUI.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace MIPSCoreUI.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            this.DataContext = CBootstrapper.MipsCoreViewModel;
         }
     }
 }

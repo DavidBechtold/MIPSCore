@@ -17,8 +17,8 @@ namespace MIPSCoreUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var boot = new CBootstrapper();
-            this.DataContext = boot.MainWindowViewModel;
+            CBootstrapper.Init();
+            this.DataContext = CBootstrapper.MainWindowViewModel;
         }
     }
 }

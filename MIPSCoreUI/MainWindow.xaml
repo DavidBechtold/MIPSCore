@@ -4,44 +4,57 @@
         xmlns:core="clr-namespace:System;assembly=mscorlib"
         xmlns:BaseObjects="clr-namespace:MIPSCoreUI.BaseObjects"
         xmlns:View="clr-namespace:MIPSCoreUI.View"
-        Title="MainWindow" Height="700" Width="1400"  
+        Title="MainWindow" Height="750" Width="1550"  
     WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
-  <Grid>
+    <Grid>
+        <StackPanel VerticalAlignment="Top">
+            <Menu Width="Auto" Height="20">
+                <MenuItem Header="Core">
+                    <MenuItem x:Name="LoadFile" Header="Load File" HorizontalAlignment="Left" Command="{Binding LoadFile}"/>
+                </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left"/>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem x:Name="About" Header="&amp;About" HorizontalAlignment="Left"/>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
 
-    <View:MIPSCore Margin="112,126,342,60"></View:MIPSCore>
+        <View:MIPSCore Margin="374,236,230,10"/>
+        <View:MIPSRegister Margin="1312,31,10,10"/>
+        <View:MIPSMemory Margin="0,31,1245,36"/>
 
+        <Button Content="Clock" HorizontalAlignment="Left" Margin="604,51,0,0" VerticalAlignment="Top" Width="76" Command="{Binding Clock}"/>
 
-
-    <Button Content="Clock" HorizontalAlignment="Left" Margin="531,23,0,0" VerticalAlignment="Top" Width="75" Command="{Binding Clock}"/>
-
-    <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="231,11,0,0" VerticalAlignment="Top" MinWidth="250">
-      <StackPanel>
-        <DockPanel>
-          <Label Content="Name:" Width="60"/>
-          <TextBox Text="{Binding ExecutedInstructionName}" Height="22" HorizontalAlignment="Stretch"/>
-        </DockPanel>
-        <DockPanel>
-          <Label Content="Example:" Width="60"/>
-          <TextBox Text="{Binding ExecutedInstructionExample}" Height="22" HorizontalAlignment="Stretch"/>
-        </DockPanel>
-        <DockPanel>
-          <Label Content="Meaning:" Width="60"/>
-          <TextBox Text="{Binding ExecutedInstructionMeaning}" Height="22" HorizontalAlignment="Stretch"/>
-        </DockPanel>
-        <DockPanel>
-          <Label Content="Format:" Width="60"/>
-          <TextBox Text="{Binding ExecutedInstructionFormat}" Height="22" HorizontalAlignment="Stretch"/>
-        </DockPanel>
-        <DockPanel>
-          <Label Content="Function:" Width="60"/>
-          <TextBox Text="{Binding ExecutedInstructionFunction}" Height="22" HorizontalAlignment="Stretch"/>
-        </DockPanel>
-        <DockPanel>
-          <Label Content="OpCode:" Width="60"/>
-          <TextBox Text="{Binding ExecutedInstructionOpCode}" Height="22" HorizontalAlignment="Stretch"/>
-        </DockPanel>
-      </StackPanel>
-    </GroupBox>
-  </Grid>
+        <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="330,31,0,0" VerticalAlignment="Top" MinWidth="250">
+            <StackPanel>
+                <DockPanel>
+                    <Label Content="Name:" Width="60"/>
+                    <TextBox Text="{Binding ExecutedInstructionName}" Height="22" HorizontalAlignment="Stretch"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label Content="Example:" Width="60"/>
+                    <TextBox Text="{Binding ExecutedInstructionExample}" Height="22" HorizontalAlignment="Stretch"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label Content="Meaning:" Width="60"/>
+                    <TextBox Text="{Binding ExecutedInstructionMeaning}" Height="22" HorizontalAlignment="Stretch"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label Content="Format:" Width="60"/>
+                    <TextBox Text="{Binding ExecutedInstructionFormat}" Height="22" HorizontalAlignment="Stretch"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label Content="Function:" Width="60"/>
+                    <TextBox Text="{Binding ExecutedInstructionFunction}" Height="22" HorizontalAlignment="Stretch"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label Content="OpCode:" Width="60"/>
+                    <TextBox Text="{Binding ExecutedInstructionOpCode}" Height="22" HorizontalAlignment="Stretch"/>
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
 
 </Window>
