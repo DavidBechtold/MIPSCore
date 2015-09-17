@@ -3,20 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:MIPSCoreUI.Converter" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              Loaded="Window_Loaded">
+    <UserControl.Resources>
+        <converter:InstructionToColorConverter x:Key="InstructionToColorConverter" />
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <Style.Triggers>
+                <!-- Color of the item depending on percentage value. -->
+                <DataTrigger Binding="{Binding Address}" Value="1" >
+                    <Setter Property="Foreground" Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
     <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-28">
         <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray">
             <TabControl>
                 <TabItem Header="Instruction">
                     <ScrollViewer>
-                        <TextBlock Text="{Binding MIPSInstructionMemory}"/>
+                        <TextBlock Name="InstructionMemory" Text="{Binding MIPSInstructionMemory}"/>
                     </ScrollViewer>
                 </TabItem>
                 <TabItem Header="Data">
                     <ScrollViewer>
-                        <TextBlock Text="{Binding MIPSDataMemory}"/>
+                        <TextBlock Name="DataMemory" Text="{Binding MIPSDataMemory}"/>
                     </ScrollViewer>
                 </TabItem>
             </TabControl>

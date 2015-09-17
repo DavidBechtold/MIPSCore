@@ -21,7 +21,7 @@
             </Menu>
         </StackPanel>
 
-        <View:MIPSCore Margin="374,236,230,10"/>
+        <View:MIPSCore Margin="340,195,264,36"/>
         <View:MIPSRegister Margin="1312,31,10,10"/>
         <View:MIPSMemory Margin="0,31,1245,36"/>
 
@@ -31,7 +31,7 @@
             <StackPanel>
                 <DockPanel>
                     <Label Content="Name:" Width="60"/>
-                    <TextBox Text="{Binding ExecutedInstructionName}" Height="22" HorizontalAlignment="Stretch"/>
+                    <TextBox Name="TextboxInstructionMemory" Text="{Binding ExecutedInstructionName}" Height="22" HorizontalAlignment="Stretch"/>
                 </DockPanel>
                 <DockPanel>
                     <Label Content="Example:" Width="60"/>

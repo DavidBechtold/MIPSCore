@@ -81,10 +81,12 @@ namespace MIPSCoreUI.View
         public void OnLoadFile()
         {
             openFileDialog.SetFilter("Object Dumps (*.objdump)|*.objdump|All files (*.*)|*.*");
-            openFileDialog.OpenFileDialog();
+            if (!openFileDialog.OpenFileDialog())
+                return;
 
             core.programObjdump(openFileDialog.GetFileName());
             core.startCore();
+            mipsMemoryViewModel.refresh();
         }
 
         private void fillExecutedInstructionGroupBox()

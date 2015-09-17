@@ -79,6 +79,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper\Bootstrapper.cs" />
+    <Compile Include="Converter\InstructionToColorConverter.cs" />
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\IOpenFileDialogService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
@@ -162,7 +163,9 @@
       <Name>MIPSCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Styles\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\MUX2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

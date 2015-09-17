@@ -67,6 +67,9 @@ namespace MIPSCore
         {
             programmCompleted = false;
             registerFile.flush();
+            instructionMemory.flush();
+            dataMemory.flush();
+           
 
             if (initStackPointer)
                 registerFile.initStackPointer();

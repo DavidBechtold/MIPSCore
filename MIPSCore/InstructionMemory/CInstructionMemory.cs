@@ -117,6 +117,9 @@ namespace MIPSCore.InstructionMemory
             rs = new CWord((UInt32)0);
             rt = new CWord((UInt32)0);
             jumpTarget = new CWord((UInt32)0);
+            programCounter = new CWord((UInt32)0);
+            firstCommand = true;
+            nextInstruction = new CWord(0);
 
             base.flush();
         }
