@@ -8,13 +8,16 @@ using MIPSCore.RegisterFile;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MIPSRegisterViewModel : NotificationObject, IMIPSViewModel
+    public enum RegisterView { HexaDecimal, SignedDecimal, UnsignedDecimal };
+    public class MIPSRegisterViewModel : NotificationObject, IMIPSRegisterViewModel
     {
         private CCore core;
         private Dispatcher dispatcher;
-        public bool DisplayHexadecimal { get; set; }
+        public RegisterView Display { get; set; }
 
         public string MIPSRegisters { get; private set; }
+
+
 
         public MIPSRegisterViewModel(CCore core, Dispatcher dispatcher)
         {
@@ -22,6 +25,7 @@ namespace MIPSCoreUI.ViewModel
             if (dispatcher == null) throw new ArgumentNullException("dispatcher");
             this.core = core;
             this.dispatcher = dispatcher;
+            Display = RegisterView.SignedDecimal;
         }
 
         public void refresh()
@@ -34,11 +38,12 @@ namespace MIPSCoreUI.ViewModel
 
         private void refreshGUI()
         {
-
-            if (DisplayHexadecimal)
-                MIPSRegisters = registerToHex();
-            else
-                MIPSRegisters = registerToUnsignedDec();
+            switch (Display)
+            {
+                case RegisterView.HexaDecimal: MIPSRegisters = registerToHex(); break;
+                case RegisterView.UnsignedDecimal: MIPSRegisters = registerToUnsignedDec(); break;
+                case RegisterView.SignedDecimal: MIPSRegisters = registerToSignedDec(); break;
+            }
             RaisePropertyChanged(() => MIPSRegisters);
         }
 
@@ -50,6 +55,7 @@ namespace MIPSCoreUI.ViewModel
             result += "\t$rs\t:" + core.getRegisterFile.readRs().getHexadecimal + "\n";
             result += "\t$rd\t:" + core.getRegisterFile.readRd().getHexadecimal + "\n";
             result += "\t$rt\t:" + core.getRegisterFile.readRs().getHexadecimal + "\n";
+            result += "\t$imm\t:" + core.getInstructionMemory.getImmediate.getHexadecimal + "\n";
             result += "\n";
             for (ushort i = 0; i < CRegisterFile.RegisterCount; i++)
                 result += core.getRegisterFile.toStringRegisterHex(i) + "\n";
@@ -64,9 +70,25 @@ namespace MIPSCoreUI.ViewModel
             result += "\t$rs\t:" + core.getRegisterFile.readRs().getUnsignedDecimal + "\n";
             result += "\t$rd\t:" + core.getRegisterFile.readRd().getUnsignedDecimal + "\n";
             result += "\t$rt\t:" + core.getRegisterFile.readRs().getUnsignedDecimal + "\n";
+            result += "\t$imm\t:" + core.getInstructionMemory.getImmediate.getUnsignedDecimal + "\n";
             result += "\n";
             for (ushort i = 0; i < CRegisterFile.RegisterCount; i++)
                 result += core.getRegisterFile.toStringRegisterUnsigned(i) + "\n";
+            return result;
+        }
+
+        private string registerToSignedDec()
+        {
+            string result = "\t$pc\t:" + core.getInstructionMemory.getProgramCounter.getSignedDecimal + "\n";
+            result += "\t$lo\t:" + core.getAlu.getResultLO.getSignedDecimal + "\n";
+            result += "\t$hi\t:" + core.getAlu.getResultHI.getSignedDecimal + "\n";
+            result += "\t$rs\t:" + core.getRegisterFile.readRs().getSignedDecimal + "\n";
+            result += "\t$rd\t:" + core.getRegisterFile.readRd().getSignedDecimal + "\n";
+            result += "\t$rt\t:" + core.getRegisterFile.readRs().getSignedDecimal + "\n";
+            result += "\t$imm\t:" + core.getInstructionMemory.getImmediate.getSignedDecimal + "\n";
+            result += "\n";
+            for (ushort i = 0; i < CRegisterFile.RegisterCount; i++)
+                result += core.getRegisterFile.toStringRegister(i) + "\n";
             return result;
         }
     }

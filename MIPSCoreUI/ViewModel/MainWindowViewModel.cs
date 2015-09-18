@@ -15,13 +15,16 @@ namespace MIPSCoreUI.View
         private CCore core;
         private CControlUnit controlUnit;
         private IMIPSViewModel mipsCoreViewModel;
-        private IMIPSViewModel mipsRegisterViewModel;
+        private IMIPSRegisterViewModel mipsRegisterViewModel;
         private IMIPSViewModel mipsMemoryViewModel;
         private IMessageBoxService messageBox;
         private IOpenFileDialogService openFileDialog;
 
         public DelegateCommand Clock { get; private set; }
         public DelegateCommand LoadFile { get; private set; }
+        public DelegateCommand ViewRegisterHex { get; private set; }
+        public DelegateCommand ViewRegisterSignedDecimal { get; private set; }
+        public DelegateCommand ViewRegisterUnsignedDecimal { get; private set; }
 
         /* executed command */
         private string executedInstructionName;
@@ -31,7 +34,7 @@ namespace MIPSCoreUI.View
         private string executedInstructionFunction;
         private string executedInstructionOpCode;
 
-        public MainWindowViewModel(CCore core, IMIPSViewModel mipsCoreViewModel, IMIPSViewModel mipsRegisterViewModel, IMIPSViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
+        public MainWindowViewModel(CCore core, IMIPSViewModel mipsCoreViewModel, IMIPSRegisterViewModel mipsRegisterViewModel, IMIPSViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (mipsCoreViewModel == null) throw new ArgumentNullException("mipsCoreViewModel");
@@ -54,6 +57,9 @@ namespace MIPSCoreUI.View
             /* install delegates für command bindings */
             Clock = new DelegateCommand(() => OnClock());
             LoadFile = new DelegateCommand(() => OnLoadFile());
+            ViewRegisterHex = new DelegateCommand(() => ViewRegister(RegisterView.HexaDecimal));
+            ViewRegisterSignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.SignedDecimal));
+            ViewRegisterUnsignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.UnsignedDecimal)); 
         }
 
         private void clocked(Object sender, EventArgs args)
@@ -73,12 +79,12 @@ namespace MIPSCoreUI.View
             messageBox.ShowNotification(core.getExceptionString());
         }
 
-        public void OnClock()
+        private void OnClock()
         {
             core.singleClock();
         }
 
-        public void OnLoadFile()
+        private void OnLoadFile()
         {
             openFileDialog.SetFilter("Object Dumps (*.objdump)|*.objdump|All files (*.*)|*.*");
             if (!openFileDialog.OpenFileDialog())
@@ -88,6 +94,12 @@ namespace MIPSCoreUI.View
             core.startCore();
             mipsRegisterViewModel.refresh();
             mipsMemoryViewModel.refresh();
+        }
+
+        private void ViewRegister(RegisterView view)
+        {
+            mipsRegisterViewModel.Display = view;
+            mipsRegisterViewModel.refresh();
         }
 
         private void fillExecutedInstructionGroupBox()

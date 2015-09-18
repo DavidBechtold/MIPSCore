@@ -163,9 +163,7 @@
       <Name>MIPSCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Styles\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\MUX2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

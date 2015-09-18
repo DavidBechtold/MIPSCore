@@ -10,10 +10,14 @@
         <StackPanel VerticalAlignment="Top">
             <Menu Width="Auto" Height="20">
                 <MenuItem Header="Core">
-                    <MenuItem x:Name="LoadFile" Header="Load File" HorizontalAlignment="Left" Command="{Binding LoadFile}"/>
+                    <MenuItem Header="Load File" HorizontalAlignment="Left" Command="{Binding LoadFile}"/>
                 </MenuItem>
-                <MenuItem Header="_Tools">
-                    <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left"/>
+                <MenuItem Header="Register">
+                    <MenuItem Header="View">
+                        <MenuItem Header="Hexadecimal" HorizontalAlignment="Left" Command="{Binding ViewRegisterHex}"/>
+                        <MenuItem Header="SignedDecimal" HorizontalAlignment="Left" Command="{Binding ViewRegisterSignedDecimal}"/>
+                        <MenuItem  Header="UnsignedDecimal" HorizontalAlignment="Left" Command="{Binding ViewRegisterUnsignedDecimal}"/>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem x:Name="About" Header="&amp;About" HorizontalAlignment="Left"/>

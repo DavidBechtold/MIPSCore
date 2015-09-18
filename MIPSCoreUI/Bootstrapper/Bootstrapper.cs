@@ -13,7 +13,7 @@ namespace MIPSCoreUI.Bootstrapper
         public static CCore Core { get; private set; }
         public static MainWindowViewModel MainWindowViewModel { get; private set; }
         public static IMIPSViewModel MipsCoreViewModel { get; private set; }
-        public static IMIPSViewModel MipsRegisterViewModel { get; private set; }
+        public static IMIPSRegisterViewModel MipsRegisterViewModel { get; private set; }
         public static IMIPSViewModel MipsMemoryViewModel { get; private set; }
         public static IMessageBoxService MessageBox { get; private set; }
         public static IOpenFileDialogService OpenFileDialog { get; private set; }
