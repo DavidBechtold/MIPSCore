@@ -86,6 +86,7 @@ namespace MIPSCoreUI.View
 
             core.programObjdump(openFileDialog.GetFileName());
             core.startCore();
+            mipsRegisterViewModel.refresh();
             mipsMemoryViewModel.refresh();
         }
 

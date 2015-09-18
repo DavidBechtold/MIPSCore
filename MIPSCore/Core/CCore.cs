@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -311,6 +312,11 @@ namespace MIPSCore
         public string getExceptionString()
         {
             return excetpionString;
+        }
+
+        public ArrayList Code
+        {
+            get { return programmer.Code; }
         }
     }
 }

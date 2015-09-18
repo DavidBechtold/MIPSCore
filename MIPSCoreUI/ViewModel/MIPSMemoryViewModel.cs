@@ -50,20 +50,29 @@ namespace MIPSCoreUI.ViewModel
         {
             /* puh ^^ had problems with the performance, so i try to call the func so few as possible */
             string stringToAdd = "";
-            for (uint i = 0; i < core.getInstructionMemory.getLastByteAddress; i = i + 4)
+            int codeCounter = 0;
+            for (uint i = 0; i < core.getInstructionMemory.getLastByteAddress; i = i + 4, codeCounter++)
             {
                 if (core.getInstructionMemory.getProgramCounter.getUnsignedDecimal == i)
                 {
                     CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, false, false);
                     stringToAdd = Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
-                    stringToAdd += core.getInstructionMemory.readWord(i).getHexadecimal + "\n";
+                    stringToAdd += core.getInstructionMemory.readWord(i).getHexadecimal + "   ";
+                    if (codeCounter < core.Code.Count)
+                        stringToAdd += core.Code[codeCounter] + "\n";
+                    else
+                        stringToAdd += "\n";
                     CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, true, false);
                     stringToAdd = "";
                     continue;
                 }
 
                 stringToAdd += Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
-                stringToAdd += core.getInstructionMemory.readWord(i).getHexadecimal + "\n";
+                stringToAdd += core.getInstructionMemory.readWord(i).getHexadecimal + "   ";
+                if(codeCounter < core.Code.Count)
+                    stringToAdd += core.Code[codeCounter] + "\n";
+                else
+                    stringToAdd += "\n";
             }
             CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, false, false);
         }

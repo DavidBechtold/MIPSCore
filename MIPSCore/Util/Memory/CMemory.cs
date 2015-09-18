@@ -12,13 +12,13 @@ namespace MIPSCore.Util
     public class CMemory : IMemory
     {
         private Byte[] memory;
-        private MemSize size;
+        public MemSize Size { get;  private set; } 
         private UInt32 endByteAddress;
         private CWord offset;           //address offset of the addresses
        
         public CMemory(MemSize size)
         {
-            this.size = size;
+            this.Size = size;
             createMemory(size);
             offset = new CWord((UInt32) 0);
         }

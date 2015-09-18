@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using MIPSCore;
@@ -15,13 +16,20 @@ namespace MIPSCore.Util
         private CCore core;
         private string textSegment;
         private string dataSegment;
-        Regex rgx;
+        private Regex rgx;
+        private Regex rgxCode;
+        private string[] Segments = { ".text", ".reginfo", ".data" };
+        public ArrayList Code { get; private set; }
+
         public CMIPSProgrammer(CCore core)
         {
             this.core = core;
             textSegment = "";
             dataSegment = "";
             rgx = new Regex("((?<=  )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
+            rgxCode = new Regex("(?<=([0-9]|[a-f]){8}( *\t))([a-z]|[A-Z]|[0-9]|\t| |,|<|>)*", RegexOptions.IgnoreCase);
+            Code = new ArrayList();
+
         }
 
         public void programObjdump(string path)
@@ -32,6 +40,7 @@ namespace MIPSCore.Util
 
             MatchCollection textMatch = rgx.Matches(textSegment);
             MatchCollection dataMatch = rgx.Matches(dataSegment);
+            MatchCollection codeMatch = rgxCode.Matches(textSegment);
 
             if (textMatch.Count / 2 * 4 >= core.getInstructionMemory.sizeBytes)
                 throw new IndexOutOfRangeException(this.GetType().Name + ".text segment is greater than " + core.getInstructionMemory.sizeBytes + ".");
@@ -40,33 +49,19 @@ namespace MIPSCore.Util
 
             programRegex(textMatch, core.getInstructionMemory);
             programRegex(dataMatch, core.getDataMemory);
-            
+            programRegex(codeMatch, Code);
         }
 
-        public void extractSegments(string path)
+        private void extractSegments(string path)
         {
             string strCode = System.IO.File.ReadAllText(path);
-            int textSegmentStart = strCode.IndexOf(".text:");
-            int dataSegmentStart = strCode.IndexOf(".data:");
 
-            if (textSegmentStart == -1)
-                throw new ArgumentException("The file " + path + "does not contain a .text segment");
-
-            if (dataSegmentStart == -1)
-                textSegment = strCode;
-            else if (dataSegmentStart > textSegmentStart)
-            {
-                textSegment = strCode.Substring(textSegmentStart, dataSegmentStart - textSegmentStart);
-                dataSegment = strCode.Substring(dataSegmentStart);
-            }
-            else
-            {
-                textSegment = strCode.Substring(dataSegmentStart, textSegmentStart - dataSegmentStart);
-                dataSegment = strCode.Substring(textSegmentStart);
-            }
+            textSegment = getSegment(strCode, ".text");
+            if (textSegment == "") throw new ArgumentException("The file " + path + "does not contain a .text segment");
+            dataSegment = getSegment(strCode, ".data");
         }
 
-        public void programRegex(MatchCollection match, IMemory memory)
+        private void programRegex(MatchCollection match, IMemory memory)
         {
             UInt32 counter = 0;
             UInt32 address = 0;
@@ -84,6 +79,37 @@ namespace MIPSCore.Util
                 }
                 counter++;
             }
+        }
+
+        private void programRegex(MatchCollection match, ArrayList list)
+        {
+            list.Clear();
+            foreach (Match codeMatch in match)
+            {
+                string stringMatch = codeMatch.Value;
+                stringMatch = stringMatch.Replace('\t', ' ');
+                list.Add(stringMatch);
+            }
+        }
+
+        private string getSegment(string file, string segment)
+        {
+            if (file == null) throw new ArgumentNullException("file");
+            if (segment == null) throw new ArgumentNullException("segment");
+
+            int segmentStart = file.IndexOf(segment);
+            int segmentEnd = file.Length;
+            if (segmentStart <= 0)
+                return "";
+
+            foreach (var s in Segments)
+            {
+                int tempSegmentEnd = file.IndexOf(s, segmentStart);
+                if ((tempSegmentEnd > 0) && (tempSegmentEnd > segmentStart) && (tempSegmentEnd < segmentEnd))
+                    segmentEnd = tempSegmentEnd;
+            }
+
+            return file.Substring(segmentStart, segmentEnd - segmentStart);
         }
     }
 }
