@@ -18,6 +18,7 @@ namespace MIPSCoreUI.Bootstrapper
         public static IMessageBoxService MessageBox { get; private set; }
         public static IOpenFileDialogService OpenFileDialog { get; private set; }
         private static Action<string, bool, bool> highlightFuncInstructionMemory;
+        private static Action redraw;
 
         public static void Init()
         {
@@ -44,6 +45,16 @@ namespace MIPSCoreUI.Bootstrapper
                 highlightFuncInstructionMemory = value;
             }
             get { return highlightFuncInstructionMemory; }
+        }
+
+        public static Action Redraw
+        {
+            set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                redraw = value;
+            }
+            get { return redraw; }
         }
     }
 }

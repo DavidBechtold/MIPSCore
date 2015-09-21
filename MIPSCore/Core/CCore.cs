@@ -28,6 +28,7 @@ namespace MIPSCore
         private const MemSize stdInstructionMemorySize_kB = MemSize.Size_1kB;
         private const MemSize stdDataMemorySize_kB = MemSize.Size_1kB;
         private const bool stdInitStackPointer = true;
+        private ExecutionMode mode; 
 
         private UInt64 coreFrequency_Hz;
         private MemSize instructionMemorySize_kB;
@@ -62,6 +63,7 @@ namespace MIPSCore
             programmer = new CMIPSProgrammer(this);
             programmCompleted = false;
             excetpionString = "";
+            setMode(ExecutionMode.singleStep);
         }
 
         private void initCore()
@@ -103,6 +105,7 @@ namespace MIPSCore
 
         public void setMode(ExecutionMode mode)
         {
+            this.mode = mode;
             switch (mode)
             {
                 case ExecutionMode.singleStep: clock.SingleStep = true;  break;
@@ -317,6 +320,11 @@ namespace MIPSCore
         public ArrayList Code
         {
             get { return programmer.Code; }
+        }
+
+        public ExecutionMode Mode
+        {
+            get { return mode; }
         }
     }
 }

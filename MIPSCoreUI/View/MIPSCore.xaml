@@ -149,11 +149,11 @@
         </Border.Style>
         <Grid>
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Register File</TextBlock>
-          <TextBlock Text="write" Margin="0,-30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}" Foreground="{Binding RegFileWriteControlLine}" />
-          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}">rs</TextBlock>
-          <TextBlock Text="rd" Margin="0,30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="rt" Margin="0,60,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
-          <TextBlock Text="Write" Margin="0,90,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="write" Foreground="{Binding RegFileWriteControlLine}" Margin="0,-30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="rs" Foreground="{Binding RegisterFileRsLine}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="rd" Foreground="{Binding RegisterFileRdLine}" Margin="0,30,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="rt" Foreground="{Binding RegisterFileRtLine}" Margin="0,60,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
+          <TextBlock Text="Write" Foreground="{Binding RegisterFileWriteBackLine}" Margin="0,90,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}"/>
           <TextBlock Text="rs" Margin="0,35,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
           <TextBlock Text="rt" Margin="0,81,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}"/>
         </Grid>

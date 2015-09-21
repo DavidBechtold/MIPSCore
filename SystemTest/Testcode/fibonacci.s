@@ -1,6 +1,6 @@
 .text
 main:
-	li $a0, 2
+	li $a0, 4
 	jal fib     #call fib (n)
 	move $t3,$v0    #result is in $t3
 

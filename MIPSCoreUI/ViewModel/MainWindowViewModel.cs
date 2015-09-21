@@ -7,6 +7,7 @@ using System.ComponentModel;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore.ControlUnit;
+using MIPSCoreUI.Bootstrapper;
 
 namespace MIPSCoreUI.View
 {
@@ -21,6 +22,8 @@ namespace MIPSCoreUI.View
         private IOpenFileDialogService openFileDialog;
 
         public DelegateCommand Clock { get; private set; }
+        public DelegateCommand Run { get; private set; }
+        public DelegateCommand Stop { get; private set; }
         public DelegateCommand LoadFile { get; private set; }
         public DelegateCommand ViewRegisterHex { get; private set; }
         public DelegateCommand ViewRegisterSignedDecimal { get; private set; }
@@ -33,6 +36,7 @@ namespace MIPSCoreUI.View
         private string executedInstructionFormat;
         private string executedInstructionFunction;
         private string executedInstructionOpCode;
+        private string excecutedInstructionAluOperation;
 
         public MainWindowViewModel(CCore core, IMIPSViewModel mipsCoreViewModel, IMIPSRegisterViewModel mipsRegisterViewModel, IMIPSViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
         {
@@ -56,6 +60,8 @@ namespace MIPSCoreUI.View
 
             /* install delegates für command bindings */
             Clock = new DelegateCommand(() => OnClock());
+            Run = new DelegateCommand(() => OnRun());
+            Stop = new DelegateCommand(() => OnStop());
             LoadFile = new DelegateCommand(() => OnLoadFile());
             ViewRegisterHex = new DelegateCommand(() => ViewRegister(RegisterView.HexaDecimal));
             ViewRegisterSignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.SignedDecimal));
@@ -68,10 +74,14 @@ namespace MIPSCoreUI.View
             mipsCoreViewModel.refresh();
             mipsRegisterViewModel.refresh();
             mipsMemoryViewModel.refresh();
+
+            if (core.Mode == ExecutionMode.runToCompletion)
+                CBootstrapper.Redraw();
         }
 
         private void completed(Object sender, EventArgs args)
         {
+            core.setMode(ExecutionMode.singleStep);
         }
 
         private void exception(Object sender, EventArgs args)
@@ -82,6 +92,17 @@ namespace MIPSCoreUI.View
         private void OnClock()
         {
             core.singleClock();
+        }
+
+        private void OnRun()
+        {
+            core.setMode(ExecutionMode.runToCompletion);
+            core.singleClock();
+        }
+
+        private void OnStop()
+        {
+            core.setMode(ExecutionMode.singleStep);
         }
 
         private void OnLoadFile()
@@ -110,6 +131,7 @@ namespace MIPSCoreUI.View
             ExecutedInstructionFormat = controlUnit.GetInstructionFormat;
             ExecutedInstructionFunction = controlUnit.GetInstructionFunction;
             ExecutedInstructionOpCode = controlUnit.GetInstructionOpCode;
+            ExcecutedInstructionAluOperation = controlUnit.getAluControl.ToText();
         }
 
         /* Executed Command */
@@ -148,5 +170,11 @@ namespace MIPSCoreUI.View
             set { executedInstructionOpCode = value; RaisePropertyChanged(() => ExecutedInstructionOpCode); }
             get { return executedInstructionOpCode; }
         }
+        public String ExcecutedInstructionAluOperation
+        {
+            set { excecutedInstructionAluOperation = value; RaisePropertyChanged(() => ExcecutedInstructionAluOperation); }
+            get { return excecutedInstructionAluOperation; }
+        }
+        
     }
 }
