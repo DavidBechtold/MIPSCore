@@ -22,7 +22,7 @@
     <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-28">
         <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray">
             <TabControl>
-                <TabItem Header="Instruction">
+                <TabItem Header="CInstruction">
                     <ScrollViewer>
                         <TextBlock Name="InstructionMemory" Text="{Binding MIPSInstructionMemory}"/>
                     </ScrollViewer>

@@ -11,7 +11,7 @@ namespace MIPSCoreUI.Converter
             try
             {
                 value = System.Convert.ToUInt32((string)value, 16);
-                if ((uint)value == CBootstrapper.Core.getInstructionMemory.getProgramCounter.getUnsignedDecimal)
+                if ((uint)value == CBootstrapper.Core.InstructionMemory.GetProgramCounter.getUnsignedDecimal)
                     return 1;
                 return 0;
             }

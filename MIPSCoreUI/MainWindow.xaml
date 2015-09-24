@@ -1,8 +1,6 @@
 ﻿<Window x:Class="MIPSCoreUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:core="clr-namespace:System;assembly=mscorlib"
-        xmlns:BaseObjects="clr-namespace:MIPSCoreUI.BaseObjects"
         xmlns:View="clr-namespace:MIPSCoreUI.View"
         Title="MainWindow" Height="750" Width="1550"  
     WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
@@ -29,7 +27,7 @@
         <View:MIPSRegister Margin="1312,31,10,10"/>
         <View:MIPSMemory Margin="0,31,1245,36"/>
 
-        <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="302,31,0,0" VerticalAlignment="Top" MinWidth="300" BorderThickness="2" BorderBrush="SlateGray">
+        <GroupBox Header="Executed CInstruction" HorizontalAlignment="Left" Margin="302,31,0,0" VerticalAlignment="Top" MinWidth="300" BorderThickness="2" BorderBrush="SlateGray">
             <StackPanel>
                 <DockPanel>
                     <Label Content="Name:" Width="83"/>

@@ -88,7 +88,7 @@
           </Style>
         </Border.Style>
         <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">Instruction Memory</TextBlock>
+          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource rectFontSizeHeader}" TextWrapping="Wrap">CInstruction Memory</TextBlock>
           <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource rectFontSize}">Addr.</TextBlock>
           <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource rectFontSize}">Inst.</TextBlock>
         </Grid>

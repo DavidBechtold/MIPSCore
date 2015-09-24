@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MIPSCore;
 using MIPSCore.Util;
-using MIPSCore.InstructionMemory;
 
 namespace CInstructionMemoryTest
 {
@@ -22,7 +21,7 @@ namespace CInstructionMemoryTest
 
             for (UInt32 i = 0; i < CInstructionMemory.endAddress; i++)
             {
-                CWord word = memory.readWord((UInt16)i);
+                CWord word = memory.ReadWord((UInt16)i);
                 Assert.AreEqual(memory.getInstructionInvalidAddress, false);
                 Assert.AreEqual(word.getUnsignedDecimal, i);
             }*/
@@ -36,7 +35,7 @@ namespace CInstructionMemoryTest
             Assert.AreEqual(memory.getInstructionInvalidAddress, true);
 
             memory = new CInstructionMemory();
-            memory.readWord(CInstructionMemory.endAddress + 1);
+            memory.ReadWord(CInstructionMemory.endAddress + 1);
             Assert.AreEqual(memory.getInstructionInvalidAddress, true);*/
         }
     }

@@ -6,15 +6,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
-using MIPSCore.ControlUnit;
+using MIPSCore.Control_Unit;
+using MIPSCore.Util;
 using MIPSCoreUI.Bootstrapper;
 
 namespace MIPSCoreUI.View
 {
     public class MainWindowViewModel :NotificationObject
     {
-        private CCore core;
-        private CControlUnit controlUnit;
+        private MipsCore core;
+        private IControlUnit controlUnit;
         private IMIPSViewModel mipsCoreViewModel;
         private IMIPSRegisterViewModel mipsRegisterViewModel;
         private IMIPSViewModel mipsMemoryViewModel;
@@ -38,7 +39,7 @@ namespace MIPSCoreUI.View
         private string executedInstructionOpCode;
         private string excecutedInstructionAluOperation;
 
-        public MainWindowViewModel(CCore core, IMIPSViewModel mipsCoreViewModel, IMIPSRegisterViewModel mipsRegisterViewModel, IMIPSViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
+        public MainWindowViewModel(MipsCore core, IMIPSViewModel mipsCoreViewModel, IMIPSRegisterViewModel mipsRegisterViewModel, IMIPSViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (mipsCoreViewModel == null) throw new ArgumentNullException("mipsCoreViewModel");
@@ -47,16 +48,16 @@ namespace MIPSCoreUI.View
             if (openFileDialog == null) throw new ArgumentNullException("openFileDialog");
 
             this.core = core;
-            this.controlUnit = core.getControlUnit;
+            controlUnit = core.ControlUnit;
             this.mipsCoreViewModel = mipsCoreViewModel;
             this.mipsRegisterViewModel = mipsRegisterViewModel;
             this.mipsMemoryViewModel = mipsMemoryViewModel;
             this.messageBox = messageBox;
             this.openFileDialog = openFileDialog;
 
-            core.clocked += clocked;
-            core.completed += completed;
-            core.exception += exception;
+            core.Clocked += clocked;
+            core.Completed += completed;
+            core.Exception += exception;
 
             /* install delegates für command bindings */
             Clock = new DelegateCommand(() => OnClock());
@@ -75,34 +76,34 @@ namespace MIPSCoreUI.View
             mipsRegisterViewModel.refresh();
             mipsMemoryViewModel.refresh();
 
-            if (core.Mode == ExecutionMode.runToCompletion)
+            if (core.Mode == ExecutionMode.RunToCompletion)
                 CBootstrapper.Redraw();
         }
 
         private void completed(Object sender, EventArgs args)
         {
-            core.setMode(ExecutionMode.singleStep);
+            core.SetMode(ExecutionMode.SingleStep);
         }
 
         private void exception(Object sender, EventArgs args)
         {
-            messageBox.ShowNotification(core.getExceptionString());
+            messageBox.ShowNotification(core.GetExceptionString());
         }
 
         private void OnClock()
         {
-            core.singleClock();
+            core.SingleClock();
         }
 
         private void OnRun()
         {
-            core.setMode(ExecutionMode.runToCompletion);
-            core.singleClock();
+            core.SetMode(ExecutionMode.RunToCompletion);
+            core.SingleClock();
         }
 
         private void OnStop()
         {
-            core.setMode(ExecutionMode.singleStep);
+            core.SetMode(ExecutionMode.SingleStep);
         }
 
         private void OnLoadFile()
@@ -111,8 +112,8 @@ namespace MIPSCoreUI.View
             if (!openFileDialog.OpenFileDialog())
                 return;
 
-            core.programObjdump(openFileDialog.GetFileName());
-            core.startCore();
+            core.ProgramObjdump(openFileDialog.GetFileName());
+            core.StartCore();
             mipsRegisterViewModel.refresh();
             mipsMemoryViewModel.refresh();
         }
@@ -131,7 +132,7 @@ namespace MIPSCoreUI.View
             ExecutedInstructionFormat = controlUnit.GetInstructionFormat;
             ExecutedInstructionFunction = controlUnit.GetInstructionFunction;
             ExecutedInstructionOpCode = controlUnit.GetInstructionOpCode;
-            ExcecutedInstructionAluOperation = controlUnit.getAluControl.ToText();
+            ExcecutedInstructionAluOperation = controlUnit.AluControl.ToText();
         }
 
         /* Executed Command */

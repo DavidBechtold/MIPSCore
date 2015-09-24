@@ -9,7 +9,7 @@ namespace MIPSCoreConsole
 {
     class CMIPSCoreConsole
     {
-        private static ICore core;
+        private static IMipsCore core;
         private static UInt16 registerReadNumber;
 
         /* Commands */
@@ -24,14 +24,14 @@ namespace MIPSCoreConsole
         static void Main(string[] args)
         {
             /* reads config file and inits all komponents */
-            core = new CCore();
+            core = new MipsCore();
             if (!serveStartArguments(args))
                 return;
 
             /* install event handler */
-            core.completed += new EventHandler(completed);
-            core.clocked += new EventHandler(clocked);
-            core.exception += new EventHandler(exception);
+            core.Completed += new EventHandler(completed);
+            core.Clocked += new EventHandler(clocked);
+            core.Exception += new EventHandler(exception);
 
             /* init commands */
             clock = new CMIPSCoreConsoleCommand("clock");
@@ -42,7 +42,7 @@ namespace MIPSCoreConsole
             controlSignals = new CMIPSCoreConsoleCommand("control");
             usage = new CMIPSCoreConsoleCommand("usage");
 
-            core.startCore();
+            core.StartCore();
             
             serveCommandLineArguments();
         }
@@ -54,13 +54,13 @@ namespace MIPSCoreConsole
 
         static void clocked(object obj, EventArgs args)
         {
-            Console.WriteLine("ProgramCounter:\t" + core.programCounter());
-            Console.WriteLine("Instruction:\t" + core.actualInstruction() + "\n");
+            Console.WriteLine("ProgramCounter:\t" + core.ProgramCounter());
+            Console.WriteLine("CInstruction:\t" + core.ActualInstruction() + "\n");
         }
 
         static void exception(object obj, EventArgs args)
         {
-            Console.WriteLine(core.getExceptionString());
+            Console.WriteLine(core.GetExceptionString());
         }
 
         static public bool serveStartArguments(string[] args)
@@ -86,14 +86,14 @@ namespace MIPSCoreConsole
                 return false;
             }
 
-            core.programObjdump(args[1]);
+            core.ProgramObjdump(args[1]);
 
             for (int i = 2; i < args.Length; i++)
             {
                 switch (args[i])
                 {
                     case "-s":
-                        core.setMode(ExecutionMode.singleStep);
+                        core.SetMode(ExecutionMode.SingleStep);
                         i++;
                         break;
 
@@ -133,26 +133,26 @@ namespace MIPSCoreConsole
                 {
                     cmd[i] = cmd[i].ToLower();
                     if (clock.ToString() == cmd[i])
-                        core.singleClock();
+                        core.SingleClock();
                     else if (readAllRegister.ToString() == cmd[i])
-                        Console.WriteLine(core.toStringAllRegisters());
+                        Console.WriteLine(core.ToStringAllRegisters());
                     else if (readRegister.ToString() == cmd[i])
                     {
                         if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            Console.WriteLine(core.toStringRegister(registerReadNumber));
+                            Console.WriteLine(core.ToStringRegister(registerReadNumber));
                     }
                     else if (readRegisterUnsigned.ToString() == cmd[i])
                     {
                         if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            Console.WriteLine(core.toStringRegisterUnsigned(registerReadNumber));
+                            Console.WriteLine(core.ToStringRegisterUnsigned(registerReadNumber));
                     }
                     else if (readRegisterHex.ToString() == cmd[i])
                     {
                         if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
-                            Console.WriteLine(core.toStringRegisterHex(registerReadNumber));
+                            Console.WriteLine(core.ToStringRegisterHex(registerReadNumber));
                     }
                     else if (controlSignals.ToString() == cmd[i])
-                        Console.WriteLine(core.readControlUnitSignals());
+                        Console.WriteLine(core.ReadControlUnitSignals());
                     else if (usage.ToString() == cmd[i])
                         Console.WriteLine(usageCommandLineArguments(null));
                     else
@@ -173,9 +173,9 @@ namespace MIPSCoreConsole
                 return false;
             }
 
-            if (registerReadNumber >= CCore.RegisterCount)
+            if (registerReadNumber >= MipsCore.RegisterCount)
             {
-                string error = String.Format("Argument {0} of command {1} must be between 0 and {2}\n", arg, cmd, CCore.RegisterCount - 1);
+                string error = String.Format("Argument {0} of command {1} must be between 0 and {2}\n", arg, cmd, MipsCore.RegisterCount - 1);
                 Console.WriteLine(usageCommandLineArguments(error));
                 return false;
             }

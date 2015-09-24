@@ -12,13 +12,13 @@ namespace MIPSCoreUI.ViewModel
 {
     public class MIPSMemoryViewModel : NotificationObject, IMIPSViewModel
     {
-        private CCore core;
+        private MipsCore core;
         private Dispatcher dispatcher;
 
         public string MIPSInstructionMemory {get; private set;}
         public string MIPSDataMemory { get; private set; }
 
-        public MIPSMemoryViewModel(CCore core, Dispatcher dispatcher)
+        public MIPSMemoryViewModel(MipsCore core, Dispatcher dispatcher)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (dispatcher == null) throw new ArgumentException("dispatcher");
@@ -40,7 +40,7 @@ namespace MIPSCoreUI.ViewModel
 
         private void refreshGUI()
         {
-            MIPSDataMemory = core.getDataMemory.hexdump(0, core.getDataMemory.getLastByteAddress);
+            MIPSDataMemory = core.DataMemory.Hexdump(0, core.DataMemory.GetLastByteAddress);
             CBootstrapper.AddHighlightedTextToInstructionMemory("", false, true);
             refreshInstructionMemory();
             RaisePropertyChanged(() => MIPSDataMemory);
@@ -51,13 +51,13 @@ namespace MIPSCoreUI.ViewModel
             /* puh ^^ had problems with the performance, so i try to call the func so few as possible */
             string stringToAdd = "";
             int codeCounter = 0;
-            for (uint i = 0; i < core.getInstructionMemory.getLastByteAddress; i = i + 4, codeCounter++)
+            for (uint i = 0; i < core.InstructionMemory.GetLastByteAddress; i = i + 4, codeCounter++)
             {
-                if (core.getInstructionMemory.getProgramCounter.getUnsignedDecimal == i)
+                if (core.InstructionMemory.GetProgramCounter.getUnsignedDecimal == i)
                 {
                     CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, false, false);
                     stringToAdd = Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
-                    stringToAdd += core.getInstructionMemory.readWord(i).getHexadecimal + "   ";
+                    stringToAdd += core.InstructionMemory.ReadWord(i).getHexadecimal + "   ";
                     if (codeCounter < core.Code.Count)
                         stringToAdd += core.Code[codeCounter] + "\n";
                     else
@@ -68,7 +68,7 @@ namespace MIPSCoreUI.ViewModel
                 }
 
                 stringToAdd += Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
-                stringToAdd += core.getInstructionMemory.readWord(i).getHexadecimal + "   ";
+                stringToAdd += core.InstructionMemory.ReadWord(i).getHexadecimal + "   ";
                 if(codeCounter < core.Code.Count)
                     stringToAdd += core.Code[codeCounter] + "\n";
                 else

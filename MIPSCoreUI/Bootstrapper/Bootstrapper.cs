@@ -10,7 +10,7 @@ namespace MIPSCoreUI.Bootstrapper
 {
     public static class CBootstrapper
     {
-        public static CCore Core { get; private set; }
+        public static MipsCore Core { get; private set; }
         public static MainWindowViewModel MainWindowViewModel { get; private set; }
         public static IMIPSViewModel MipsCoreViewModel { get; private set; }
         public static IMIPSRegisterViewModel MipsRegisterViewModel { get; private set; }
@@ -23,15 +23,15 @@ namespace MIPSCoreUI.Bootstrapper
         public static void Init()
         {
             /* init core */
-            Core = new CCore();
-            Core.setMode(ExecutionMode.singleStep);
+            Core = new MipsCore();
+            Core.SetMode(ExecutionMode.SingleStep);
 
             /* init services */
             MessageBox = new MessageBoxService();
             OpenFileDialog = new DialogOpenFileDialogService();
 
             /* init viewmodels */
-            MipsCoreViewModel = new MIPSCoreViewModel(Core.getControlUnit, Application.Current.Dispatcher);
+            MipsCoreViewModel = new MIPSCoreViewModel(Core.ControlUnit, Application.Current.Dispatcher);
             MipsRegisterViewModel = new MIPSRegisterViewModel(Core, Application.Current.Dispatcher);
             MipsMemoryViewModel = new MIPSMemoryViewModel(Core, Application.Current.Dispatcher);
             MainWindowViewModel = new MainWindowViewModel(Core, MipsCoreViewModel, MipsRegisterViewModel, MipsMemoryViewModel, MessageBox, OpenFileDialog);

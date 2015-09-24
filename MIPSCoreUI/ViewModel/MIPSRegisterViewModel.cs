@@ -4,14 +4,14 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore;
-using MIPSCore.RegisterFile;
+using MIPSCore.Register_File;
 
 namespace MIPSCoreUI.ViewModel
 {
     public enum RegisterView { HexaDecimal, SignedDecimal, UnsignedDecimal };
     public class MIPSRegisterViewModel : NotificationObject, IMIPSRegisterViewModel
     {
-        private CCore core;
+        private MipsCore core;
         private Dispatcher dispatcher;
         public RegisterView Display { get; set; }
 
@@ -19,7 +19,7 @@ namespace MIPSCoreUI.ViewModel
 
 
 
-        public MIPSRegisterViewModel(CCore core, Dispatcher dispatcher)
+        public MIPSRegisterViewModel(MipsCore core, Dispatcher dispatcher)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (dispatcher == null) throw new ArgumentNullException("dispatcher");
@@ -49,46 +49,46 @@ namespace MIPSCoreUI.ViewModel
 
         private string registerToHex()
         {
-            string result = "\t$pc\t:" + core.getInstructionMemory.getProgramCounter.getHexadecimal + "\n";
-            result += "\t$lo\t:" + core.getAlu.getResultLO.getHexadecimal + "\n";
-            result += "\t$hi\t:" + core.getAlu.getResultHI.getHexadecimal + "\n";
-            result += "\t$rs\t:" + core.getRegisterFile.readRs().getHexadecimal + "\n";
-            result += "\t$rd\t:" + core.getRegisterFile.readRd().getHexadecimal + "\n";
-            result += "\t$rt\t:" + core.getRegisterFile.readRs().getHexadecimal + "\n";
-            result += "\t$imm\t:" + core.getInstructionMemory.getImmediate.getHexadecimal + "\n";
+            string result = "\t$pc\t:" + core.InstructionMemory.GetProgramCounter.getHexadecimal + "\n";
+            result += "\t$lo\t:" + core.Alu.GetResultLo.getHexadecimal + "\n";
+            result += "\t$hi\t:" + core.Alu.GetResultHi.getHexadecimal + "\n";
+            result += "\t$rs\t:" + core.RegisterFile.ReadRs().getHexadecimal + "\n";
+            result += "\t$rd\t:" + core.RegisterFile.ReadRd().getHexadecimal + "\n";
+            result += "\t$rt\t:" + core.RegisterFile.ReadRs().getHexadecimal + "\n";
+            result += "\t$imm\t:" + core.InstructionMemory.GetImmediate.getHexadecimal + "\n";
             result += "\n";
-            for (ushort i = 0; i < CRegisterFile.RegisterCount; i++)
-                result += core.getRegisterFile.toStringRegisterHex(i) + "\n";
+            for (ushort i = 0; i < RegisterFile.RegisterCount; i++)
+                result += core.RegisterFile.ToStringRegisterHex(i) + "\n";
             return result;
         }
 
         private string registerToUnsignedDec()
         {
-            string result = "\t$pc\t:" + core.getInstructionMemory.getProgramCounter.getUnsignedDecimal + "\n";
-            result += "\t$lo\t:" + core.getAlu.getResultLO.getUnsignedDecimal + "\n";
-            result += "\t$hi\t:" + core.getAlu.getResultHI.getUnsignedDecimal + "\n";
-            result += "\t$rs\t:" + core.getRegisterFile.readRs().getUnsignedDecimal + "\n";
-            result += "\t$rd\t:" + core.getRegisterFile.readRd().getUnsignedDecimal + "\n";
-            result += "\t$rt\t:" + core.getRegisterFile.readRs().getUnsignedDecimal + "\n";
-            result += "\t$imm\t:" + core.getInstructionMemory.getImmediate.getUnsignedDecimal + "\n";
+            string result = "\t$pc\t:" + core.InstructionMemory.GetProgramCounter.getUnsignedDecimal + "\n";
+            result += "\t$lo\t:" + core.Alu.GetResultLo.getUnsignedDecimal + "\n";
+            result += "\t$hi\t:" + core.Alu.GetResultHi.getUnsignedDecimal + "\n";
+            result += "\t$rs\t:" + core.RegisterFile.ReadRs().getUnsignedDecimal + "\n";
+            result += "\t$rd\t:" + core.RegisterFile.ReadRd().getUnsignedDecimal + "\n";
+            result += "\t$rt\t:" + core.RegisterFile.ReadRs().getUnsignedDecimal + "\n";
+            result += "\t$imm\t:" + core.InstructionMemory.GetImmediate.getUnsignedDecimal + "\n";
             result += "\n";
-            for (ushort i = 0; i < CRegisterFile.RegisterCount; i++)
-                result += core.getRegisterFile.toStringRegisterUnsigned(i) + "\n";
+            for (ushort i = 0; i < RegisterFile.RegisterCount; i++)
+                result += core.RegisterFile.ToStringRegisterUnsigned(i) + "\n";
             return result;
         }
 
         private string registerToSignedDec()
         {
-            string result = "\t$pc\t:" + core.getInstructionMemory.getProgramCounter.getSignedDecimal + "\n";
-            result += "\t$lo\t:" + core.getAlu.getResultLO.getSignedDecimal + "\n";
-            result += "\t$hi\t:" + core.getAlu.getResultHI.getSignedDecimal + "\n";
-            result += "\t$rs\t:" + core.getRegisterFile.readRs().getSignedDecimal + "\n";
-            result += "\t$rd\t:" + core.getRegisterFile.readRd().getSignedDecimal + "\n";
-            result += "\t$rt\t:" + core.getRegisterFile.readRs().getSignedDecimal + "\n";
-            result += "\t$imm\t:" + core.getInstructionMemory.getImmediate.getSignedDecimal + "\n";
+            string result = "\t$pc\t:" + core.InstructionMemory.GetProgramCounter.getSignedDecimal + "\n";
+            result += "\t$lo\t:" + core.Alu.GetResultLo.getSignedDecimal + "\n";
+            result += "\t$hi\t:" + core.Alu.GetResultHi.getSignedDecimal + "\n";
+            result += "\t$rs\t:" + core.RegisterFile.ReadRs().getSignedDecimal + "\n";
+            result += "\t$rd\t:" + core.RegisterFile.ReadRd().getSignedDecimal + "\n";
+            result += "\t$rt\t:" + core.RegisterFile.ReadRs().getSignedDecimal + "\n";
+            result += "\t$imm\t:" + core.InstructionMemory.GetImmediate.getSignedDecimal + "\n";
             result += "\n";
-            for (ushort i = 0; i < CRegisterFile.RegisterCount; i++)
-                result += core.getRegisterFile.toStringRegister(i) + "\n";
+            for (ushort i = 0; i < RegisterFile.RegisterCount; i++)
+                result += core.RegisterFile.ToStringRegister(i) + "\n";
             return result;
         }
     }

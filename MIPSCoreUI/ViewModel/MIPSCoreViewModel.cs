@@ -3,14 +3,14 @@ using System.Windows.Threading;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
-using MIPSCore.ControlUnit;
+using MIPSCore.Control_Unit;
 using MIPSCore.InstructionSet;
 
 namespace MIPSCoreUI.ViewModel
 {
     public class MIPSCoreViewModel : NotificationObject, IMIPSViewModel
     {
-        private CControlUnit controlUnit;
+        private IControlUnit controlUnit;
         private Dispatcher dispatcher;
  
         /* colors */
@@ -72,7 +72,7 @@ namespace MIPSCoreUI.ViewModel
         private double rectangleWidth = 100;
         private double rectangleSpaceBetween = 50;
 
-        public MIPSCoreViewModel(CControlUnit controlUnit, Dispatcher dispatcher)
+        public MIPSCoreViewModel(IControlUnit controlUnit, Dispatcher dispatcher)
         {
             if (controlUnit == null) throw new ArgumentNullException("controlUnit");
             if (dispatcher == null) throw new ArgumentNullException("dispatcher");
@@ -144,7 +144,7 @@ namespace MIPSCoreUI.ViewModel
             RegisterFileWriteBackLine = lineInactive;
 
             /* Control Lines */
-            if (controlUnit.getAluControl != ALUControl.stall)
+            if (controlUnit.AluControl != AluControl.Stall)
             {
                 ALUOperationControlLine = controlLineActive;
                 AluRead1Line = lineActive;
@@ -152,21 +152,21 @@ namespace MIPSCoreUI.ViewModel
                 JumpRegisterAluRead1Line = lineActive;
             }
 
-            if (controlUnit.getRegWrite)
+            if (controlUnit.RegisterWrite)
             {
                 RegFileWriteControlLine = controlLineActive;
                 DataMemoryMux = lineActive;
                 AluResultLine = lineActive;
                 RegisterFileWriteBackLine = lineActive;
 
-                if (controlUnit.getRegisterFileInput == RegisterFileInput.aluLO)
+                if (controlUnit.RegisterFileInput == RegisterFileInput.AluLo)
                 {
                     WriteAluResultLine = lineActive;
                     
                 }
-                else if (controlUnit.getRegisterFileInput == RegisterFileInput.programCounter)
+                else if (controlUnit.RegisterFileInput == RegisterFileInput.ProgramCounter)
                     WritePcToRegisterLine = lineActive;
-                else if (controlUnit.getRegisterFileInput == RegisterFileInput.dataMemory)
+                else if (controlUnit.RegisterFileInput == RegisterFileInput.DataMemory)
                 {
                     DataMemoryAddressLine = lineActive;
                     DataMemoryOutLine = lineActive;
@@ -174,27 +174,27 @@ namespace MIPSCoreUI.ViewModel
             }
 
             /* Memory Lines */
-            if (controlUnit.getMemRead == true || controlUnit.getMemWrite == true)
+            if (controlUnit.MemoryRead == true || controlUnit.MemoryWrite == true)
             {
                 DataMemoryControlLine = controlLineActive;
                 DataMemoryAddressLine = lineActive;
                 AluResultLine = lineActive;
             }
-            else if (controlUnit.getMemRead)
+            else if (controlUnit.MemoryRead)
             {
                 DataMemoryMux = lineActive;
                 DataMemoryOutLine = lineActive;
             }
 
             /* Branch Lines */
-            if (controlUnit.getPcSource == ProgramCounterSource.programCounter)
+            if (controlUnit.ProgramCounterSource == ProgramCounterSource.ProgramCounter)
             {
                 BranchMux = lineActive;
                 BranchMuxLine = lineActive;
                 ProgramCounterLine = lineActive;
                 ProgramCounterOrRegisterFileInputLine = lineActive;
             }
-            else if (controlUnit.getPcSource == ProgramCounterSource.jump)
+            else if (controlUnit.ProgramCounterSource == ProgramCounterSource.Jump)
             {
                 JumpControlLine = controlLineActive;
 
@@ -205,7 +205,7 @@ namespace MIPSCoreUI.ViewModel
                 AluSourceMux = lineInactive;
 
             }
-            else if (controlUnit.getPcSource == ProgramCounterSource.register)
+            else if (controlUnit.ProgramCounterSource == ProgramCounterSource.Register)
             {
                 JumpControlLine = controlLineActive;
 
@@ -229,7 +229,7 @@ namespace MIPSCoreUI.ViewModel
             }
 
             /* instruction memory lines */
-            if (controlUnit.getInstructionFormat == InstructionFormat.R)
+            if (controlUnit.InstructionFormat == InstructionFormat.R)
             {
                 RegisterFileRsLine = lineActive;
                 RegisterFileRdLine = lineActive;
@@ -239,7 +239,7 @@ namespace MIPSCoreUI.ViewModel
                 if (JumpRegisterLine != lineActive)
                     RegisterFileRtOutLine = lineActive;
             }
-            else if (controlUnit.getInstructionFormat == InstructionFormat.I && BranchLine == lineInactive)
+            else if (controlUnit.InstructionFormat == InstructionFormat.I && BranchLine == lineInactive)
             {
                 RegisterFileRsLine = lineActive;
                 RegisterFileRtLine = lineActive;

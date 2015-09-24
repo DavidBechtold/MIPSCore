@@ -50,34 +50,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ALU\CALU.cs" />
-    <Compile Include="ControlUnit\CControlUnit.cs" />
-    <Compile Include="Core\CCore.cs" />
-    <Compile Include="Core\ICore.cs" />
-    <Compile Include="DataMemory\CDataMemory.cs" />
-    <Compile Include="InstructionSet\CInstructionSet.cs" />
-    <Compile Include="InstructionSet\CControlSignals.cs" />
-    <Compile Include="RegisterFile\CRegisterFile.cs" />
-    <Compile Include="Util\CByte.cs" />
-    <Compile Include="Util\Memory\CMemory.cs" />
-    <Compile Include="Util\CMIPSProgrammer.cs" />
+    <Compile Include="ALU\Alu.cs" />
+    <Compile Include="ALU\IAlu.cs" />
+    <Compile Include="Data Memory\IDataMemory.cs" />
+    <Compile Include="Instruction Memory\IInstructionMemory.cs" />
+    <Compile Include="Register File\IRegisterFile.cs" />
+    <Compile Include="Timing\IClock.cs" />
+    <Compile Include="Control Unit\ControlUnit.cs" />
+    <Compile Include="Control Unit\IControlUnit.cs" />
+    <Compile Include="MipsCore.cs" />
+    <Compile Include="IMipsCore.cs" />
+    <Compile Include="Data Memory\DataMemory.cs" />
+    <Compile Include="Instruction Set\CInstructionSet.cs" />
+    <Compile Include="Instruction Set\ControlSignals.cs" />
+    <Compile Include="Instruction Set\IControlSignals.cs" />
+    <Compile Include="Register File\RegisterFile.cs" />
+    <Compile Include="Util\_Memory\Memory.cs" />
+    <Compile Include="Util\MipsProgrammer.cs" />
     <Compile Include="Util\CMIPSRegister.cs" />
     <Compile Include="Util\CRegister.cs" />
     <Compile Include="Util\CWord.cs" />
-    <Compile Include="Clock\CClock.cs" />
-    <Compile Include="InstructionMemory\CInstructionMemory.cs" />
+    <Compile Include="Timing\Clock.cs" />
+    <Compile Include="Instruction Memory\InstructionMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\Memory\IMemory.cs" />
+    <Compile Include="Util\_Memory\IMemory.cs" />
     <Compile Include="Util\TextAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="InstructionSet\instructionSet.xml">
+    <Content Include="Instruction Set\instructionSet.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MipsCore\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

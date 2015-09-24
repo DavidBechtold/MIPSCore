@@ -2,8 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MIPSCore;
 using MIPSCore.Util;
-using MIPSCore.InstructionMemory;
-
 
 
 namespace CMIPSRegisterTest
