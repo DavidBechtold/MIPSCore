@@ -1,7 +1,7 @@
 //----------------------------------------------
 // ArrowLineBase.cs (c) 2007 by Charles Petzold
 //----------------------------------------------
-using System;
+
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -14,14 +14,12 @@ namespace MIPSCoreUI.BaseObjects
     /// </summary>
     public abstract class ArrowLineBase : Shape
     {
-        protected PathGeometry pathgeo;
-        protected PathFigure pathfigLine;
-        protected PolyLineSegment polysegLine;
+        protected PathGeometry Pathgeo;
+        protected PathFigure PathfigLine;
+        protected PolyLineSegment PolysegLine;
 
-        PathFigure pathfigHead1;
-        PolyLineSegment polysegHead1;
-        PathFigure pathfigHead2;
-        PolyLineSegment polysegHead2;
+        private readonly PathFigure pathfigHead1;
+        private readonly PathFigure pathfigHead2;
 
         /// <summary>
         ///     Identifies the ArrowAngle dependency property.
@@ -119,20 +117,20 @@ namespace MIPSCoreUI.BaseObjects
         /// <summary>
         ///     Initializes a new instance of ArrowLineBase.
         /// </summary>
-        public ArrowLineBase()
+        protected ArrowLineBase()
         {
-            pathgeo = new PathGeometry();
+            Pathgeo = new PathGeometry();
 
-            pathfigLine = new PathFigure();
-            polysegLine = new PolyLineSegment();
-            pathfigLine.Segments.Add(polysegLine);
+            PathfigLine = new PathFigure();
+            PolysegLine = new PolyLineSegment();
+            PathfigLine.Segments.Add(PolysegLine);
 
             pathfigHead1 = new PathFigure();
-            polysegHead1 = new PolyLineSegment();
+            var polysegHead1 = new PolyLineSegment();
             pathfigHead1.Segments.Add(polysegHead1);
 
             pathfigHead2 = new PathFigure();
-            polysegHead2 = new PolyLineSegment();
+            var polysegHead2 = new PolyLineSegment();
             pathfigHead2.Segments.Add(polysegHead2);
         }
 
@@ -143,58 +141,61 @@ namespace MIPSCoreUI.BaseObjects
         {
             get
             {
-                int count = polysegLine.Points.Count;
+                var count = PolysegLine.Points.Count;
 
                 if (count > 0)
                 {
                     // Draw the arrow at the start of the line.
                     if ((ArrowEnds & ArrowEnds.Start) == ArrowEnds.Start)
                     {
-                        Point pt1 = pathfigLine.StartPoint;
-                        Point pt2 = polysegLine.Points[0];
-                        pathgeo.Figures.Add(CalculateArrow(pathfigHead1, pt2, pt1));
+                        var pt1 = PathfigLine.StartPoint;
+                        var pt2 = PolysegLine.Points[0];
+                        Pathgeo.Figures.Add(CalculateArrow(pathfigHead1, pt2, pt1));
                     }
 
                     // Draw the arrow at the end of the line.
                     if ((ArrowEnds & ArrowEnds.End) == ArrowEnds.End)
                     {
-                        Point pt1 = count == 1 ? pathfigLine.StartPoint :
-                                                 polysegLine.Points[count - 2];
-                        Point pt2 = polysegLine.Points[count - 1];
-                        pathgeo.Figures.Add(CalculateArrow(pathfigHead2, pt1, pt2));
+                        var pt1 = count == 1 ? PathfigLine.StartPoint :
+                                                 PolysegLine.Points[count - 2];
+                        var pt2 = PolysegLine.Points[count - 1];
+                        Pathgeo.Figures.Add(CalculateArrow(pathfigHead2, pt1, pt2));
                     }
 
                     if (CircleStart)
                     {
-                        Point pt1 = pathfigLine.StartPoint;
+                        var pt1 = PathfigLine.StartPoint;
                        
-                        EllipseGeometry ellipse1 = new EllipseGeometry(pt1, 1, 1);
-                        EllipseGeometry ellipse2 = new EllipseGeometry(pt1, 2, 2);
+                        var ellipse1 = new EllipseGeometry(pt1, 1, 1);
+                        var ellipse2 = new EllipseGeometry(pt1, 2, 2);
                         
-                        pathgeo.AddGeometry(ellipse1);
-                        pathgeo.AddGeometry(ellipse2);
+                        Pathgeo.AddGeometry(ellipse1);
+                        Pathgeo.AddGeometry(ellipse2);
                     }
                 }
-                return pathgeo;
+                return Pathgeo;
             }
         }
        
 
         PathFigure CalculateArrow(PathFigure pathfig, Point pt1, Point pt2)
         {
-            Matrix matx = new Matrix();
-            Vector vect = pt1 - pt2;
+            var matx = new Matrix();
+            var vect = pt1 - pt2;
             vect.Normalize();
             vect *= ArrowLength;
 
-            PolyLineSegment polyseg = pathfig.Segments[0] as PolyLineSegment;
-            polyseg.Points.Clear();
-            matx.Rotate(ArrowAngle / 2);
-            pathfig.StartPoint = pt2 + vect * matx;
-            polyseg.Points.Add(pt2);
+            var polyseg = pathfig.Segments[0] as PolyLineSegment;
+            if (polyseg != null)
+            {
+                polyseg.Points.Clear();
+                matx.Rotate(ArrowAngle / 2);
+                pathfig.StartPoint = pt2 + vect * matx;
+                polyseg.Points.Add(pt2);
 
-            matx.Rotate(-ArrowAngle);
-            polyseg.Points.Add(pt2 + vect * matx);
+                matx.Rotate(-ArrowAngle);
+                polyseg.Points.Add(pt2 + vect * matx);
+            }
             pathfig.IsClosed = IsArrowClosed;
 
             return pathfig;

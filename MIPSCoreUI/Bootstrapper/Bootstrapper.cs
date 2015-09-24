@@ -1,10 +1,9 @@
 ﻿using MIPSCore;
 using MIPSCoreUI.Services;
-using MIPSCoreUI.View;
 using MIPSCoreUI.ViewModel;
 using System;
 using System.Windows;
-using System.Windows.Media;
+using MipsCore = MIPSCore.MipsCore;
 
 namespace MIPSCoreUI.Bootstrapper
 {
@@ -12,9 +11,9 @@ namespace MIPSCoreUI.Bootstrapper
     {
         public static MipsCore Core { get; private set; }
         public static MainWindowViewModel MainWindowViewModel { get; private set; }
-        public static IMIPSViewModel MipsCoreViewModel { get; private set; }
-        public static IMIPSRegisterViewModel MipsRegisterViewModel { get; private set; }
-        public static IMIPSViewModel MipsMemoryViewModel { get; private set; }
+        public static IMipsViewModel MipsCoreViewModel { get; private set; }
+        public static IMipsRegisterViewModel MipsRegisterViewModel { get; private set; }
+        public static IMipsViewModel MipsMemoryViewModel { get; private set; }
         public static IMessageBoxService MessageBox { get; private set; }
         public static IOpenFileDialogService OpenFileDialog { get; private set; }
         private static Action<string, bool, bool> highlightFuncInstructionMemory;
@@ -31,9 +30,9 @@ namespace MIPSCoreUI.Bootstrapper
             OpenFileDialog = new DialogOpenFileDialogService();
 
             /* init viewmodels */
-            MipsCoreViewModel = new MIPSCoreViewModel(Core.ControlUnit, Application.Current.Dispatcher);
-            MipsRegisterViewModel = new MIPSRegisterViewModel(Core, Application.Current.Dispatcher);
-            MipsMemoryViewModel = new MIPSMemoryViewModel(Core, Application.Current.Dispatcher);
+            MipsCoreViewModel = new MipsCoreViewModel(Core.ControlUnit, Application.Current.Dispatcher);
+            MipsRegisterViewModel = new MipsRegisterViewModel(Core, Application.Current.Dispatcher);
+            MipsMemoryViewModel = new MipsMemoryViewModel(Core, Application.Current.Dispatcher);
             MainWindowViewModel = new MainWindowViewModel(Core, MipsCoreViewModel, MipsRegisterViewModel, MipsMemoryViewModel, MessageBox, OpenFileDialog);
         }
 

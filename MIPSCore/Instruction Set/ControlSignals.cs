@@ -1,10 +1,8 @@
-﻿using System;
-using MIPSCore.Util;
-using System.IO;
+﻿using System.IO;
 using System.Xml.Serialization;
-using MIPSCore.Instruction_Set;
+using MIPSCore.Util;
 
-namespace MIPSCore.InstructionSet
+namespace MIPSCore.Instruction_Set
 {
     public enum InstructionFormat {
         [Text("R")] R,
@@ -95,24 +93,14 @@ namespace MIPSCore.InstructionSet
             if(!File.Exists("Instruction Set//instructionSet.xml"))
                 throw new FileNotFoundException("File \"Instruction Set/instructionSet.xml\" not found.");
 
-            FileStream reader = new FileStream("Instruction Set//instructionSet.xml", FileMode.Open);
-            XmlSerializer ser = new XmlSerializer(typeof(CInstructionSet));
-            try
-            {
-                instructionSet = ser.Deserialize(reader) as CInstructionSet;
-            }
-            catch (Exception e)
-            {
-                string test = "";
-
-            }
-            
+            var reader = new FileStream("Instruction Set//instructionSet.xml", FileMode.Open);
+            var ser = new XmlSerializer(typeof(CInstructionSet));
+            instructionSet = ser.Deserialize(reader) as CInstructionSet;
             reader.Close();
-         
             instruction = new CInstruction();
         }
 
-        protected void PrepareControlSignals(CWord opCode, CWord function)
+        protected void PrepareControlSignals(Word opCode, Word function)
         {
             instruction = instructionSet.GetInstruction(opCode, function);
 

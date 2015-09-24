@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemTest", "SystemTest\Sy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIPSCoreConsole", "MIPSCoreConsole\MIPSCoreConsole.csproj", "{E91D25AC-D99C-49E3-BA3B-FE00C71FAA4B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{383D6A1C-0376-4C8E-955B-9601C42C87C5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Tests", "Solution Tests", "{383D6A1C-0376-4C8E-955B-9601C42C87C5}"
 	ProjectSection(SolutionItems) = preProject
 		t.testsettings = t.testsettings
 	EndProjectSection

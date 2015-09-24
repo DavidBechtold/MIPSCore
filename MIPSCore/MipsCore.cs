@@ -16,8 +16,8 @@ namespace MIPSCore
 
     public class MipsCore : IMipsCore
     {
-        public const ushort CCoreWordLength = CWord.wordLength;
-        public const ushort RegisterCount = CMIPSRegister.numberOfRegisters;
+        public const ushort CCoreWordLength = Word.WordLength;
+        public const ushort RegisterCount = MipsRegister.NumberOfRegisters;
 
         public IInstructionMemory InstructionMemory { get; private set; }
         public IControlUnit ControlUnit { get; private set; }
@@ -226,12 +226,12 @@ namespace MIPSCore
 
         public int ReadWordDataMemory(uint byteAddr)
         {
-            return DataMemory.ReadWord(byteAddr).getSignedDecimal;
+            return DataMemory.ReadWord(byteAddr).SignedDecimal;
         }
 
         public uint ReadWordDataMemoryUnsigned(uint byteAddr)
         {
-            return DataMemory.ReadWord(byteAddr).getUnsignedDecimal;
+            return DataMemory.ReadWord(byteAddr).UnsignedDecimal;
         }
 
         public int[] ReadAllRegisters()
@@ -271,12 +271,12 @@ namespace MIPSCore
 
         public string ActualInstruction()
         {
-            return InstructionMemory.GetActualInstruction.getHexadecimal;
+            return InstructionMemory.GetActualInstruction.Hexadecimal;
         }
 
         public string ProgramCounter()
         {
-            return InstructionMemory.GetProgramCounter.getHexadecimal + "";
+            return InstructionMemory.GetProgramCounter.Hexadecimal + "";
         }
 
         public string ReadControlUnitSignals()

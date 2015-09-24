@@ -7,7 +7,7 @@ namespace MIPSCore.Util._Memory
     {
         private byte[] memory;
         public MemSize Size { get;  private set; }
-        public CWord Offset { get; set; }
+        public Word Offset { get; set; }
         public uint GetLastByteAddress { get; private set; }
         public uint SizeBytes { get { return GetLastByteAddress + 1; } }
 
@@ -15,7 +15,7 @@ namespace MIPSCore.Util._Memory
         {
             Size = size;
             CreateMemory(size);
-            Offset = new CWord((uint) 0);
+            Offset = new Word((uint) 0);
         }
 
         private void CreateMemory(MemSize size)
@@ -47,94 +47,94 @@ namespace MIPSCore.Util._Memory
             }
         }
 
-        public void WriteByte(CWord byteVal, uint byteAddress)
+        public void WriteByte(Word byteVal, uint byteAddress)
         {
             if (byteVal == null) throw new ArgumentNullException("byteVal");
-            if (byteVal.getUnsignedDecimal > byte.MaxValue) throw new ArgumentOutOfRangeException("byteVal");
+            if (byteVal.UnsignedDecimal > byte.MaxValue) throw new ArgumentOutOfRangeException("byteVal");
 
             byteAddress = CheckAndCalculateAddress(byteAddress, 0);
-            memory[byteAddress] = (byte)byteVal.getUnsignedDecimal;
+            memory[byteAddress] = (byte)byteVal.UnsignedDecimal;
         }
 
-        public void WriteByte(CWord byteVal, CWord byteAddress)
+        public void WriteByte(Word byteVal, Word byteAddress)
         {
-            WriteByte(byteVal, byteAddress.getUnsignedDecimal);
+            WriteByte(byteVal, byteAddress.UnsignedDecimal);
         }
 
-        public void WriteHalfWord(CWord halfword, uint byteAddress)
+        public void WriteHalfWord(Word halfword, uint byteAddress)
         {
             if (halfword == null) throw new ArgumentNullException("halfword");
-            if (halfword.getUnsignedDecimal > ushort.MaxValue) throw new ArgumentOutOfRangeException("halfword");
+            if (halfword.UnsignedDecimal > ushort.MaxValue) throw new ArgumentOutOfRangeException("halfword");
 
             byteAddress = CheckAndCalculateAddress(byteAddress, 1);
-            memory[byteAddress] = (byte)(halfword.getUnsignedDecimal >> 8);
-            memory[byteAddress + 1] = (byte)(halfword.getUnsignedDecimal);
+            memory[byteAddress] = (byte)(halfword.UnsignedDecimal >> 8);
+            memory[byteAddress + 1] = (byte)(halfword.UnsignedDecimal);
         }
 
-        public void WriteHalfWord(CWord halfword, CWord byteAddress)
+        public void WriteHalfWord(Word halfword, Word byteAddress)
         {
-            WriteHalfWord(halfword, byteAddress.getUnsignedDecimal);
+            WriteHalfWord(halfword, byteAddress.UnsignedDecimal);
         }
 
-        public void WriteWord(CWord word, uint byteAddress)
+        public void WriteWord(Word word, uint byteAddress)
         {
             if (word == null) throw new ArgumentNullException("word");
             byteAddress = CheckAndCalculateAddress(byteAddress, 3);
 
-            memory[byteAddress] = (byte)(word.getUnsignedDecimal >> 24);
-            memory[byteAddress + 1] = (byte)(word.getUnsignedDecimal >> 16);
-            memory[byteAddress + 2] = (byte)(word.getUnsignedDecimal >> 8);
-            memory[byteAddress + 3] = (byte)(word.getUnsignedDecimal);
+            memory[byteAddress] = (byte)(word.UnsignedDecimal >> 24);
+            memory[byteAddress + 1] = (byte)(word.UnsignedDecimal >> 16);
+            memory[byteAddress + 2] = (byte)(word.UnsignedDecimal >> 8);
+            memory[byteAddress + 3] = (byte)(word.UnsignedDecimal);
         }
 
-        public void WriteWord(CWord word, CWord byteAddress)
+        public void WriteWord(Word word, Word byteAddress)
         {
-            WriteWord(word, byteAddress.getUnsignedDecimal);
+            WriteWord(word, byteAddress.UnsignedDecimal);
         }
 
-        public CWord ReadByte(uint byteAddress)
+        public Word ReadByte(uint byteAddress)
         {
             byteAddress = CheckAndCalculateAddress(byteAddress, 0);
 
-            return new CWord((uint) memory[byteAddress]);
+            return new Word((uint) memory[byteAddress]);
         }
 
-        public CWord ReadByte(CWord byteAddress)
+        public Word ReadByte(Word byteAddress)
         {
             if (byteAddress == null) throw new ArgumentNullException("byteAddress");
-            return ReadByte(byteAddress.getUnsignedDecimal);
+            return ReadByte(byteAddress.UnsignedDecimal);
         }
 
-        public CWord ReadHalfWord(uint byteAddress)
+        public Word ReadHalfWord(uint byteAddress)
         {
             byteAddress = CheckAndCalculateAddress(byteAddress, 1);
 
-            return new CWord((uint) (memory[byteAddress] << 8 | memory[byteAddress + 1]));
+            return new Word((uint) (memory[byteAddress] << 8 | memory[byteAddress + 1]));
         }
 
-        public CWord ReadHalfWord(CWord byteAddress)
+        public Word ReadHalfWord(Word byteAddress)
         {
             if (byteAddress == null) throw new ArgumentNullException("byteAddress");
-            return ReadHalfWord(byteAddress.getUnsignedDecimal);
+            return ReadHalfWord(byteAddress.UnsignedDecimal);
         }
 
-        public CWord ReadWord(uint byteAddress)
+        public Word ReadWord(uint byteAddress)
         {
             byteAddress = CheckAndCalculateAddress(byteAddress, 3);
 
-            return new CWord((uint)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
+            return new Word((uint)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
         }
 
-        public CWord ReadWord(CWord byteAddress)
+        public Word ReadWord(Word byteAddress)
         {
             if (byteAddress == null) throw new ArgumentNullException("byteAddress");
-            return ReadWord(byteAddress.getUnsignedDecimal);
+            return ReadWord(byteAddress.UnsignedDecimal);
         }
 
         // ReSharper disable once UnusedParameter.Local
         private uint CheckAndCalculateAddress(uint byteAddress, uint bytesRead)
         {
-            var realAddress = byteAddress - Offset.getUnsignedDecimal;
+            var realAddress = byteAddress - Offset.UnsignedDecimal;
             if (realAddress + bytesRead > GetLastByteAddress) throw new ArgumentOutOfRangeException("byteAddress");
             return realAddress;
         }
@@ -142,7 +142,7 @@ namespace MIPSCore.Util._Memory
         public virtual void Flush()
         {
             for (uint i = 0; i < GetLastByteAddress; i += 4)
-                WriteWord(new CWord(0), i);
+                WriteWord(new Word(0), i);
         }
 
         public string Hexdump(uint startaddress, uint bytesToRead)
@@ -151,7 +151,7 @@ namespace MIPSCore.Util._Memory
             string result = "";
 
             for (uint i = realStartaddress; i < realStartaddress + bytesToRead; i+=4)
-                result += string.Format("{0:X8} {1:X2} {2:X2} {3:X2} {4:X2}\n", i + Offset.getUnsignedDecimal, memory[i], memory[i + 1], memory[i + 2], memory[i + 3]);
+                result += string.Format("{0:X8} {1:X2} {2:X2} {3:X2} {4:X2}\n", i + Offset.UnsignedDecimal, memory[i], memory[i + 1], memory[i + 2], memory[i + 3]);
             return result;
         }
     }

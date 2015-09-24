@@ -1,11 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MIPSCore;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CClockTest
+namespace Tests
 {
     [TestClass]
-    public class UnitTest_CClock
+    public class UnitTestCClock
     {
         [TestMethod]
         public void Clock_ConstructorTest()

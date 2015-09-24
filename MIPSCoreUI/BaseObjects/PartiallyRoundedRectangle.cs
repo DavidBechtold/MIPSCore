@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -75,17 +70,13 @@ namespace MIPSCoreUI.BaseObjects
             RoundAllProperty = DependencyProperty.Register("RoundAll", typeof(bool), typeof(PartiallyRoundedRectangle));
         }
 
-        public PartiallyRoundedRectangle()
-        {
-        }
-
         protected override Geometry DefiningGeometry
         {
             get
             {
-                Geometry result = new RectangleGeometry(new Rect(0, 0, base.Width, base.Height), RadiusX, RadiusY);
-                double halfWidth = base.Width / 2;
-                double halfHeight = base.Height / 2;
+                Geometry result = new RectangleGeometry(new Rect(0, 0, Width, Height), RadiusX, RadiusY);
+                double halfWidth = Width / 2;
+                double halfHeight = Height / 2;
 
                 if (RoundAll)
                     return result;

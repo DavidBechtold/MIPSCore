@@ -1,62 +1,61 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MIPSCore;
 using MIPSCore.Util;
 
-namespace CWordTest
+namespace Tests
 {
     [TestClass]
-    public class UnitTest_CWord
+    public class UnitTestCWord
     {
         [TestMethod]
         public void CWord_Constructor_SignedInteger()
         {
-            CWord arg = new CWord((Int32) Int32.MaxValue);
-            Assert.AreEqual("0".PadRight(32, '1'), arg.getBinary);
-            Assert.AreEqual("7FFFFFFF", arg.getHexadecimal);
-            Assert.AreEqual((UInt32) Int32.MaxValue, arg.getUnsignedDecimal);
+            Word arg = new Word(int.MaxValue);
+            Assert.AreEqual("0".PadRight(32, '1'), arg.Binary);
+            Assert.AreEqual("7FFFFFFF", arg.Hexadecimal);
+            Assert.AreEqual((uint) int.MaxValue, arg.UnsignedDecimal);
 
-            arg = new CWord((Int32)Int32.MinValue);
-            Assert.AreEqual("1".PadRight(32, '0'), arg.getBinary);
-            Assert.AreEqual("80000000", arg.getHexadecimal);
-            Assert.AreEqual((UInt32)Int32.MaxValue + 1, arg.getUnsignedDecimal);
+            arg = new Word(int.MinValue);
+            Assert.AreEqual("1".PadRight(32, '0'), arg.Binary);
+            Assert.AreEqual("80000000", arg.Hexadecimal);
+            Assert.AreEqual((uint)int.MaxValue + 1, arg.UnsignedDecimal);
         }
 
         [TestMethod]
         public void CWord_Constructor_UnsignedInteger()
         {
-            CWord arg = new CWord((UInt32) UInt32.MaxValue);
-            Assert.AreEqual("1".PadRight(32, '1'), arg.getBinary);
-            Assert.AreEqual("FFFFFFFF", arg.getHexadecimal);
-            Assert.AreEqual(-1, arg.getSignedDecimal);
+            Word arg = new Word(uint.MaxValue);
+            Assert.AreEqual("1".PadRight(32, '1'), arg.Binary);
+            Assert.AreEqual("FFFFFFFF", arg.Hexadecimal);
+            Assert.AreEqual(-1, arg.SignedDecimal);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Binary strings > 32 length are not allowed.")]
         public void CWord_Constructor_Binary()
         {
-            CWord arg = new CWord("00000000000000000000000000000001");
-            Assert.AreEqual("1".PadLeft(32, '0'), arg.getBinary);
-            Assert.AreEqual("00000001", arg.getHexadecimal);
-            Assert.AreEqual(1, arg.getSignedDecimal);
-            Assert.AreEqual((UInt32) 1, arg.getUnsignedDecimal);
+            Word arg = new Word("00000000000000000000000000000001");
+            Assert.AreEqual("1".PadLeft(32, '0'), arg.Binary);
+            Assert.AreEqual("00000001", arg.Hexadecimal);
+            Assert.AreEqual(1, arg.SignedDecimal);
+            Assert.AreEqual((uint) 1, arg.UnsignedDecimal);
 
-            arg = new CWord("11111111111111111111111111111111");
-            Assert.AreEqual("1".PadLeft(32, '1'), arg.getBinary);
-            Assert.AreEqual("FFFFFFFF", arg.getHexadecimal);
-            Assert.AreEqual(-1, arg.getSignedDecimal);
-            Assert.AreEqual((UInt32)UInt32.MaxValue, arg.getUnsignedDecimal);
+            arg = new Word("11111111111111111111111111111111");
+            Assert.AreEqual("1".PadLeft(32, '1'), arg.Binary);
+            Assert.AreEqual("FFFFFFFF", arg.Hexadecimal);
+            Assert.AreEqual(-1, arg.SignedDecimal);
+            Assert.AreEqual(uint.MaxValue, arg.UnsignedDecimal);
 
             /* check if padding works correct => we want always a string which has the length of 32 (because of substrings) */
-            arg = new CWord("11111111");
-            Assert.AreEqual("11111111".PadLeft(32, '0'), arg.getBinary);
-            Assert.AreEqual("000000FF", arg.getHexadecimal);
-            Assert.AreEqual(255, arg.getSignedDecimal);
-            Assert.AreEqual((UInt32) 255, arg.getUnsignedDecimal);
-
+            arg = new Word("11111111");
+            Assert.AreEqual("11111111".PadLeft(32, '0'), arg.Binary);
+            Assert.AreEqual("000000FF", arg.Hexadecimal);
+            Assert.AreEqual(255, arg.SignedDecimal);
+            Assert.AreEqual((uint) 255, arg.UnsignedDecimal);
 
             /* argument out of range exeption */
-            arg = new CWord("111111111111111111111111111111111");
+            // ReSharper disable once RedundantAssignment
+            arg = new Word("111111111111111111111111111111111");
         }
 
         [TestMethod]
@@ -64,22 +63,24 @@ namespace CWordTest
         public void CWord_Constructor_Binary_FormatException()
         {
             /* format exception */
-            CWord word = new CWord("abcd");
+            // ReSharper disable once UnusedVariable
+            Word word = new Word("abcd");
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArithmeticException), "Addition of signed and unsigned values are not allowed.")]
         public void CWord_Plus_Operator()
         {
-            CWord arg1 = new CWord((Int32) (-4));
-            CWord arg2 = new CWord((Int32) 5);
+            Word arg1 = new Word(-4);
+            Word arg2 = new Word(5);
 
-            CWord arg3 = arg1 + arg2;
+            Word arg3 = arg1 + arg2;
 
-            Assert.AreEqual("1".PadLeft(32, '0'), arg3.getBinary);
-            Assert.AreEqual("00000001", arg3.getHexadecimal);
+            Assert.AreEqual("1".PadLeft(32, '0'), arg3.Binary);
+            Assert.AreEqual("00000001", arg3.Hexadecimal);
 
-            arg1 = new CWord((UInt32) 4);
+            arg1 = new Word((uint) 4);
+            // ReSharper disable once RedundantAssignment
             arg3 = arg1 + arg2;
         }
 
@@ -87,15 +88,16 @@ namespace CWordTest
         [ExpectedException(typeof(ArithmeticException), "Addition of signed and unsigned values are not allowed.")]
         public void CWord_Minus_Operator()
         {
-            CWord arg1 = new CWord((Int32) 4);
-            CWord arg2 = new CWord((Int32) 5);
+            Word arg1 = new Word(4);
+            Word arg2 = new Word(5);
 
-            CWord arg3 = arg1 - arg2;
+            Word arg3 = arg1 - arg2;
 
-            Assert.AreEqual("1".PadLeft(32, '1'), arg3.getBinary);
-            Assert.AreEqual("FFFFFFFF", arg3.getHexadecimal);
+            Assert.AreEqual("1".PadLeft(32, '1'), arg3.Binary);
+            Assert.AreEqual("FFFFFFFF", arg3.Hexadecimal);
 
-            arg1 = new CWord((UInt32)4);
+            arg1 = new Word((uint)4);
+            // ReSharper disable once RedundantAssignment
             arg3 = arg1 - arg2;
         }
 
@@ -103,40 +105,41 @@ namespace CWordTest
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Requesting a subword with an start > 32 or an length > 32 is not allowed.")]
         public void CWord_getSubwordFromBinary()
         {
-            CWord word = new CWord("00001111000011111111000010011111");
-            CWord subWord = word.getSubword(2, 6);
-            Assert.AreEqual("001111".PadLeft(32, '0'), subWord.getBinary);
-            Assert.AreEqual(15, subWord.getSignedDecimal);
-            Assert.AreEqual((UInt16)15, subWord.getUnsignedDecimal);
-            Assert.AreEqual("00001111000011111111000010011111", word.getBinary);
+            Word word = new Word("00001111000011111111000010011111");
+            Word subWord = word.GetSubword(2, 6);
+            Assert.AreEqual("001111".PadLeft(32, '0'), subWord.Binary);
+            Assert.AreEqual(15, subWord.SignedDecimal);
+            Assert.AreEqual((ushort)15, subWord.UnsignedDecimal);
+            Assert.AreEqual("00001111000011111111000010011111", word.Binary);
 
-            word = new CWord("1111");
-            subWord = word.getSubword(5, 10);
-            Assert.AreEqual("0".PadLeft(32, '0'), subWord.getBinary);
-            Assert.AreEqual(0, subWord.getSignedDecimal);
-            Assert.AreEqual((UInt16) 0, subWord.getUnsignedDecimal);
-            Assert.AreEqual("1111".PadLeft(32, '0'), word.getBinary);
-
-            /* argument out of range */
-            subWord = word.getSubword(2, 33);
+            word = new Word("1111");
+            subWord = word.GetSubword(5, 10);
+            Assert.AreEqual("0".PadLeft(32, '0'), subWord.Binary);
+            Assert.AreEqual(0, subWord.SignedDecimal);
+            Assert.AreEqual((ushort) 0, subWord.UnsignedDecimal);
+            Assert.AreEqual("1111".PadLeft(32, '0'), word.Binary);
 
             /* argument out of range */
-            subWord = word.getSubword(32, 5);
+            // ReSharper disable once RedundantAssignment
+            subWord = word.GetSubword(2, 33);
+
+            /* argument out of range */
+            // ReSharper disable once RedundantAssignment
+            subWord = word.GetSubword(32, 5);
         }
-
 
         [TestMethod]
         public void CWord_signExtendSigned()
         {
-            CWord arg = new CWord(-5);
-            arg = arg.getSubword(16, 16);
-            arg.signExtendSigned();
-            Assert.AreEqual("FFFFFFFB", arg.getHexadecimal);
-            Assert.AreEqual(-5, arg.getSignedDecimal);
+            Word arg = new Word(-5);
+            arg = arg.GetSubword(16, 16);
+            arg.SignExtendSigned();
+            Assert.AreEqual("FFFFFFFB", arg.Hexadecimal);
+            Assert.AreEqual(-5, arg.SignedDecimal);
 
-            arg = new CWord(5);
-            arg.signExtendSigned();
-            Assert.AreEqual("00000005", arg.getHexadecimal);
+            arg = new Word(5);
+            arg.SignExtendSigned();
+            Assert.AreEqual("00000005", arg.Hexadecimal);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<Window x:Class="MIPSCoreUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:View="clr-namespace:MIPSCoreUI.View"
+        xmlns:view="clr-namespace:MIPSCoreUI.View"
         Title="MainWindow" Height="750" Width="1550"  
     WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Grid>
@@ -23,9 +23,9 @@
             </Menu>
         </StackPanel>
 
-        <View:MIPSCore Margin="340,195,264,36"/>
-        <View:MIPSRegister Margin="1312,31,10,10"/>
-        <View:MIPSMemory Margin="0,31,1245,36"/>
+        <view:MipsCore Margin="340,195,264,36"/>
+        <view:MipsRegister Margin="1312,31,10,10"/>
+        <view:MipsMemory Margin="0,31,1245,36"/>
 
         <GroupBox Header="Executed CInstruction" HorizontalAlignment="Left" Margin="302,31,0,0" VerticalAlignment="Top" MinWidth="300" BorderThickness="2" BorderBrush="SlateGray">
             <StackPanel>

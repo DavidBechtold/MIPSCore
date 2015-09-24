@@ -1,88 +1,85 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MIPSCore;
 
 namespace MIPSCoreConsole
 {
-    class CMIPSCoreConsole
+    class MipsCoreConsole
     {
         private static IMipsCore core;
-        private static UInt16 registerReadNumber;
+        private static ushort registerReadNumber;
 
         /* Commands */
-        private static CMIPSCoreConsoleCommand clock;
-        private static CMIPSCoreConsoleCommand readAllRegister;
-        private static CMIPSCoreConsoleCommand readRegister;
-        private static CMIPSCoreConsoleCommand readRegisterUnsigned;
-        private static CMIPSCoreConsoleCommand readRegisterHex;
-        private static CMIPSCoreConsoleCommand controlSignals;
-        private static CMIPSCoreConsoleCommand usage;
+        private static CmipsCoreConsoleCommand clock;
+        private static CmipsCoreConsoleCommand readAllRegister;
+        private static CmipsCoreConsoleCommand readRegister;
+        private static CmipsCoreConsoleCommand readRegisterUnsigned;
+        private static CmipsCoreConsoleCommand readRegisterHex;
+        private static CmipsCoreConsoleCommand controlSignals;
+        private static CmipsCoreConsoleCommand usage;
 
         static void Main(string[] args)
         {
+            if (args == null) throw new ArgumentNullException("args");
+
             /* reads config file and inits all komponents */
             core = new MipsCore();
-            if (!serveStartArguments(args))
-                return;
+            if (!ServeStartArguments(args)) return;
 
             /* install event handler */
-            core.Completed += new EventHandler(completed);
-            core.Clocked += new EventHandler(clocked);
-            core.Exception += new EventHandler(exception);
+            core.Completed += Completed;
+            core.Clocked += Clocked;
+            core.Exception += Exception;
 
             /* init commands */
-            clock = new CMIPSCoreConsoleCommand("clock");
-            readAllRegister = new CMIPSCoreConsoleCommand("rregAll");
-            readRegister = new CMIPSCoreConsoleCommand("rreg");
-            readRegisterUnsigned = new CMIPSCoreConsoleCommand("rregU");
-            readRegisterHex = new CMIPSCoreConsoleCommand("rregH");
-            controlSignals = new CMIPSCoreConsoleCommand("control");
-            usage = new CMIPSCoreConsoleCommand("usage");
+            clock = new CmipsCoreConsoleCommand("clock");
+            readAllRegister = new CmipsCoreConsoleCommand("rregAll");
+            readRegister = new CmipsCoreConsoleCommand("rreg");
+            readRegisterUnsigned = new CmipsCoreConsoleCommand("rregU");
+            readRegisterHex = new CmipsCoreConsoleCommand("rregH");
+            controlSignals = new CmipsCoreConsoleCommand("control");
+            usage = new CmipsCoreConsoleCommand("usage");
 
             core.StartCore();
             
-            serveCommandLineArguments();
+            ServeCommandLineArguments();
         }
 
-        static void completed(object obj, EventArgs args)
+        static void Completed(object obj, EventArgs args)
         {
             Console.WriteLine("Completed");
         }
 
-        static void clocked(object obj, EventArgs args)
+        static void Clocked(object obj, EventArgs args)
         {
             Console.WriteLine("ProgramCounter:\t" + core.ProgramCounter());
             Console.WriteLine("CInstruction:\t" + core.ActualInstruction() + "\n");
         }
 
-        static void exception(object obj, EventArgs args)
+        static void Exception(object obj, EventArgs args)
         {
             Console.WriteLine(core.GetExceptionString());
         }
 
-        static public bool serveStartArguments(string[] args)
+        static public bool ServeStartArguments(string[] args)
         {
             if (args[0] == "-h" || args[0] == "--h" || args[0] == "-help" || args[0] == "--help")
-                Console.WriteLine(usageStartArguments(null));
+                Console.WriteLine(UsageStartArguments(null));
 
             if (args.Length < 2)
             {
-                Console.WriteLine(usageStartArguments("Too little arguments " + args.Length + "."));
+                Console.WriteLine(UsageStartArguments("Too little arguments " + args.Length + "."));
                 return false;
             }
 
             if(args[0] != "-p")
             {
-                Console.WriteLine(usageStartArguments("Wrong first argument " + args[0] + "."));
+                Console.WriteLine(UsageStartArguments("Wrong first argument " + args[0] + "."));
                 return false;
             }
 
             if(!System.IO.File.Exists(args[1]))
             {
-                Console.WriteLine(usageStartArguments("File \"" + args[1] + "\" doesn't exist."));
+                Console.WriteLine(UsageStartArguments("File \"" + args[1] + "\" doesn't exist."));
                 return false;
             }
 
@@ -98,7 +95,7 @@ namespace MIPSCoreConsole
                         break;
 
                     default:
-                        Console.WriteLine(usageStartArguments("Optional argument " + args[i] + " doesn't exist."));
+                        Console.WriteLine(UsageStartArguments("Optional argument " + args[i] + " doesn't exist."));
                         return false;
                 }
             }
@@ -106,7 +103,7 @@ namespace MIPSCoreConsole
             return true;
         }
 
-        static public string usageStartArguments(string error)
+        static public string UsageStartArguments(string error)
         {
             string usageString = "";
 
@@ -122,14 +119,15 @@ namespace MIPSCoreConsole
             return usageString;
         }
 
-        static void serveCommandLineArguments()
+        static void ServeCommandLineArguments()
         {
             while(true)
             {
-                string rawCmd = Console.ReadLine();
-                string[] cmd = rawCmd.Split(' ');
+                var rawCmd = Console.ReadLine();
+                if (rawCmd == null) continue;
+                var cmd = rawCmd.Split(' ');
 
-                for (int i = 0; i < cmd.Length; i++)
+                for (var i = 0; i < cmd.Length; i++)
                 {
                     cmd[i] = cmd[i].ToLower();
                     if (clock.ToString() == cmd[i])
@@ -138,30 +136,31 @@ namespace MIPSCoreConsole
                         Console.WriteLine(core.ToStringAllRegisters());
                     else if (readRegister.ToString() == cmd[i])
                     {
-                        if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                        if (CheckAndGetRegisterNumber(cmd[i++], cmd[i]))
                             Console.WriteLine(core.ToStringRegister(registerReadNumber));
                     }
                     else if (readRegisterUnsigned.ToString() == cmd[i])
                     {
-                        if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                        if (CheckAndGetRegisterNumber(cmd[i++], cmd[i]))
                             Console.WriteLine(core.ToStringRegisterUnsigned(registerReadNumber));
                     }
                     else if (readRegisterHex.ToString() == cmd[i])
                     {
-                        if (checkAndGetRegisterNumber(cmd[i++], cmd[i]))
+                        if (CheckAndGetRegisterNumber(cmd[i++], cmd[i]))
                             Console.WriteLine(core.ToStringRegisterHex(registerReadNumber));
                     }
                     else if (controlSignals.ToString() == cmd[i])
                         Console.WriteLine(core.ReadControlUnitSignals());
                     else if (usage.ToString() == cmd[i])
-                        Console.WriteLine(usageCommandLineArguments(null));
+                        Console.WriteLine(UsageCommandLineArguments(null));
                     else
-                        Console.WriteLine(usageCommandLineArguments("Unkown command " + cmd[i] + ".\n"));
+                        Console.WriteLine(UsageCommandLineArguments("Unkown command " + cmd[i] + ".\n"));
                 }
             }
+            // ReSharper disable once FunctionNeverReturns
         }
 
-        static bool checkAndGetRegisterNumber(string cmd, string arg)
+        static bool CheckAndGetRegisterNumber(string cmd, string arg)
         {
             try
             {
@@ -169,21 +168,21 @@ namespace MIPSCoreConsole
             }
             catch
             {
-                Console.WriteLine(usageCommandLineArguments("Argument " + arg + " of command " + cmd + " can not be converted to a number.\n"));
+                Console.WriteLine(UsageCommandLineArguments("Argument " + arg + " of command " + cmd + " can not be converted to a number.\n"));
                 return false;
             }
 
             if (registerReadNumber >= MipsCore.RegisterCount)
             {
                 string error = String.Format("Argument {0} of command {1} must be between 0 and {2}\n", arg, cmd, MipsCore.RegisterCount - 1);
-                Console.WriteLine(usageCommandLineArguments(error));
+                Console.WriteLine(UsageCommandLineArguments(error));
                 return false;
             }
 
             return true;
         }
 
-        static public string usageCommandLineArguments(string error)
+        static public string UsageCommandLineArguments(string error)
         {
             string usageString = "";
 
@@ -192,27 +191,27 @@ namespace MIPSCoreConsole
 
             usageString += "MIPSCoreConsole <command> [args]\n";
             usageString += "------------------------------\n";
-            usageString += usage.ToString() + "\t\tShows this usage message.\n";
-            usageString += clock.ToString() + "\t\tIn stepping mode step one instruction further.\n";
-            usageString += readAllRegister.ToString() + "\t\tReads all registers\n";
-            usageString += readRegister.ToString() + " <number>\tRead register value signed decimal.\n";
-            usageString += readRegisterUnsigned.ToString() + " <number>\tRead register value unsigned decimal.\n";
-            usageString += readRegisterHex.ToString() + " <number>\tRead register value hexadecimal.\n";
-            usageString += controlSignals.ToString() + "\t\tPrints the control units signals.\n";
+            usageString += usage + "\t\tShows this usage message.\n";
+            usageString += clock + "\t\tIn stepping mode step one instruction further.\n";
+            usageString += readAllRegister + "\t\tReads all registers\n";
+            usageString += readRegister + " <number>\tRead register value signed decimal.\n";
+            usageString += readRegisterUnsigned + " <number>\tRead register value unsigned decimal.\n";
+            usageString += readRegisterHex + " <number>\tRead register value hexadecimal.\n";
+            usageString += controlSignals + "\t\tPrints the control units signals.\n";
 
             return usageString;
         }
     }
 
-    public class CMIPSCoreConsoleCommand
+    public class CmipsCoreConsoleCommand
     {
         private readonly string command;
-        public CMIPSCoreConsoleCommand(string cmd)
+        public CmipsCoreConsoleCommand(string cmd)
         {
             command = cmd;
         }
 
-        public string getCommand
+        public string GetCommand
         {
             get
             {

@@ -1,42 +1,18 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MIPSCore;
-using MIPSCore.Util;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CInstructionMemoryTest
+namespace Tests
 {
     [TestClass]
-    public class UnitTest_InstructionMemory
+    public class UnitTestInstructionMemory
     {
         [TestMethod]
-        public void CInstuctionMemory_WriteAndReadWords()
+        public void InstuctionMemory_WriteAndReadWords()
         {
-            /*CInstructionMemory memory = new CInstructionMemory();
-            // write image into the instruction memory and read it 
-            for (UInt32 i = 0; i < CInstructionMemory.endAddress; i++)
-            {
-                memory.writeWord((UInt16) i, new CWord((UInt32) i));
-                Assert.AreEqual(memory.getInstructionInvalidAddress, false);
-            }
-
-            for (UInt32 i = 0; i < CInstructionMemory.endAddress; i++)
-            {
-                CWord word = memory.ReadWord((UInt16)i);
-                Assert.AreEqual(memory.getInstructionInvalidAddress, false);
-                Assert.AreEqual(word.getUnsignedDecimal, i);
-            }*/
         }
 
         [TestMethod]
-        public void CInstuctionMemory_OutOfBoundWriteAndRead()
+        public void InstuctionMemory_OutOfBoundWriteAndRead()
         {
-            /*CInstructionMemory memory = new CInstructionMemory();
-            memory.writeWord(CInstructionMemory.endAddress + 1, new CWord(100));
-            Assert.AreEqual(memory.getInstructionInvalidAddress, true);
-
-            memory = new CInstructionMemory();
-            memory.ReadWord(CInstructionMemory.endAddress + 1);
-            Assert.AreEqual(memory.getInstructionInvalidAddress, true);*/
         }
     }
 }

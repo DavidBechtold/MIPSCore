@@ -10,8 +10,8 @@ namespace MIPSCore.ALU
         void Clock();
         bool ZeroFlag { get; }
         bool OverflowFlag { get; }
-        CWord GetResultLo { get; }
-        CWord GetResultHi { get; }
+        Word GetResultLo { get; }
+        Word GetResultHi { get; }
 
         IControlUnit ControlUnit { get; set; }
         IInstructionMemory InstructionMemory { get; set; }

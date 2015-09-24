@@ -11,9 +11,9 @@ namespace MIPSCore.Register_File
         void Clock();
         void Flush();
 
-        CWord ReadRs();
-        CWord ReadRt();
-        CWord ReadRd();
+        Word ReadRs();
+        Word ReadRt();
+        Word ReadRd();
         string ToString();
         void InitStackPointer();
         int[] ReadAllRegister();

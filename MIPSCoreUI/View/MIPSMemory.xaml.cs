@@ -1,37 +1,30 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using MIPSCoreUI.Bootstrapper;
 using System.Windows.Media;
 using System.Windows.Documents;
-
-
 
 namespace MIPSCoreUI.View
 {
     /// <summary>
     /// Interaktionslogik für MIPSMemory.xaml
     /// </summary>
-    public partial class MIPSMemory : UserControl
+    public partial class MipsMemory
     {
-        private Run runBackgroundYellow;
-        private Run runBackgroundWhite;
-        public MIPSMemory()
+        private readonly Run runBackgroundYellow;
+        public MipsMemory()
         {
             InitializeComponent();
-            runBackgroundYellow = new Run();
-            runBackgroundWhite = new Run();
-            runBackgroundYellow.Background = Brushes.Yellow;
-            runBackgroundWhite.Background = Brushes.White; 
+            runBackgroundYellow = new Run {Background = Brushes.Yellow};
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = CBootstrapper.MipsMemoryViewModel;
-            CBootstrapper.AddHighlightedTextToInstructionMemory = addTextHighlightedToInstructionMemory;    //TODO make this mvvm
+            DataContext = CBootstrapper.MipsMemoryViewModel;
+            CBootstrapper.AddHighlightedTextToInstructionMemory = AddTextHighlightedToInstructionMemory;    //TODO make this mvvm
         }
 
-        private void addTextHighlightedToInstructionMemory(string text, bool highlight, bool clear)
+        private void AddTextHighlightedToInstructionMemory(string text, bool highlight, bool clear)
         {
             if (text == null) throw new ArgumentNullException("text");
 
@@ -44,9 +37,7 @@ namespace MIPSCoreUI.View
                 InstructionMemory.Inlines.Add(runBackgroundYellow);
             }
             else
-            {
                 InstructionMemory.Inlines.Add(text);
-            }
         }
     }
 }

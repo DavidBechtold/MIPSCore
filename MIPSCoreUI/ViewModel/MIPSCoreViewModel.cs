@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Windows.Threading;
 using System.Windows.Media;
-using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore.Control_Unit;
-using MIPSCore.InstructionSet;
+using MIPSCore.Instruction_Set;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MIPSCoreViewModel : NotificationObject, IMIPSViewModel
+    public class MipsCoreViewModel : NotificationObject, IMipsViewModel
     {
-        private IControlUnit controlUnit;
-        private Dispatcher dispatcher;
+        private readonly IControlUnit controlUnit;
+        private readonly Dispatcher dispatcher;
  
-        /* colors */
-        private SolidColorBrush instructionMemoryActive;
-        private SolidColorBrush registerFileActive;
-        private SolidColorBrush aluActive;
-        private SolidColorBrush dataMemoryActive;
-
         /* lines */
-        private SolidColorBrush lineInactive = new SolidColorBrush(Colors.Black);
-        private SolidColorBrush lineActive = new SolidColorBrush(Colors.Blue);
+        private readonly SolidColorBrush lineInactive = new SolidColorBrush(Colors.Black);
+        private readonly SolidColorBrush lineActive = new SolidColorBrush(Colors.Blue);
         private SolidColorBrush jumpLine;
         private SolidColorBrush jumpRegisterLine;
         private SolidColorBrush jumpRegisterAluRead1Line;
@@ -56,8 +49,8 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush dataMemoryMux;
 
         /* control line colors */
-        private SolidColorBrush controlLineInactive = new SolidColorBrush(Colors.LightBlue);
-        private SolidColorBrush controlLineActive = new SolidColorBrush(Colors.Blue);
+        private readonly SolidColorBrush controlLineInactive = new SolidColorBrush(Colors.LightBlue);
+        private readonly SolidColorBrush controlLineActive = new SolidColorBrush(Colors.Blue);
         private SolidColorBrush branchControlLine;
         private SolidColorBrush jumpControlLine;
         private SolidColorBrush aluOperationControlLine;    
@@ -66,13 +59,9 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush aluSourceControlLine;
         private SolidColorBrush regFileInputControlLine;
 
-        private double adderWidth = 30;
-        private double adderHeight = 30;
-        private double rectangleHeight = 140;
-        private double rectangleWidth = 100;
-        private double rectangleSpaceBetween = 50;
 
-        public MIPSCoreViewModel(IControlUnit controlUnit, Dispatcher dispatcher)
+
+        public MipsCoreViewModel(IControlUnit controlUnit, Dispatcher dispatcher)
         {
             if (controlUnit == null) throw new ArgumentNullException("controlUnit");
             if (dispatcher == null) throw new ArgumentNullException("dispatcher");
@@ -86,27 +75,21 @@ namespace MIPSCoreUI.ViewModel
         
             DataMemoryAddressLine = WritePcToRegisterLine = WriteAluResultLine = AluResultLine = DataMemoryOutLine = DataMemoryMux = AluSourceMux = RegisterFileRtOutLine = BranchMux = JumpMux = BranchMuxLine = JumpMuxLine = AluRead1Line = AluRead2Line = lineInactive;
 
-            RegisterFileWriteBackLine = BranchControlLine = JumpControlLine = ALUOperationControlLine = DataMemoryControlLine = ALUSourceControlLine = RegFileWriteControlLine = RegFileInputControlLine = controlLineInactive;
+            RegisterFileWriteBackLine = BranchControlLine = JumpControlLine = AluOperationControlLine = DataMemoryControlLine = AluSourceControlLine = RegFileWriteControlLine = RegFileInputControlLine = controlLineInactive;
         }
 
-        public void refresh()
+        public void Refresh()
         {
             /* invoke the wpf thread */
-            dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
-            {
-                refreshGUI();
-            }));
+            dispatcher.Invoke(DispatcherPriority.Normal, (Action)(RefreshGui));
         }
 
-        private void refreshGUI()
+        private void RefreshGui()
         {
-            string test;
-            if (controlUnit.GetInstructionAssemblerName == "jr")
-                test = "";
-            ALUOperationControlLine = controlLineInactive;
+            AluOperationControlLine = controlLineInactive;
             BranchControlLine = controlLineInactive;
             JumpControlLine = controlLineInactive;
-            ALUSourceControlLine = controlLineInactive;
+            AluSourceControlLine = controlLineInactive;
             RegFileWriteControlLine = controlLineInactive;
             DataMemoryControlLine = controlLineInactive;
 
@@ -146,7 +129,7 @@ namespace MIPSCoreUI.ViewModel
             /* Control Lines */
             if (controlUnit.AluControl != AluControl.Stall)
             {
-                ALUOperationControlLine = controlLineActive;
+                AluOperationControlLine = controlLineActive;
                 AluRead1Line = lineActive;
                 AluRead2Line = lineActive;
                 JumpRegisterAluRead1Line = lineActive;
@@ -174,7 +157,7 @@ namespace MIPSCoreUI.ViewModel
             }
 
             /* Memory Lines */
-            if (controlUnit.MemoryRead == true || controlUnit.MemoryWrite == true)
+            if (controlUnit.MemoryRead || controlUnit.MemoryWrite)
             {
                 DataMemoryControlLine = controlLineActive;
                 DataMemoryAddressLine = lineActive;
@@ -236,10 +219,10 @@ namespace MIPSCoreUI.ViewModel
                 RegisterFileRtLine = lineActive;
                 RegisterFileRsRdLine = lineActive;
                 RegisterFileRsRdRtLine = lineActive;
-                if (JumpRegisterLine != lineActive)
+                if (!Equals(JumpRegisterLine, lineActive))
                     RegisterFileRtOutLine = lineActive;
             }
-            else if (controlUnit.InstructionFormat == InstructionFormat.I && BranchLine == lineInactive)
+            else if (controlUnit.InstructionFormat == InstructionFormat.I && Equals(BranchLine, lineInactive))
             {
                 RegisterFileRsLine = lineActive;
                 RegisterFileRtLine = lineActive;
@@ -248,7 +231,7 @@ namespace MIPSCoreUI.ViewModel
                 JumpBranchLine = lineActive;
                 ImmediateOrBranchLine = lineActive;
                 ImmediateLine = lineActive;
-                ALUSourceControlLine = controlLineActive;
+                AluSourceControlLine = controlLineActive;
             }
         }
 
@@ -447,15 +430,15 @@ namespace MIPSCoreUI.ViewModel
             get { return jumpControlLine; }
         }
 
-        public SolidColorBrush ALUSourceControlLine
+        public SolidColorBrush AluSourceControlLine
         {
-            set { aluSourceControlLine = value; RaisePropertyChanged(() => ALUSourceControlLine); }
+            set { aluSourceControlLine = value; RaisePropertyChanged(() => AluSourceControlLine); }
             get { return aluSourceControlLine; }
         }
 
-        public SolidColorBrush ALUOperationControlLine
+        public SolidColorBrush AluOperationControlLine
         {
-            set { aluOperationControlLine = value; RaisePropertyChanged(() => ALUOperationControlLine); }
+            set { aluOperationControlLine = value; RaisePropertyChanged(() => AluOperationControlLine); }
             get { return aluOperationControlLine; }
         }
 
@@ -475,18 +458,6 @@ namespace MIPSCoreUI.ViewModel
         {
             set { regFileWriteControlLine = value; RaisePropertyChanged(() => RegFileWriteControlLine); }
             get { return regFileWriteControlLine; }
-        }
-
-        public double RectangleWidth
-        {
-            get { return rectangleWidth; }
-            set { rectangleWidth = value; RaisePropertyChanged(() => RectangleWidth); }
-        }
-
-        public double RectangleHeight 
-        {
-            get {return rectangleHeight;}
-            set { rectangleHeight = value; RaisePropertyChanged(() => RectangleHeight); }
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using MIPSCoreUI.Bootstrapper;
-using MIPSCoreUI.View;
-using MIPSCoreUI.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Threading;
@@ -10,7 +8,7 @@ namespace MIPSCoreUI
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
     /// 
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
@@ -20,11 +18,11 @@ namespace MIPSCoreUI
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CBootstrapper.Init();
-            CBootstrapper.Redraw = redraw;
-            this.DataContext = CBootstrapper.MainWindowViewModel;
+            CBootstrapper.Redraw = Redraw;
+            DataContext = CBootstrapper.MainWindowViewModel;
         }
 
-        private void redraw()
+        private void Redraw()
         {
             this.Refresh();
         }
@@ -32,7 +30,7 @@ namespace MIPSCoreUI
 
     public static class ExtensionMethods
     {
-        private static Action EmptyDelegate = delegate() { };
+        private static readonly Action EmptyDelegate = delegate { };
 
         public static void Refresh(this UIElement uiElement)
         {

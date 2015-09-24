@@ -1,4 +1,4 @@
-﻿namespace MIPSCore.InstructionSet
+﻿namespace MIPSCore.Instruction_Set
 {
     public interface IControlSignals
     {

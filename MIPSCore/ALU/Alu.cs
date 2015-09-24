@@ -1,8 +1,8 @@
 ﻿using System;
 using MIPSCore.Control_Unit;
 using MIPSCore.Util;
-using MIPSCore.InstructionSet;
 using MIPSCore.Instruction_Memory;
+using MIPSCore.Instruction_Set;
 using MIPSCore.Register_File;
 
 namespace MIPSCore.ALU
@@ -13,21 +13,21 @@ namespace MIPSCore.ALU
         public IInstructionMemory InstructionMemory { get; set; }
         public IRegisterFile RegisterFile { get; set; }
 
-        private CWord arg1;
-        private CWord arg2;
+        private Word arg1;
+        private Word arg2;
 
         // TODO make a state register
         public bool ZeroFlag { get; private set; }
         public bool OverflowFlag { get; private set; }
-        public CWord GetResultLo { get; private set; }
-        public CWord GetResultHi { get; private set; }
+        public Word GetResultLo { get; private set; }
+        public Word GetResultHi { get; private set; }
 
         public Alu()
         {
             ZeroFlag = false;
             OverflowFlag = false;
-            GetResultLo = new CWord((uint) 0);
-            GetResultHi = new CWord((uint) 0);
+            GetResultLo = new Word((uint) 0);
+            GetResultHi = new Word((uint) 0);
         }
 
         public void Clock()
@@ -66,78 +66,75 @@ namespace MIPSCore.ALU
 
         private void PerformAdd()
         {
-            try { GetResultLo.set(checked(arg1.getSignedDecimal + arg2.getSignedDecimal)); }
+            try { GetResultLo.Set(checked(arg1.SignedDecimal + arg2.SignedDecimal)); }
             catch (OverflowException) { OverflowFlag = true; }
         }
 
         private void PerformAddU()
         {
-            try { GetResultLo.set(checked(arg1.getUnsignedDecimal + arg2.getUnsignedDecimal)); }
+            try { GetResultLo.Set(checked(arg1.UnsignedDecimal + arg2.UnsignedDecimal)); }
             catch (OverflowException) { OverflowFlag = true; }
         }
 
         private void PerformAnd()
         {
-            GetResultLo.set(arg1.getUnsignedDecimal & arg2.getUnsignedDecimal);
+            GetResultLo.Set(arg1.UnsignedDecimal & arg2.UnsignedDecimal);
         }
 
         private void PerformOr()
         {
-            GetResultLo.set(arg1.getUnsignedDecimal | arg2.getUnsignedDecimal);
+            GetResultLo.Set(arg1.UnsignedDecimal | arg2.UnsignedDecimal);
         }
 
         private void PerformXor()
         {
-            GetResultLo.set(arg1.getUnsignedDecimal ^ arg2.getUnsignedDecimal);
+            GetResultLo.Set(arg1.UnsignedDecimal ^ arg2.UnsignedDecimal);
         }
 
         private void PerformSub()
         {
-            try { GetResultLo.set(checked(arg1.getSignedDecimal - arg2.getSignedDecimal)); }
+            try { GetResultLo.Set(checked(arg1.SignedDecimal - arg2.SignedDecimal)); }
             catch (OverflowException) { OverflowFlag = true; }
         }
 
         private void PerformSubU()
         {
-            try { GetResultLo.set(checked(arg1.getUnsignedDecimal - arg2.getUnsignedDecimal)); }
+            try { GetResultLo.Set(checked(arg1.UnsignedDecimal - arg2.UnsignedDecimal)); }
             catch (OverflowException) { OverflowFlag = true; }
         }
 
         private void PerformSetOnLessThen()
         {
-            if (arg1.getSignedDecimal < arg2.getSignedDecimal)
-                GetResultLo.set(1);
-            else
-                GetResultLo.set(0);
+            GetResultLo.Set(arg1.SignedDecimal < arg2.SignedDecimal ? 1 : 0);
         }
 
         private void PerformSetOnLessThenU()
         {
-            if (arg1.getUnsignedDecimal < arg2.getUnsignedDecimal)
-                GetResultLo.set((UInt32)1);
+            if (arg1.UnsignedDecimal < arg2.UnsignedDecimal)
+                GetResultLo.Set((UInt32)1);
             else
-                GetResultLo.set((UInt32)0);
+                GetResultLo.Set((UInt32)0);
         }
 
         private void PerformSetOnLessThanZ()
         {
-            if (arg1.getSignedDecimal < 0)
-                GetResultLo.set((UInt32)1);
+            if (arg1.SignedDecimal < 0)
+                GetResultLo.Set((UInt32)1);
             else
-                GetResultLo.set((UInt32)0);
+                GetResultLo.Set((UInt32)0);
         }
 
         private void PerformShift(bool left)
         {
-            UInt32 shiftAmount = InstructionMemory.GetShiftAmount.getUnsignedDecimal;
-            UInt32 valueToShift = arg2.getUnsignedDecimal;
+            UInt32 shiftAmount = InstructionMemory.GetShiftAmount.UnsignedDecimal;
+            UInt32 valueToShift = arg2.UnsignedDecimal;
             Shift(left, valueToShift, shiftAmount);
         }
 
         private void PerformShiftLeft16()
         {
             UInt32 shiftAmount = 16;
-            UInt32 valueToShift = arg2.getUnsignedDecimal;
+            UInt32 valueToShift = arg2.UnsignedDecimal;
             Shift(true, valueToShift, shiftAmount);
         }
 
@@ -158,27 +155,27 @@ namespace MIPSCore.ALU
                     valueToShift = valueToShift >> 1;
                 }
             }
-            GetResultLo.set(valueToShift);
+            GetResultLo.Set(valueToShift);
         }
 
         private void PerformMult()
         {
-            Int64 res = arg1.getSignedDecimal * arg2.getSignedDecimal;
-            GetResultLo.set((Int32) res);
-            GetResultHi.set((Int32) (res >> 32));
+            Int64 res = arg1.SignedDecimal * arg2.SignedDecimal;
+            GetResultLo.Set((Int32) res);
+            GetResultHi.Set((Int32) (res >> 32));
         }
 
         private void PerformMultU()
         {
-            UInt64 res = arg1.getUnsignedDecimal * arg2.getUnsignedDecimal;
-            GetResultLo.set((uint)res);
-            GetResultHi.set((uint)(res >> 32));
+            UInt64 res = arg1.UnsignedDecimal * arg2.UnsignedDecimal;
+            GetResultLo.Set((uint)res);
+            GetResultHi.Set((uint)(res >> 32));
         }
 
         private void PerformDiv()
         {
-            GetResultLo.set(arg1.getUnsignedDecimal / arg2.getUnsignedDecimal);
-            GetResultHi.set(arg1.getUnsignedDecimal % arg2.getUnsignedDecimal);
+            GetResultLo.Set(arg1.UnsignedDecimal / arg2.UnsignedDecimal);
+            GetResultHi.Set(arg1.UnsignedDecimal % arg2.UnsignedDecimal);
         }
 
         private void SetAluArguments()
@@ -194,7 +191,7 @@ namespace MIPSCore.ALU
                     break;
                 /* if the signExtend signal is set take the register from the sign extender */
                 case AluSource.SignExtend:
-                    InstructionMemory.GetImmediate.signExtendSigned();
+                    InstructionMemory.GetImmediate.SignExtendSigned();
                     arg2 = InstructionMemory.GetImmediate;
                     break;
                 default:
@@ -204,7 +201,7 @@ namespace MIPSCore.ALU
 
         private void CheckIfResultIsZero()
         {
-            if (GetResultLo.getUnsignedDecimal == 0)
+            if (GetResultLo.UnsignedDecimal == 0)
                 ZeroFlag = true;
         }
     }

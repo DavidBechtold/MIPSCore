@@ -2,62 +2,55 @@
 using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore;
 using System.Windows.Threading;
-using System.Drawing;
-using System.Windows.Documents;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using MIPSCoreUI.Bootstrapper;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MIPSMemoryViewModel : NotificationObject, IMIPSViewModel
+    public class MipsMemoryViewModel : NotificationObject, IMipsViewModel
     {
-        private MipsCore core;
-        private Dispatcher dispatcher;
+        private readonly MipsCore core;
+        private readonly Dispatcher dispatcher;
 
-        public string MIPSInstructionMemory {get; private set;}
-        public string MIPSDataMemory { get; private set; }
+        public string MipsInstructionMemory {get; private set;}
+        public string MipsDataMemory { get; private set; }
 
-        public MIPSMemoryViewModel(MipsCore core, Dispatcher dispatcher)
+        public MipsMemoryViewModel(MipsCore core, Dispatcher dispatcher)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (dispatcher == null) throw new ArgumentException("dispatcher");
             this.core = core;
             this.dispatcher = dispatcher;
 
-            MIPSInstructionMemory = "";
-            MIPSDataMemory = "";
+            MipsInstructionMemory = "";
+            MipsDataMemory = "";
         }
 
-        public void refresh()
+        public void Refresh()
         {
             /* invoke the wpf thread */
-            dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
-            {
-                refreshGUI();
-            }));
+            dispatcher.Invoke(DispatcherPriority.Normal, (Action)(RefreshGui));
         }
 
-        private void refreshGUI()
+        private void RefreshGui()
         {
-            MIPSDataMemory = core.DataMemory.Hexdump(0, core.DataMemory.GetLastByteAddress);
+            MipsDataMemory = core.DataMemory.Hexdump(0, core.DataMemory.GetLastByteAddress);
             CBootstrapper.AddHighlightedTextToInstructionMemory("", false, true);
-            refreshInstructionMemory();
-            RaisePropertyChanged(() => MIPSDataMemory);
+            RefreshInstructionMemory();
+            RaisePropertyChanged(() => MipsDataMemory);
         }
 
-        private void refreshInstructionMemory()
+        private void RefreshInstructionMemory()
         {
             /* puh ^^ had problems with the performance, so i try to call the func so few as possible */
             string stringToAdd = "";
             int codeCounter = 0;
             for (uint i = 0; i < core.InstructionMemory.GetLastByteAddress; i = i + 4, codeCounter++)
             {
-                if (core.InstructionMemory.GetProgramCounter.getUnsignedDecimal == i)
+                if (core.InstructionMemory.GetProgramCounter.UnsignedDecimal == i)
                 {
                     CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, false, false);
                     stringToAdd = Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
-                    stringToAdd += core.InstructionMemory.ReadWord(i).getHexadecimal + "   ";
+                    stringToAdd += core.InstructionMemory.ReadWord(i).Hexadecimal + "   ";
                     if (codeCounter < core.Code.Count)
                         stringToAdd += core.Code[codeCounter] + "\n";
                     else
@@ -68,18 +61,13 @@ namespace MIPSCoreUI.ViewModel
                 }
 
                 stringToAdd += Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
-                stringToAdd += core.InstructionMemory.ReadWord(i).getHexadecimal + "   ";
+                stringToAdd += core.InstructionMemory.ReadWord(i).Hexadecimal + "   ";
                 if(codeCounter < core.Code.Count)
                     stringToAdd += core.Code[codeCounter] + "\n";
                 else
                     stringToAdd += "\n";
             }
             CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, false, false);
-        }
-
-        private void refreshDataMemory()
-        {
-
         }
     }
 

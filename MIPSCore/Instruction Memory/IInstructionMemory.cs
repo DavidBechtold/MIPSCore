@@ -10,17 +10,17 @@ namespace MIPSCore.Instruction_Memory
     {
         void Clock();
         new void Flush();
-        CWord GetOpCode { get; }
-        CWord GetFunction { get; }
-        CWord GetShiftAmount { get; }
-        CWord GetImmediate { get; }
-        CWord GetRd { get; }
-        CWord GetRs { get; }
-        CWord GetRt { get; }
-        CWord GetJumpTarget { get;  }
-        CWord GetProgramCounter { get; }
-        CWord GetActualInstruction { get; }
-        CWord SetAddressOffset { set; }
+        Word GetOpCode { get; }
+        Word GetFunction { get; }
+        Word GetShiftAmount { get; }
+        Word GetImmediate { get; }
+        Word GetRd { get; }
+        Word GetRs { get; }
+        Word GetRt { get; }
+        Word GetJumpTarget { get;  }
+        Word GetProgramCounter { get; }
+        Word GetActualInstruction { get; }
+        Word SetAddressOffset { set; }
 
         IAlu Alu { get; set; }
         IControlUnit ControlUnit { get; set; }

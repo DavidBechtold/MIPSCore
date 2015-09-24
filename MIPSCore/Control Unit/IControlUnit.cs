@@ -1,5 +1,5 @@
-﻿using MIPSCore.InstructionSet;
-using MIPSCore.Instruction_Memory;
+﻿using MIPSCore.Instruction_Memory;
+using MIPSCore.Instruction_Set;
 
 namespace MIPSCore.Control_Unit
 {

@@ -67,9 +67,9 @@
     <Compile Include="Register File\RegisterFile.cs" />
     <Compile Include="Util\_Memory\Memory.cs" />
     <Compile Include="Util\MipsProgrammer.cs" />
-    <Compile Include="Util\CMIPSRegister.cs" />
-    <Compile Include="Util\CRegister.cs" />
-    <Compile Include="Util\CWord.cs" />
+    <Compile Include="Util\MipsRegister.cs" />
+    <Compile Include="Util\Register.cs" />
+    <Compile Include="Util\Word.cs" />
     <Compile Include="Timing\Clock.cs" />
     <Compile Include="Instruction Memory\InstructionMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

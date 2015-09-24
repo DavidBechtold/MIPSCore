@@ -1,4 +1,3 @@
-using System;
 using System.Windows;
 using System.Windows.Media;
 
@@ -45,19 +44,19 @@ namespace MIPSCoreUI.BaseObjects
             get 
             {
                 // Clear out the PathGeometry.
-                pathgeo.Figures.Clear();
+                Pathgeo.Figures.Clear();
 
                 // Try to avoid unnecessary indexing exceptions.
                 if (Points.Count > 0)
                 {
                     // Define a PathFigure containing the points.
-                    pathfigLine.StartPoint = Points[0];
-                    polysegLine.Points.Clear();
+                    PathfigLine.StartPoint = Points[0];
+                    PolysegLine.Points.Clear();
 
                     for (int i = 1; i < Points.Count; i++)
-                        polysegLine.Points.Add(Points[i]);
+                        PolysegLine.Points.Add(Points[i]);
 
-                    pathgeo.Figures.Add(pathfigLine);
+                    Pathgeo.Figures.Add(PathfigLine);
                 }
 
                 // Call the base property to add arrows on the ends.

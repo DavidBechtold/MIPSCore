@@ -12,7 +12,7 @@ namespace MIPSCore.Data_Memory
         IAlu Alu { get; set; }
         IRegisterFile RegisterFile { get; set; }
         IControlUnit ControlUnit { get; set; }
-        CWord LoadedValue { get; }
-        CWord AddressOffset { set; }
+        Word LoadedValue { get; }
+        Word AddressOffset { set; }
     }
 }

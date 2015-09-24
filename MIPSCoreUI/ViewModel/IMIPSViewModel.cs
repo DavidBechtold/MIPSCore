@@ -1,11 +1,11 @@
 ﻿namespace MIPSCoreUI.ViewModel
 {
-    public interface IMIPSViewModel
+    public interface IMipsViewModel
     {
-        void refresh();
+        void Refresh();
     }
 
-    public interface IMIPSRegisterViewModel : IMIPSViewModel
+    public interface IMipsRegisterViewModel : IMipsViewModel
     {
         RegisterView Display { get; set; }
     }

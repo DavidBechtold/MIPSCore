@@ -1,26 +1,23 @@
-﻿using MIPSCore;
-using MIPSCoreUI.Services;
-using MIPSCoreUI.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
+using MIPSCore;
 using MIPSCore.Control_Unit;
 using MIPSCore.Util;
 using MIPSCoreUI.Bootstrapper;
+using MIPSCoreUI.Services;
 
-namespace MIPSCoreUI.View
+namespace MIPSCoreUI.ViewModel
 {
     public class MainWindowViewModel :NotificationObject
     {
-        private MipsCore core;
-        private IControlUnit controlUnit;
-        private IMIPSViewModel mipsCoreViewModel;
-        private IMIPSRegisterViewModel mipsRegisterViewModel;
-        private IMIPSViewModel mipsMemoryViewModel;
-        private IMessageBoxService messageBox;
-        private IOpenFileDialogService openFileDialog;
+        private readonly MipsCore core;
+        private readonly IControlUnit controlUnit;
+        private readonly IMipsViewModel mipsCoreViewModel;
+        private readonly IMipsRegisterViewModel mipsRegisterViewModel;
+        private readonly IMipsViewModel mipsMemoryViewModel;
+        private readonly IMessageBoxService messageBox;
+        private readonly IOpenFileDialogService openFileDialog;
 
         public DelegateCommand Clock { get; private set; }
         public DelegateCommand Run { get; private set; }
@@ -39,7 +36,7 @@ namespace MIPSCoreUI.View
         private string executedInstructionOpCode;
         private string excecutedInstructionAluOperation;
 
-        public MainWindowViewModel(MipsCore core, IMIPSViewModel mipsCoreViewModel, IMIPSRegisterViewModel mipsRegisterViewModel, IMIPSViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
+        public MainWindowViewModel(MipsCore core, IMipsViewModel mipsCoreViewModel, IMipsRegisterViewModel mipsRegisterViewModel, IMipsViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (mipsCoreViewModel == null) throw new ArgumentNullException("mipsCoreViewModel");
@@ -55,37 +52,37 @@ namespace MIPSCoreUI.View
             this.messageBox = messageBox;
             this.openFileDialog = openFileDialog;
 
-            core.Clocked += clocked;
-            core.Completed += completed;
-            core.Exception += exception;
+            core.Clocked += Clocked;
+            core.Completed += Completed;
+            core.Exception += Exception;
 
             /* install delegates für command bindings */
-            Clock = new DelegateCommand(() => OnClock());
-            Run = new DelegateCommand(() => OnRun());
-            Stop = new DelegateCommand(() => OnStop());
-            LoadFile = new DelegateCommand(() => OnLoadFile());
+            Clock = new DelegateCommand(OnClock);
+            Run = new DelegateCommand(OnRun);
+            Stop = new DelegateCommand(OnStop);
+            LoadFile = new DelegateCommand(OnLoadFile);
             ViewRegisterHex = new DelegateCommand(() => ViewRegister(RegisterView.HexaDecimal));
             ViewRegisterSignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.SignedDecimal));
             ViewRegisterUnsignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.UnsignedDecimal)); 
         }
 
-        private void clocked(Object sender, EventArgs args)
+        private void Clocked(object sender, EventArgs args)
         {
-            fillExecutedInstructionGroupBox();
-            mipsCoreViewModel.refresh();
-            mipsRegisterViewModel.refresh();
-            mipsMemoryViewModel.refresh();
+            FillExecutedInstructionGroupBox();
+            mipsCoreViewModel.Refresh();
+            mipsRegisterViewModel.Refresh();
+            mipsMemoryViewModel.Refresh();
 
             if (core.Mode == ExecutionMode.RunToCompletion)
                 CBootstrapper.Redraw();
         }
 
-        private void completed(Object sender, EventArgs args)
+        private void Completed(object sender, EventArgs args)
         {
             core.SetMode(ExecutionMode.SingleStep);
         }
 
-        private void exception(Object sender, EventArgs args)
+        private void Exception(object sender, EventArgs args)
         {
             messageBox.ShowNotification(core.GetExceptionString());
         }
@@ -114,17 +111,17 @@ namespace MIPSCoreUI.View
 
             core.ProgramObjdump(openFileDialog.GetFileName());
             core.StartCore();
-            mipsRegisterViewModel.refresh();
-            mipsMemoryViewModel.refresh();
+            mipsRegisterViewModel.Refresh();
+            mipsMemoryViewModel.Refresh();
         }
 
         private void ViewRegister(RegisterView view)
         {
             mipsRegisterViewModel.Display = view;
-            mipsRegisterViewModel.refresh();
+            mipsRegisterViewModel.Refresh();
         }
 
-        private void fillExecutedInstructionGroupBox()
+        private void FillExecutedInstructionGroupBox()
         {
             ExecutedInstructionName = controlUnit.GetInstructionAssemblerName + ": " + controlUnit.GetInstructionFriendlyName;
             ExecutedInstructionExample = controlUnit.GetInstructionExample;
@@ -136,46 +133,45 @@ namespace MIPSCoreUI.View
         }
 
         /* Executed Command */
-        public String ExecutedInstructionName
+        public string ExecutedInstructionName
         {
             set { executedInstructionName = value; RaisePropertyChanged(() => ExecutedInstructionName); }
             get { return executedInstructionName; }
         }
 
-        public String ExecutedInstructionExample
+        public string ExecutedInstructionExample
         {
             set { executedInstructionExample = value; RaisePropertyChanged(() => ExecutedInstructionExample); }
             get { return executedInstructionExample; }
         }
 
-        public String ExecutedInstructionMeaning
+        public string ExecutedInstructionMeaning
         {
             set { executedInstructionMeaning = value; RaisePropertyChanged(() => ExecutedInstructionMeaning); }
             get { return executedInstructionMeaning; }
         }
 
-        public String ExecutedInstructionFormat
+        public string ExecutedInstructionFormat
         {
             set { executedInstructionFormat = value; RaisePropertyChanged(() => ExecutedInstructionFormat); }
             get { return executedInstructionFormat; }
         }
 
-        public String ExecutedInstructionFunction
+        public string ExecutedInstructionFunction
         {
             set { executedInstructionFunction = value; RaisePropertyChanged(() => ExecutedInstructionFunction); }
             get { return executedInstructionFunction; }
         }
 
-        public String ExecutedInstructionOpCode
+        public string ExecutedInstructionOpCode
         {
             set { executedInstructionOpCode = value; RaisePropertyChanged(() => ExecutedInstructionOpCode); }
             get { return executedInstructionOpCode; }
         }
-        public String ExcecutedInstructionAluOperation
+        public string ExcecutedInstructionAluOperation
         {
             set { excecutedInstructionAluOperation = value; RaisePropertyChanged(() => ExcecutedInstructionAluOperation); }
             get { return excecutedInstructionAluOperation; }
         }
-        
     }
 }
