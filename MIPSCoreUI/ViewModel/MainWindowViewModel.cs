@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore;
+using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
 using MIPSCore.Util;
 using MIPSCoreUI.Bootstrapper;
@@ -13,6 +15,7 @@ namespace MIPSCoreUI.ViewModel
     {
         private readonly MipsCore core;
         private readonly IControlUnit controlUnit;
+        private readonly IAlu alu;
         private readonly IMipsViewModel mipsCoreViewModel;
         private readonly IMipsRegisterViewModel mipsRegisterViewModel;
         private readonly IMipsViewModel mipsMemoryViewModel;
@@ -36,6 +39,14 @@ namespace MIPSCoreUI.ViewModel
         private string executedInstructionOpCode;
         private string excecutedInstructionAluOperation;
 
+        /* state register */
+        private SolidColorBrush stateRegisterActive;
+        private SolidColorBrush stateRegisterInactive;
+        private SolidColorBrush stateRegisterSignFlag;
+        private SolidColorBrush stateRegisterZeroFlag;
+        private SolidColorBrush stateRegisterOverflowFlag;
+        private SolidColorBrush stateRegisterCarryFlag;
+
         public MainWindowViewModel(MipsCore core, IMipsViewModel mipsCoreViewModel, IMipsRegisterViewModel mipsRegisterViewModel, IMipsViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
         {
             if (core == null) throw new ArgumentNullException("core");
@@ -46,6 +57,7 @@ namespace MIPSCoreUI.ViewModel
 
             this.core = core;
             controlUnit = core.ControlUnit;
+            alu = core.Alu;
             this.mipsCoreViewModel = mipsCoreViewModel;
             this.mipsRegisterViewModel = mipsRegisterViewModel;
             this.mipsMemoryViewModel = mipsMemoryViewModel;
@@ -63,12 +75,17 @@ namespace MIPSCoreUI.ViewModel
             LoadFile = new DelegateCommand(OnLoadFile);
             ViewRegisterHex = new DelegateCommand(() => ViewRegister(RegisterView.HexaDecimal));
             ViewRegisterSignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.SignedDecimal));
-            ViewRegisterUnsignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.UnsignedDecimal)); 
+            ViewRegisterUnsignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.UnsignedDecimal));
+
+            /* state register */
+            stateRegisterActive = new SolidColorBrush(Colors.DeepSkyBlue);
+            stateRegisterInactive = new SolidColorBrush(Colors.White);
         }
 
         private void Clocked(object sender, EventArgs args)
         {
             FillExecutedInstructionGroupBox();
+            StateRegisterRefresh();
             mipsCoreViewModel.Refresh();
             mipsRegisterViewModel.Refresh();
             mipsMemoryViewModel.Refresh();
@@ -132,6 +149,23 @@ namespace MIPSCoreUI.ViewModel
             ExcecutedInstructionAluOperation = controlUnit.AluControl.ToText();
         }
 
+        private void StateRegisterRefresh()
+        {
+            StateRegisterZeroFlag = stateRegisterInactive;
+            StateRegisterOverflowFlag = stateRegisterInactive;
+            StateRegisterCarryFlag = stateRegisterInactive;
+            StateRegisterSignFlag = stateRegisterInactive;
+
+            if (alu.ZeroFlag)
+                StateRegisterZeroFlag = stateRegisterActive;
+            if (alu.OverflowFlag)
+                StateRegisterOverflowFlag = stateRegisterActive;
+            if (alu.CarryFlag)
+                StateRegisterCarryFlag = stateRegisterActive;
+            if (alu.SignFlag)
+                StateRegisterSignFlag = stateRegisterActive;
+        }
+
         /* Executed Command */
         public string ExecutedInstructionName
         {
@@ -172,6 +206,30 @@ namespace MIPSCoreUI.ViewModel
         {
             set { excecutedInstructionAluOperation = value; RaisePropertyChanged(() => ExcecutedInstructionAluOperation); }
             get { return excecutedInstructionAluOperation; }
+        }
+
+        public SolidColorBrush StateRegisterSignFlag
+        {
+            set { stateRegisterSignFlag = value; RaisePropertyChanged(() => StateRegisterSignFlag); }
+            get { return stateRegisterSignFlag; }
+        }
+
+        public SolidColorBrush StateRegisterZeroFlag
+        {
+            set { stateRegisterZeroFlag = value; RaisePropertyChanged(() => StateRegisterZeroFlag); }
+            get { return stateRegisterZeroFlag; }
+        }
+
+        public SolidColorBrush StateRegisterOverflowFlag
+        {
+            set { stateRegisterOverflowFlag = value; RaisePropertyChanged(() => StateRegisterOverflowFlag); }
+            get { return stateRegisterOverflowFlag; }
+        }
+
+        public SolidColorBrush StateRegisterCarryFlag
+        {
+            set { stateRegisterCarryFlag = value; RaisePropertyChanged(() => StateRegisterCarryFlag); }
+            get { return stateRegisterCarryFlag; }
         }
     }
 }

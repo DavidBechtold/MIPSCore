@@ -52,7 +52,12 @@ namespace MIPSCoreUI.ViewModel
                     stringToAdd = Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
                     stringToAdd += core.InstructionMemory.ReadWord(i).Hexadecimal + "   ";
                     if (codeCounter < core.Code.Count)
-                        stringToAdd += core.Code[codeCounter] + "\n";
+                    {
+                        if(core.Code.ContainsKey(i))
+                            stringToAdd += core.Code[i] + "\n";
+                        else
+                            stringToAdd += "\n";        
+                    }
                     else
                         stringToAdd += "\n";
                     CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, true, false);
@@ -63,7 +68,12 @@ namespace MIPSCoreUI.ViewModel
                 stringToAdd += Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
                 stringToAdd += core.InstructionMemory.ReadWord(i).Hexadecimal + "   ";
                 if(codeCounter < core.Code.Count)
-                    stringToAdd += core.Code[codeCounter] + "\n";
+                {
+                    if (core.Code.ContainsKey(i))
+                        stringToAdd += core.Code[i] + "\n";
+                    else
+                        stringToAdd += "\n";  
+                }
                 else
                     stringToAdd += "\n";
             }

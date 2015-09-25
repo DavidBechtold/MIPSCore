@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
@@ -289,7 +290,7 @@ namespace MIPSCore
             return excetpionString;
         }
 
-        public ArrayList Code
+        public Dictionary<uint, string> Code
         {
             get { return programmer.Code; }
         }

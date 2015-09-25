@@ -2,6 +2,7 @@
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore;
+using MIPSCore.Instruction_Set;
 using MIPSCore.Register_File;
 
 namespace MIPSCoreUI.ViewModel
@@ -46,8 +47,11 @@ namespace MIPSCoreUI.ViewModel
             result += "\t$lo\t:" + core.Alu.GetResultLo.Hexadecimal + "\n";
             result += "\t$hi\t:" + core.Alu.GetResultHi.Hexadecimal + "\n";
             result += "\t$rs\t:" + core.RegisterFile.ReadRs().Hexadecimal + "\n";
-            result += "\t$rd\t:" + core.RegisterFile.ReadRd().Hexadecimal + "\n";
-            result += "\t$rt\t:" + core.RegisterFile.ReadRs().Hexadecimal + "\n";
+            if (core.ControlUnit.InstructionFormat == InstructionFormat.R)
+                result += "\t$rd\t:" + core.RegisterFile.ReadRd().UnsignedDecimal + "\n";
+            else
+                result += "\t$rd\t:" + 0 + "\n";  
+            result += "\t$rt\t:" + core.RegisterFile.ReadRt().Hexadecimal + "\n";
             result += "\t$imm\t:" + core.InstructionMemory.GetImmediate.Hexadecimal + "\n";
             result += "\n";
             for (ushort i = 0; i < RegisterFile.RegisterCount; i++)
@@ -61,8 +65,11 @@ namespace MIPSCoreUI.ViewModel
             result += "\t$lo\t:" + core.Alu.GetResultLo.UnsignedDecimal + "\n";
             result += "\t$hi\t:" + core.Alu.GetResultHi.UnsignedDecimal + "\n";
             result += "\t$rs\t:" + core.RegisterFile.ReadRs().UnsignedDecimal + "\n";
-            result += "\t$rd\t:" + core.RegisterFile.ReadRd().UnsignedDecimal + "\n";
-            result += "\t$rt\t:" + core.RegisterFile.ReadRs().UnsignedDecimal + "\n";
+            if (core.ControlUnit.InstructionFormat == InstructionFormat.R)
+                result += "\t$rd\t:" + core.RegisterFile.ReadRd().UnsignedDecimal + "\n";
+            else
+                result += "\t$rd\t:" + 0 + "\n";    
+            result += "\t$rt\t:" + core.RegisterFile.ReadRt().UnsignedDecimal + "\n";
             result += "\t$imm\t:" + core.InstructionMemory.GetImmediate.UnsignedDecimal + "\n";
             result += "\n";
             for (ushort i = 0; i < RegisterFile.RegisterCount; i++)
@@ -76,8 +83,11 @@ namespace MIPSCoreUI.ViewModel
             result += "\t$lo\t:" + core.Alu.GetResultLo.SignedDecimal + "\n";
             result += "\t$hi\t:" + core.Alu.GetResultHi.SignedDecimal + "\n";
             result += "\t$rs\t:" + core.RegisterFile.ReadRs().SignedDecimal + "\n";
-            result += "\t$rd\t:" + core.RegisterFile.ReadRd().SignedDecimal + "\n";
-            result += "\t$rt\t:" + core.RegisterFile.ReadRs().SignedDecimal + "\n";
+            if (core.ControlUnit.InstructionFormat == InstructionFormat.R)
+                result += "\t$rd\t:" + core.RegisterFile.ReadRd().UnsignedDecimal + "\n";
+            else
+                result += "\t$rd\t:" + 0 + "\n";  
+            result += "\t$rt\t:" + core.RegisterFile.ReadRt().SignedDecimal + "\n";
             result += "\t$imm\t:" + core.InstructionMemory.GetImmediate.SignedDecimal + "\n";
             result += "\n";
             for (ushort i = 0; i < RegisterFile.RegisterCount; i++)
