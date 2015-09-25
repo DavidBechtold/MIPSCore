@@ -72,25 +72,25 @@ namespace MIPSCore.Instruction_Memory
                     break;
                 case ProgramCounterSource.SignExtendEqual:
                     if (Alu.ZeroFlag)
-                        GetProgramCounter += GetImmediate * 4 + 4;
+                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
                     else
                         GetProgramCounter += 4;
                     break;
                 case ProgramCounterSource.SignExtendUnequal:
                     if (!Alu.ZeroFlag)
-                        GetProgramCounter += GetImmediate * 4 + 4;
+                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
                     else
                         GetProgramCounter += 4;
                     break;
                 case ProgramCounterSource.SignExtendLessThanZero:
                     if (Alu.GetResultLo.UnsignedDecimal == 1)
-                        GetProgramCounter += GetImmediate * 4 + 4;
+                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
                     else
                         GetProgramCounter += 4;
                     break;
                 case ProgramCounterSource.SignExtendLessOrEqualZero:
                     if (!Alu.ZeroFlag || Alu.GetResultLo.UnsignedDecimal == 1)
-                        GetProgramCounter += GetImmediate * 4 + 4;
+                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
                     else
                         GetProgramCounter += 4;
                     break;
