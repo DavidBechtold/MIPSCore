@@ -42,12 +42,14 @@
         <TextBlock Text="1" Margin="2,21,0,0" Foreground="{Binding BranchLine, FallbackValue=Black}" FontSize="{StaticResource RectFontSizeHeader}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
       </Grid>
 
-      <baseObjects:ArrowPolyline Points="68,261 68,470 555,470" Stroke="{Binding BranchLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="0" CircleStart="True"/>
+      <baseObjects:ArrowPolyline Points="68,261 68,470 555,470" Stroke="{Binding BranchOrWriteProgramCounterLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="0" CircleStart="True"/>
       <baseObjects:ArrowPolyline Points="555,470 555,443 580,443" Stroke="{Binding BranchLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}" CircleStart="True"/>
       <baseObjects:ArrowPolyline Points="555,470 880,470 880,310 900,310" Stroke="{Binding WritePcToRegisterLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}" CircleStart="True"/>
-      <TextBlock Text="PC+4" Margin="64,245,0,0" FontSize="{StaticResource RectFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-      <TextBlock Text="PC+4" Margin="549,427,0,0" FontSize="{StaticResource RectFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-      <baseObjects:ArrowPolyline Points="615,424 630,424 630,460 80,460 80,281 95,281" Stroke="{Binding BranchLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}" Margin="0,-1,0,1"/>
+        <TextBlock Text="PC+4" Margin="64,246,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock Text="PC+4" Margin="550,430,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock Text="PC+4" Margin="875,296,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock Text="Branch Addr." Margin="615,411,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+      <baseObjects:ArrowPolyline Points="615,424 630,424 630,460 80,460 80,281 95,281" Stroke="{Binding BranchLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
 
 
       <!-- Jump Mux -->
@@ -59,11 +61,20 @@
       </Grid> 
 
       <baseObjects:ArrowPolyline Points="115,270 146,270" Stroke="{Binding BranchMuxLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
-      <baseObjects:ArrowPolyline Points="340,405 130,405 130,290 146,290" Stroke="{Binding JumpLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}" CircleStart="True"/>
-      <TextBlock HorizontalAlignment="Left" Margin="319,392,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top"><Run Language="de-at" Text="2"/><Run Text="5:"/><Run Language="de-at" Text="0"/></TextBlock>
+      <baseObjects:ArrowPolyline Points="340,405 250,405" Stroke="{Binding JumpLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}" CircleStart="True"/>
+      <baseObjects:ArrowPolyline Points="200,405 130,405 130,290 146,290" Stroke="{Binding JumpLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
+      <TextBlock Text="25:0" HorizontalAlignment="Left" Margin="319,392,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top"/>
       <baseObjects:ArrowPolyline Points="167,270 200,270" Stroke="{Binding JumpMuxLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
 
-      <!--= Instruction Memory -->
+        <!--  Shifter * 4-->
+        <Border BorderThickness="{StaticResource BorderThickness}" BorderBrush="{Binding BranchLine, FallbackValue=Black}" Background="White" Margin="480,380,0,0" Width="50" Height="50" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Grid>
+                <TextBlock Text="&lt;&lt;2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
+
+
+        <!--= Instruction Memory -->
       <Border BorderThickness="{StaticResource BorderThickness}" Background="White" Margin="200,200,0,0" Width="{StaticResource RectWidth}" Height="{StaticResource RectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
         <Border.Style>
           <Style TargetType="Border">
@@ -78,9 +89,9 @@
           </Style>
         </Border.Style>
         <Grid>
-          <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap">CInstruction Memory</TextBlock>
-          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}">Addr.</TextBlock>
-          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}">Inst.</TextBlock>
+          <TextBlock Text="Instruction Memory" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap"/>
+          <TextBlock Text="Addr." Foreground="{Binding JumpMuxLine}" VerticalAlignment="Center"  HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="Instruction" Foreground="{Binding InstructionMemoryLine}" VerticalAlignment="Center"  HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
         </Grid>
       </Border>
 
@@ -166,8 +177,8 @@
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap">Control Unit</TextBlock>
           <TextBlock Text="branch" Margin="0,0,0,60" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}" Foreground="{Binding BranchControlLine}"/>
           <TextBlock Text="jump" Margin="0,0,0,45" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}" Foreground="{Binding JumpControlLine}"/>
-          <TextBlock Text="op code" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
-          <TextBlock Text="function." Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="op code" Foreground="{Binding InstructionMemoryLine}" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="function" Foreground="{Binding InstructionMemoryLine}" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="Write" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}" Foreground="{Binding RegFileWriteControlLine}" />
           <TextBlock Text="aluSrc" Margin="0,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}" Foreground="{Binding AluSourceControlLine}"/>
           <TextBlock Text="aluOp" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}" Foreground="{Binding AluOperationControlLine}"/>
@@ -191,11 +202,11 @@
       <baseObjects:ArrowPolyline Points="530,405 580,405" Stroke="{Binding BranchLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
 
       <!--  Shifter * 4-->
-      <Border BorderThickness="{StaticResource BorderThickness}" BorderBrush="{Binding BranchLine, FallbackValue=Black}" Background="White" Margin="480,380,0,0" Width="50" Height="50" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Grid>
-          <TextBlock Text=">>2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap"/>
-        </Grid>
-      </Border>
+      <Border BorderThickness="{StaticResource BorderThickness}" BorderBrush="{Binding JumpLine, FallbackValue=Black}" Background="White" Margin="200,380,0,0" Width="50" Height="50" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Grid>
+                <TextBlock Text="&lt;&lt;2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap"/>
+            </Grid>
+        </Border>
 
       <!-- Program counter Adder -->
       <Grid Height="60" Width="35" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="580,394,0,0">
@@ -226,8 +237,8 @@
         </Border.Style>
         <Grid>
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap">ALU</TextBlock>
-          <TextBlock Text="read1" Margin="0,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
-          <TextBlock Text="read2" Margin="0,81,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="read1" Foreground="{Binding AluRead1Line}" Margin="0,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="read2" Foreground="{Binding AluRead2Line}" Margin="0,81,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="zero" Margin="0,35,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="result" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="aluOperation" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding AluOperationControlLine}" FontSize="{StaticResource RectFontSize}"/>
@@ -250,8 +261,8 @@
         </Border.Style>
         <Grid>
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap">Data Memory</TextBlock>
-          <TextBlock Text="address" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
-          <TextBlock Text="data" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="address" Foreground="{Binding DataMemoryAddressLine}" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="data" Foreground="{Binding DataMemoryOutLine}" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="r/w" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding DataMemoryControlLine}" FontSize="{StaticResource RectFontSize}"/>
         </Grid>
       </Border>
@@ -268,5 +279,9 @@
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding WriteAluResultLine, FallbackValue=Black}" FontSize="{StaticResource RectFontSizeHeader}" Margin="2,21,0,0">1</TextBlock>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding WritePcToRegisterLine, FallbackValue=Black}" FontSize="{StaticResource RectFontSizeHeader}" Margin="2,40,0,0">2</TextBlock>
       </Grid>
+        <TextBlock Text="31:0" HorizontalAlignment="Left" Margin="181,392,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top"/>
+        <TextBlock Text="Jump Addr." Margin="250,392,0,0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock HorizontalAlignment="Left" Margin="358,118,0,0" Text="1:0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="356,304,0,0" Text="31:0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>
