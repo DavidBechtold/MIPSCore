@@ -5,7 +5,7 @@ using System.Threading;
 namespace SystemTest
 {
     [TestClass]
-    public class Mergesort
+    public class Insertionsort
     {
         [TestMethod]
         [Timeout(25000)]
