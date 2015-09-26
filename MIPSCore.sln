@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIPSCore", "MIPSCore\MIPSCore.csproj", "{8167717C-DF36-4477-AD3F-F655F4C4033E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Tests", "Integration Tests", "{F69D4D3E-AD31-46EE-A745-31E22E0CA315}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{57946455-5A87-4D65-9DCF-CBAFF478BABF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{AC7FBABA-B5B6-4B96-9875-5B4B10858160}"
@@ -17,11 +15,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemTest", "SystemTest\SystemTest.csproj", "{0FAF18DD-1C7D-4067-8F3D-0165ABCF57E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIPSCoreConsole", "MIPSCoreConsole\MIPSCoreConsole.csproj", "{E91D25AC-D99C-49E3-BA3B-FE00C71FAA4B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Tests", "Solution Tests", "{383D6A1C-0376-4C8E-955B-9601C42C87C5}"
-	ProjectSection(SolutionItems) = preProject
-		t.testsettings = t.testsettings
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIPSCoreUI", "MIPSCoreUI\MIPSCoreUI.csproj", "{AE009F91-5511-4A92-85CA-0FCBAE708889}"
 	ProjectSection(ProjectDependencies) = postProject

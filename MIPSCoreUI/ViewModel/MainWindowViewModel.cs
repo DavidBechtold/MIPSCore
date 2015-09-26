@@ -40,8 +40,8 @@ namespace MIPSCoreUI.ViewModel
         private string excecutedInstructionAluOperation;
 
         /* state register */
-        private SolidColorBrush stateRegisterActive;
-        private SolidColorBrush stateRegisterInactive;
+        private readonly SolidColorBrush stateRegisterActive;
+        private readonly SolidColorBrush stateRegisterInactive;
         private SolidColorBrush stateRegisterSignFlag;
         private SolidColorBrush stateRegisterZeroFlag;
         private SolidColorBrush stateRegisterOverflowFlag;

@@ -21,13 +21,14 @@ namespace MIPSCoreUI.Bootstrapper
 
         public static void Init()
         {
-            /* init core */
-            Core = new MipsCore();
-            Core.SetMode(ExecutionMode.SingleStep);
-
             /* init services */
             MessageBox = new MessageBoxService();
             OpenFileDialog = new DialogOpenFileDialogService();
+
+            /* init core */
+            try { Core = new MipsCore(); }
+            catch (Exception e) { MessageBox.ShowNotification(e.ToString()); }
+            Core.SetMode(ExecutionMode.SingleStep);
 
             /* init viewmodels */
             MipsCoreViewModel = new MipsCoreViewModel(Core.ControlUnit, Application.Current.Dispatcher);
