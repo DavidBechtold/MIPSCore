@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.Practices.Prism.ViewModel;
-using MIPSCore;
 using System.Windows.Threading;
 using MIPSCoreUI.Bootstrapper;
+using MIPSCoreUI.View;
+using MipsCore = MIPSCore.MipsCore;
 
 namespace MIPSCoreUI.ViewModel
 {
@@ -31,24 +32,33 @@ namespace MIPSCoreUI.ViewModel
             dispatcher.Invoke(DispatcherPriority.Normal, (Action)(RefreshGui));
         }
 
-        private void RefreshGui()
+        public void Draw()
         {
             MipsDataMemory = core.DataMemory.Hexdump(0, core.DataMemory.GetLastByteAddress);
-            CBootstrapper.AddHighlightedTextToInstructionMemory("", false, true);
+            CBootstrapper.AddHighlightedTextToInstructionMemory("", HighlightAction.Clear);
             RefreshInstructionMemory();
+            RaisePropertyChanged(() => MipsDataMemory);
+        }
+
+        public void RefreshGui()
+        {
+            MipsDataMemory = core.DataMemory.Hexdump(0, core.DataMemory.GetLastByteAddress);
+            //CBootstrapper.AddHighlightedTextToInstructionMemory("", false, true);
+            RefreshInstructionMemoryWhileRunning();
             RaisePropertyChanged(() => MipsDataMemory);
         }
 
         private void RefreshInstructionMemory()
         {
             /* puh ^^ had problems with the performance, so i try to call the func so few as possible */
-            string stringToAdd = "";
-            int codeCounter = 0;
+            // TODO remove this shit with the textblock and make it better!
+            var stringToAdd = "";
+            var codeCounter = 0;
             for (uint i = 0; i < core.InstructionMemory.GetLastByteAddress; i = i + 4, codeCounter++)
             {
                 if (core.InstructionMemory.GetProgramCounter.UnsignedDecimal == i)
                 {
-                    CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, false, false);
+                    CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, HighlightAction.AddNormal);
                     stringToAdd = Convert.ToString(i, 16).PadLeft(8, '0').ToUpper() + "   ";
                     stringToAdd += core.InstructionMemory.ReadWord(i).Hexadecimal + "   ";
                     if (codeCounter < core.Code.Count)
@@ -60,7 +70,7 @@ namespace MIPSCoreUI.ViewModel
                     }
                     else
                         stringToAdd += "\n";
-                    CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, true, false);
+                    CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, HighlightAction.AddHighlighted);
                     stringToAdd = "";
                     continue;
                 }
@@ -77,7 +87,32 @@ namespace MIPSCoreUI.ViewModel
                 else
                     stringToAdd += "\n";
             }
-            CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, false, false);
+            CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, HighlightAction.AddNormal);
+        }
+
+        private void RefreshInstructionMemoryWhileRunning()
+        {
+            var text = CBootstrapper.InstructionMemoryText();
+            CBootstrapper.AddHighlightedTextToInstructionMemory("", HighlightAction.Clear);
+
+            var address = core.InstructionMemory.GetProgramCounter.UnsignedDecimal;
+            var stringToAdd = Convert.ToString(address, 16).PadLeft(8, '0').ToUpper() + "   ";
+            stringToAdd += core.InstructionMemory.ReadWord(address).Hexadecimal + "   ";
+
+            if(core.Code.ContainsKey(address))
+                stringToAdd += core.Code[address] + "\n";
+            else
+                stringToAdd += "\n";   
+     
+            var place = text.IndexOf(stringToAdd, StringComparison.Ordinal);
+            if (place < 0)
+                return;
+            var textBefore = text.Substring(0, place);
+            var textAfter = text.Substring(place + stringToAdd.Length, text.Length - (place+ stringToAdd.Length));
+
+            CBootstrapper.AddHighlightedTextToInstructionMemory(textBefore, HighlightAction.AddNormal);
+            CBootstrapper.AddHighlightedTextToInstructionMemory(stringToAdd, HighlightAction.AddHighlighted);
+            CBootstrapper.AddHighlightedTextToInstructionMemory(textAfter, HighlightAction.AddNormal);
         }
     }
 

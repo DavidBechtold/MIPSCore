@@ -9,15 +9,15 @@ namespace SystemTest
     {
         [TestMethod]
         [Timeout(25000)]
-        public void SystemTest_mergesort()
+        public void SystemTest_insertionsort()
         {
             var finished = new ManualResetEvent(false);
 
             IMipsCore core = new MipsCore();
 
             core.SetMode(ExecutionMode.RunToCompletion);
-            Assert.IsTrue(System.IO.File.Exists("Testcode//mergesort.objdump"));
-            core.ProgramObjdump("Testcode//mergesort.objdump");
+            Assert.IsTrue(System.IO.File.Exists("Testcode//insertionsort.objdump"));
+            core.ProgramObjdump("Testcode//insertionsort.objdump");
 
             core.Exception += delegate { Assert.Fail(core.GetExceptionString()); };
             core.Completed += delegate

@@ -3,6 +3,7 @@ using MIPSCoreUI.Services;
 using MIPSCoreUI.ViewModel;
 using System;
 using System.Windows;
+using MIPSCoreUI.View;
 using MipsCore = MIPSCore.MipsCore;
 
 namespace MIPSCoreUI.Bootstrapper
@@ -16,8 +17,9 @@ namespace MIPSCoreUI.Bootstrapper
         public static IMipsViewModel MipsMemoryViewModel { get; private set; }
         public static IMessageBoxService MessageBox { get; private set; }
         public static IOpenFileDialogService OpenFileDialog { get; private set; }
-        private static Action<string, bool, bool> highlightFuncInstructionMemory;
+        private static Action<string, HighlightAction> highlightFuncInstructionMemory;
         private static Action redraw;
+        public static Func<string> InstructionMemoryText { get; set; }
 
         public static void Init()
         {
@@ -37,7 +39,7 @@ namespace MIPSCoreUI.Bootstrapper
             MainWindowViewModel = new MainWindowViewModel(Core, MipsCoreViewModel, MipsRegisterViewModel, MipsMemoryViewModel, MessageBox, OpenFileDialog);
         }
 
-        public static Action<string, bool, bool> AddHighlightedTextToInstructionMemory
+        public static Action<string, HighlightAction> AddHighlightedTextToInstructionMemory
         {
             set
             {

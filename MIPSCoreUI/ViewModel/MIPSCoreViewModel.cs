@@ -85,6 +85,11 @@ namespace MIPSCoreUI.ViewModel
             dispatcher.Invoke(DispatcherPriority.Normal, (Action)(RefreshGui));
         }
 
+        public void Draw()
+        {
+            Refresh();
+        }
+
         private void RefreshGui()
         {
             AluOperationControlLine = controlLineInactive;

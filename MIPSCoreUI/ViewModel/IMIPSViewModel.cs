@@ -3,6 +3,7 @@
     public interface IMipsViewModel
     {
         void Refresh();
+        void Draw();
     }
 
     public interface IMipsRegisterViewModel : IMipsViewModel

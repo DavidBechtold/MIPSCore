@@ -128,8 +128,8 @@ namespace MIPSCoreUI.ViewModel
 
             core.ProgramObjdump(openFileDialog.GetFileName());
             core.StartCore();
-            mipsRegisterViewModel.Refresh();
-            mipsMemoryViewModel.Refresh();
+            mipsRegisterViewModel.Draw();
+            mipsMemoryViewModel.Draw();
         }
 
         private void ViewRegister(RegisterView view)

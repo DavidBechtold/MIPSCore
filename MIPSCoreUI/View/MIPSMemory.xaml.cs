@@ -6,9 +6,7 @@ using System.Windows.Documents;
 
 namespace MIPSCoreUI.View
 {
-    /// <summary>
-    /// Interaktionslogik für MIPSMemory.xaml
-    /// </summary>
+    public enum HighlightAction { Clear, AddNormal, AddHighlighted }
     public partial class MipsMemory
     {
         private readonly Run runBackgroundYellow;
@@ -22,22 +20,31 @@ namespace MIPSCoreUI.View
         {
             DataContext = CBootstrapper.MipsMemoryViewModel;
             CBootstrapper.AddHighlightedTextToInstructionMemory = AddTextHighlightedToInstructionMemory;    //TODO make this mvvm
+            CBootstrapper.InstructionMemoryText = InstructionMemoryText;
         }
 
-        private void AddTextHighlightedToInstructionMemory(string text, bool highlight, bool clear)
+        private void AddTextHighlightedToInstructionMemory(string text, HighlightAction action)
         {
             if (text == null) throw new ArgumentNullException("text");
 
-            if (clear)
-                InstructionMemory.Text = "";
-
-            if (highlight)
+            switch (action)
             {
-                runBackgroundYellow.Text = text;
-                InstructionMemory.Inlines.Add(runBackgroundYellow);
+                case HighlightAction.Clear: 
+                    InstructionMemory.Text = "";
+                    break;
+                case HighlightAction.AddNormal: 
+                    InstructionMemory.Inlines.Add(text);
+                    break;
+                case HighlightAction.AddHighlighted:
+                    runBackgroundYellow.Text = text;
+                    InstructionMemory.Inlines.Add(runBackgroundYellow);
+                    break;
             }
-            else
-                InstructionMemory.Inlines.Add(text);
+        }
+
+        public string InstructionMemoryText()
+        {
+            return InstructionMemory.Text;
         }
     }
 }
