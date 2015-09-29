@@ -129,6 +129,7 @@ namespace MIPSCoreUI.ViewModel
             WritePcToRegisterLine = lineInactive;
             DataMemoryAddressLine = lineInactive;
             RegisterFileWriteBackLine = lineInactive;
+            BranchOrWriteProgramCounterLine = lineInactive;
 
             /* Control Lines */
             if (controlUnit.AluControl != AluControl.Stall)
