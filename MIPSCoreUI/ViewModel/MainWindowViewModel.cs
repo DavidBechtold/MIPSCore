@@ -89,9 +89,6 @@ namespace MIPSCoreUI.ViewModel
             mipsCoreViewModel.Refresh();
             mipsRegisterViewModel.Refresh();
             mipsMemoryViewModel.Refresh();
-
-            if (core.Mode == ExecutionMode.RunToCompletion)
-                CBootstrapper.Redraw();
         }
 
         private void Completed(object sender, EventArgs args)

@@ -85,7 +85,7 @@ namespace MIPSCoreConsole
 
             core.ProgramObjdump(args[1]);
 
-            for (int i = 2; i < args.Length; i++)
+            for (var i = 2; i < args.Length; i++)
             {
                 switch (args[i])
                 {
@@ -99,13 +99,12 @@ namespace MIPSCoreConsole
                         return false;
                 }
             }
-
             return true;
         }
 
         static public string UsageStartArguments(string error)
         {
-            string usageString = "";
+            var usageString = "";
 
             if (error != null)
                 usageString += error + "\n\n";
@@ -172,19 +171,15 @@ namespace MIPSCoreConsole
                 return false;
             }
 
-            if (registerReadNumber >= MipsCore.RegisterCount)
-            {
-                string error = String.Format("Argument {0} of command {1} must be between 0 and {2}\n", arg, cmd, MipsCore.RegisterCount - 1);
-                Console.WriteLine(UsageCommandLineArguments(error));
-                return false;
-            }
-
-            return true;
+            if (registerReadNumber < MipsCore.RegisterCount) return true;
+            var error = String.Format("Argument {0} of command {1} must be between 0 and {2}\n", arg, cmd, MipsCore.RegisterCount - 1);
+            Console.WriteLine(UsageCommandLineArguments(error));
+            return false;
         }
 
         static public string UsageCommandLineArguments(string error)
         {
-            string usageString = "";
+            var usageString = "";
 
             if(error != null)
                 usageString += error + "\n\n";

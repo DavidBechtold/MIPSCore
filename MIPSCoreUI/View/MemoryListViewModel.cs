@@ -1,67 +1,29 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
-using Microsoft.Practices.Prism.ViewModel;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.ViewModel;
 using MIPSCoreUI.Bootstrapper;
-using MIPSCoreUI.View;
-using MipsCore = MIPSCore.MipsCore;
+using MIPSCoreUI.ViewModel;
 
-namespace MIPSCoreUI.ViewModel
+namespace MIPSCoreUI.View
 {
-    public class MipsMemoryViewModel : NotificationObject, IMipsViewModel
+    public class MemoryListViewModel : NotificationObject, IMipsViewModel
     {
-        private readonly MipsCore core;
         private readonly Dispatcher dispatcher;
-
-        public string MipsInstructionMemory {get; private set;}
-        public string MipsDataMemory { get; private set; }
-
         private ObservableCollection<ListTextDto> list;
         private int oldProgramCounter;
         public ListTextDto SelectedItem { get; set; }
         public DelegateCommand AddBreakpoint { get; set; }
 
-        public MipsMemoryViewModel(MipsCore core, Dispatcher dispatcher)
+        public MemoryListViewModel(Dispatcher dispatcher)
         {
-            if (core == null) throw new ArgumentNullException("core");
-            if (dispatcher == null) throw new ArgumentException("dispatcher");
-            this.core = core;
+            if (dispatcher == null) throw new ArgumentNullException("dispatcher");
             this.dispatcher = dispatcher;
-
-            MipsInstructionMemory = "";
-            MipsDataMemory = "";
-
             List = new ObservableCollection<ListTextDto>();
             AddBreakpoint = new DelegateCommand(OnAddBreakpoint);
             oldProgramCounter = 0;
-        }
-
-        public void Refresh()
-        {
-            /* invoke the wpf thread */
-            dispatcher.Invoke(DispatcherPriority.Normal, (Action)(RefreshGui));
-        }
-
-        public void Draw()
-        {
-            MipsDataMemory = core.DataMemory.Hexdump(0, core.DataMemory.GetLastByteAddress);
-            DrawInstructionMemory();
-            RaisePropertyChanged(() => MipsDataMemory);
-        }
-
-        public void RefreshGui()
-        {
-            MipsDataMemory = core.DataMemory.Hexdump(0, core.DataMemory.GetLastByteAddress);
-            RefreshInstructionMemory();
-            RaisePropertyChanged(() => MipsDataMemory);
-        }
-
-        public ObservableCollection<ListTextDto> List
-        {
-            get { return list; }
-            private set { list = value; RaisePropertyChanged(() => List); }
         }
 
         private void OnAddBreakpoint()
@@ -73,7 +35,28 @@ namespace MIPSCoreUI.ViewModel
             }
         }
 
-        private void DrawInstructionMemory()
+        public ObservableCollection<ListTextDto> List
+        {
+            get { return list; }
+            private set { list = value; RaisePropertyChanged(() => List); }
+        }
+
+        public void Refresh()
+        {
+            /* invoke the wpf thread */
+            dispatcher.Invoke(DispatcherPriority.Normal, (Action)(RefreshGui));
+        }
+
+        public void RefreshGui()
+        {
+            List[oldProgramCounter / 4].Background = new SolidColorBrush(Colors.White);
+            List[oldProgramCounter / 4].Changed();
+            oldProgramCounter = CBootstrapper.Core.InstructionMemory.GetProgramCounter.SignedDecimal;
+            List[oldProgramCounter / 4].Background = new SolidColorBrush(Colors.DarkGray);
+            List[oldProgramCounter / 4].Changed();
+        }
+
+        public void Draw()
         {
             List.Clear();
             var instructionMemory = CBootstrapper.Core.InstructionMemory;
@@ -84,20 +67,8 @@ namespace MIPSCoreUI.ViewModel
                 var code = "";
                 var instruction = instructionMemory.ReadWord(i).Hexadecimal;
                 if ((codeCounter < codeDict.Count) && codeDict.ContainsKey(i))
-                    code += codeDict[i];
+                        code += codeDict[i];
                 List.Add(new ListTextDto(i, codeCounter, instruction, code, new SolidColorBrush(Colors.White)));
-            }
-        }
-
-        private void RefreshInstructionMemory()
-        {
-            if (List.Count > 0)
-            {
-                List[oldProgramCounter / 4].Background = new SolidColorBrush(Colors.White);
-                List[oldProgramCounter / 4].Changed();
-                oldProgramCounter = CBootstrapper.Core.InstructionMemory.GetProgramCounter.SignedDecimal;
-                List[oldProgramCounter / 4].Background = new SolidColorBrush(Colors.DarkGray);
-                List[oldProgramCounter / 4].Changed();
             }
         }
     }

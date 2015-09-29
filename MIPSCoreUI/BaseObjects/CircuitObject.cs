@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace MIPSCoreUI.BaseObjects
 {
-    public class CircuitObject : UserControl, ICircuitObject
+    public class CircuitObject : UserControl
     {
         //The lines being connected to the input
         // ReSharper disable once CollectionNeverQueried.Local

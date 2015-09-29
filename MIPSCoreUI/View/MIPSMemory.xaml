@@ -3,17 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:MIPSCoreUI.ViewModel" mc:Ignorable="d"
+             xmlns:vm="clr-namespace:MIPSCoreUI.ViewModel"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance d:Type=vm:MipsMemoryViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300"
              Loaded="Window_Loaded">
     <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-28">
-        <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray">
+        <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
             <TabControl>
-                <TabItem Header="CInstruction">
-                    <ScrollViewer>
-                        <TextBlock Name="InstructionMemory" Text="{Binding MipsInstructionMemory}"/>
-                    </ScrollViewer>
+                <TabItem Header="Text">
+                    <ListBox ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding AddBreakpoint}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Name="TextBoxList" Text="{Binding Text}" Background="{Binding Background}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </TabItem>
                 <TabItem Header="Data">
                     <ScrollViewer>

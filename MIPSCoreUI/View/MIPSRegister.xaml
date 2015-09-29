@@ -7,7 +7,7 @@
              d:DataContext="{d:DesignInstance d:Type=vm:MipsRegisterViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="730" d:DesignWidth="300"
              Loaded="Window_Loaded">
-    <GroupBox Header="Registers" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="2" BorderBrush="SlateGray">
+    <GroupBox Header="Registers" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
         <TextBlock Text="{Binding MipsRegisters}"/>
     </GroupBox>
 </UserControl>

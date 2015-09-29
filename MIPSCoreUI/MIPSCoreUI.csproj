@@ -89,6 +89,7 @@
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\MipsMemoryViewModel.cs" />
     <Compile Include="ViewModel\MipsRegisterViewModel.cs" />
+    <Compile Include="View\MemoryListViewModel.cs" />
     <Compile Include="View\MipsCore.xaml.cs">
       <DependentUpon>MipsCore.xaml</DependentUpon>
     </Compile>
@@ -110,7 +111,6 @@
     <Compile Include="BaseObjects\ArrowLineBase.cs" />
     <Compile Include="BaseObjects\ArrowPolyline.cs" />
     <Compile Include="BaseObjects\CircuitObject.cs" />
-    <Compile Include="BaseObjects\ICircuitObject.cs" />
     <Compile Include="BaseObjects\PartiallyRoundedRectangle.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

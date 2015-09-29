@@ -18,17 +18,17 @@ namespace MIPSCoreUI
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CBootstrapper.Init();
-            CBootstrapper.Redraw = Redraw;
+            //CBootstrapper.Redraw = Redraw;
             DataContext = CBootstrapper.MainWindowViewModel;
         }
 
-        private void Redraw()
+        /*private void Redraw()
         {
             this.Refresh();
-        }
+        }*/
     }
 
-    public static class ExtensionMethods
+    /*public static class ExtensionMethods
     {
         private static readonly Action EmptyDelegate = delegate { };
 
@@ -36,5 +36,5 @@ namespace MIPSCoreUI
         {
             uiElement.Dispatcher.Invoke(DispatcherPriority.Render, EmptyDelegate);
         }
-    }
+    }*/
 }

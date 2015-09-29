@@ -19,32 +19,6 @@ namespace MIPSCoreUI.View
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DataContext = CBootstrapper.MipsMemoryViewModel;
-            CBootstrapper.AddHighlightedTextToInstructionMemory = AddTextHighlightedToInstructionMemory;    //TODO make this mvvm
-            CBootstrapper.InstructionMemoryText = InstructionMemoryText;
-        }
-
-        private void AddTextHighlightedToInstructionMemory(string text, HighlightAction action)
-        {
-            if (text == null) throw new ArgumentNullException("text");
-
-            switch (action)
-            {
-                case HighlightAction.Clear: 
-                    InstructionMemory.Text = "";
-                    break;
-                case HighlightAction.AddNormal: 
-                    InstructionMemory.Inlines.Add(text);
-                    break;
-                case HighlightAction.AddHighlighted:
-                    runBackgroundYellow.Text = text;
-                    InstructionMemory.Inlines.Add(runBackgroundYellow);
-                    break;
-            }
-        }
-
-        public string InstructionMemoryText()
-        {
-            return InstructionMemory.Text;
         }
     }
 }

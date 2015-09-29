@@ -3,16 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:MIPSCoreUI.View"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModel="clr-namespace:MIPSCoreUI.ViewModel"
         d:DataContext="{d:DesignInstance d:Type=viewModel:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1550"  
-       
-    WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="MainWindow" Height="798.5" Width="1550" 
+        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <system:Double x:Key="FontSize">13</system:Double>
+    </Window.Resources>
+
     <Grid>
-        <StackPanel VerticalAlignment="Top">
-            <Menu Width="Auto" Height="20">
+        <StackPanel VerticalAlignment="Top" >
+            <Menu Width="Auto" Height="20" FontSize="{StaticResource FontSize}">
                 <MenuItem Header="Core">
                     <MenuItem Header="Load File" HorizontalAlignment="Left" Command="{Binding LoadFile}"/>
                 </MenuItem>
@@ -29,65 +34,65 @@
             </Menu>
         </StackPanel>
 
-        <view:MipsCore Margin="340,195,264,36"/>
+        <view:MipsCore Margin="340,247,264,-16"/>
         <view:MipsRegister Margin="1312,31,10,10"/>
-        <view:MipsMemory Margin="0,31,1245,36"/>
+        <view:MipsMemory Margin="0,31,1231,36"/>
 
-        <GroupBox Header="Executed CInstruction" HorizontalAlignment="Left" Margin="302,31,0,0" VerticalAlignment="Top" MinWidth="300" BorderThickness="2" BorderBrush="SlateGray">
+        <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="313,31,0,0" VerticalAlignment="Top" MinWidth="300" BorderThickness="2" BorderBrush="SlateGray" Width="325" FontSize="{StaticResource FontSize}">
             <StackPanel>
                 <DockPanel>
-                    <Label Content="Name:" Width="83"/>
+                    <Label Content="Name:" Width="90"/>
                     <TextBox Name="TextboxInstructionMemory" Text="{Binding ExecutedInstructionName}" Height="22" HorizontalAlignment="Stretch"/>
                 </DockPanel>
                 <DockPanel>
-                    <Label Content="Example:" Width="83"/>
+                    <Label Content="Example:" Width="90"/>
                     <TextBox Text="{Binding ExecutedInstructionExample}" Height="22" HorizontalAlignment="Stretch"/>
                 </DockPanel>
                 <DockPanel>
-                    <Label Content="Meaning:" Width="83"/>
+                    <Label Content="Meaning:" Width="90"/>
                     <TextBox Text="{Binding ExecutedInstructionMeaning}" Height="22" HorizontalAlignment="Stretch"/>
                 </DockPanel>
                 <DockPanel>
-                    <Label Content="Format:" Width="83"/>
+                    <Label Content="Format:" Width="90"/>
                     <TextBox Text="{Binding ExecutedInstructionFormat}" Height="22" HorizontalAlignment="Stretch"/>
                 </DockPanel>
                 <DockPanel>
-                    <Label Content="Function:" Width="83"/>
+                    <Label Content="Function:" Width="90"/>
                     <TextBox Text="{Binding ExecutedInstructionFunction}" Height="22" HorizontalAlignment="Stretch"/>
                 </DockPanel>
                 <DockPanel>
-                    <Label Content="OpCode:" Width="83"/>
+                    <Label Content="OpCode:" Width="90"/>
                     <TextBox Text="{Binding ExecutedInstructionOpCode}" Height="22" HorizontalAlignment="Stretch"/>
                 </DockPanel>
                 <DockPanel>
-                    <Label Content="AluOperation:" Width="83"/>
-                    <TextBox Text="{Binding ExcecutedInstructionAluOperation}" Height="22" HorizontalAlignment="Stretch"/>
+                    <Label Content="AluOperation:" Width="90"/>
+                    <TextBox Text="{Binding ExcecutedInstructionAluOperation}" Height="22" HorizontalAlignment="Stretch" />
                 </DockPanel>
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Header="Excecute" Margin="607,31,715,0" VerticalAlignment="Top" MinHeight="50" BorderThickness="2" BorderBrush="SlateGray">
+        <GroupBox Header="Excecute" Margin="639,31,642,0" VerticalAlignment="Top" MinHeight="50" BorderThickness="2" BorderBrush="SlateGray" FontSize="{StaticResource FontSize}" Height="55">
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <Button Command="{Binding Clock}" Content="Clock" MinWidth="62" HorizontalAlignment="Left"/>
+                <Button Command="{Binding Clock}" Content="Clock" MinWidth="62" HorizontalAlignment="Left"/>
                 <Button Command="{Binding Run}" Content="Run" MinWidth="62"  HorizontalAlignment="Center"/>
-                    <Button Command="{Binding Stop}" Content="Stop" MinWidth="62" HorizontalAlignment="Right"/>
+                <Button Command="{Binding Stop}" Content="Stop" MinWidth="62" HorizontalAlignment="Right"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="State Register"  BorderThickness="2"  BorderBrush="SlateGray"  Margin="607,86,715,571" >
+        <GroupBox Header="State Register"  BorderThickness="2"  BorderBrush="SlateGray"  MinHeight="65" Margin="639,86,642,612" FontSize="{StaticResource FontSize}">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="2,0,0,0">
-                <Grid Height="30" Width="50">
+                <Grid Height="30" Width="60">
                     <Rectangle  Stroke="Black" Fill="{Binding StateRegisterOverflowFlag}"/>
                     <TextBlock Text="Overflow" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
-                <Grid Margin="-1,0,0,0" Height="30" Width="50">
+                <Grid Margin="-1,0,0,0" Height="30" Width="60">
                     <Rectangle  Stroke="Black" Fill="{Binding StateRegisterSignFlag}"/>
                     <TextBlock Text="Sign" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
-                <Grid Margin="-1,0,0,0" Height="30" Width="50">
+                <Grid Margin="-1,0,0,0" Height="30" Width="60">
                     <Rectangle  Stroke="Black" Fill="{Binding StateRegisterCarryFlag}"/>
                     <TextBlock Text="Carry" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
-                <Grid Margin="-1,0,0,0" Height="30" Width="50">
+                <Grid Margin="-1,0,0,0" Height="30" Width="60">
                     <Rectangle  Stroke="Black" Fill="{Binding StateRegisterZeroFlag}"/>
                     <TextBlock Text="Zero" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>

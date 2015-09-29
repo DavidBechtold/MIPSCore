@@ -2,7 +2,7 @@
 
 namespace MIPSCore.Util._Memory
 {
-    public enum MemSize { Size1Kb = 1, Size2Kb, Size4Kb, Size8Kb, Size16Kb}
+    public enum MemSize { Size128Byte = 1, Size512Byte, Size1Kb, Size2Kb, Size4Kb, Size8Kb, Size16Kb}
     public class Memory : IMemory
     {
         private byte[] memory;
@@ -22,6 +22,14 @@ namespace MIPSCore.Util._Memory
         {
             switch (size)
             {
+                case MemSize.Size128Byte:
+                    memory = new byte[128 * 8];
+                    GetLastByteAddress = 128 * 8 - 1;
+                    break;
+                case MemSize.Size512Byte:
+                    memory = new byte[512 * 8];
+                    GetLastByteAddress = 512 * 8 - 1;
+                    break;
                 case MemSize.Size1Kb:
                     memory = new byte[1024 * 8];
                     GetLastByteAddress = 1024 * 8 - 1;
