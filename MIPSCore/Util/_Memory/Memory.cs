@@ -1,52 +1,65 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MIPSCore.Util._Memory
 {
-    public enum MemSize { Size128Byte = 1, Size512Byte, Size1Kb, Size2Kb, Size4Kb, Size8Kb, Size16Kb}
+    public enum MemorySize { [Text("128 Byte")] Size128Byte = 1, [Text("512 Byte")] Size512Byte, [Text("1 KByte")] Size1Kb,
+    [Text("2 KByte")] Size2Kb, [Text("4 KByte")] Size4Kb, [Text("8 KByte")] Size8Kb, [Text("16 KByte")] Size16Kb }
+
     public class Memory : IMemory
     {
         private byte[] memory;
-        public MemSize Size { get;  private set; }
+        private readonly List<uint> changedWordAddresses;
+        public MemorySize Size { get;  private set; }
         public Word Offset { get; set; }
         public uint GetLastByteAddress { get; private set; }
         public uint SizeBytes { get { return GetLastByteAddress + 1; } }
+        private readonly LastChangedAddressDto lastChangedAddress;
 
-        public Memory(MemSize size)
+        public Memory(MemorySize size)
+        {
+            changedWordAddresses = new List<uint>();
+            lastChangedAddress = new LastChangedAddressDto(false, 0);
+            SetSize(size);
+        }
+
+        public void SetSize(MemorySize size)
         {
             Size = size;
             CreateMemory(size);
             Offset = new Word((uint) 0);
+            changedWordAddresses.Clear();
         }
 
-        private void CreateMemory(MemSize size)
+        private void CreateMemory(MemorySize size)
         {
             switch (size)
             {
-                case MemSize.Size128Byte:
+                case MemorySize.Size128Byte:
                     memory = new byte[128 * 8];
                     GetLastByteAddress = 128 * 8 - 1;
                     break;
-                case MemSize.Size512Byte:
+                case MemorySize.Size512Byte:
                     memory = new byte[512 * 8];
                     GetLastByteAddress = 512 * 8 - 1;
                     break;
-                case MemSize.Size1Kb:
+                case MemorySize.Size1Kb:
                     memory = new byte[1024 * 8];
                     GetLastByteAddress = 1024 * 8 - 1;
                     break;
-                case MemSize.Size2Kb:
+                case MemorySize.Size2Kb:
                     memory = new byte[2048 * 8];
                     GetLastByteAddress = 2048 * 8 - 1;
                     break;
-                case MemSize.Size4Kb:
+                case MemorySize.Size4Kb:
                     memory = new byte[4096 * 8];
                     GetLastByteAddress = 4096 * 8 - 1;
                     break;
-                case MemSize.Size8Kb:
+                case MemorySize.Size8Kb:
                     memory = new byte[8192 * 8];
                     GetLastByteAddress = 8192 * 8 - 1;
                     break;
-                case MemSize.Size16Kb:
+                case MemorySize.Size16Kb:
                     memory = new byte[16384 * 8];
                     GetLastByteAddress = 16384 * 8 - 1;
                     break;
@@ -61,6 +74,9 @@ namespace MIPSCore.Util._Memory
             if (byteVal.UnsignedDecimal > byte.MaxValue) throw new ArgumentOutOfRangeException("byteVal");
 
             byteAddress = CheckAndCalculateAddress(byteAddress, 0);
+            changedWordAddresses.Add(byteAddress / 4);
+            lastChangedAddress.Address = byteAddress;
+            lastChangedAddress.Changed = true;
             memory[byteAddress] = (byte)byteVal.UnsignedDecimal;
         }
 
@@ -75,6 +91,9 @@ namespace MIPSCore.Util._Memory
             if (halfword.UnsignedDecimal > ushort.MaxValue) throw new ArgumentOutOfRangeException("halfword");
 
             byteAddress = CheckAndCalculateAddress(byteAddress, 1);
+            changedWordAddresses.Add(byteAddress / 4);
+            lastChangedAddress.Address = byteAddress;
+            lastChangedAddress.Changed = true;
             memory[byteAddress] = (byte)(halfword.UnsignedDecimal >> 8);
             memory[byteAddress + 1] = (byte)(halfword.UnsignedDecimal);
         }
@@ -87,8 +106,11 @@ namespace MIPSCore.Util._Memory
         public void WriteWord(Word word, uint byteAddress)
         {
             if (word == null) throw new ArgumentNullException("word");
-            byteAddress = CheckAndCalculateAddress(byteAddress, 3);
 
+            byteAddress = CheckAndCalculateAddress(byteAddress, 3);
+            changedWordAddresses.Add(byteAddress);
+            lastChangedAddress.Address = byteAddress;
+            lastChangedAddress.Changed = true;
             memory[byteAddress] = (byte)(word.UnsignedDecimal >> 24);
             memory[byteAddress + 1] = (byte)(word.UnsignedDecimal >> 16);
             memory[byteAddress + 2] = (byte)(word.UnsignedDecimal >> 8);
@@ -103,7 +125,8 @@ namespace MIPSCore.Util._Memory
         public Word ReadByte(uint byteAddress)
         {
             byteAddress = CheckAndCalculateAddress(byteAddress, 0);
-
+            if (changedWordAddresses.Contains(byteAddress))
+                changedWordAddresses.Remove(byteAddress);
             return new Word((uint) memory[byteAddress]);
         }
 
@@ -116,7 +139,8 @@ namespace MIPSCore.Util._Memory
         public Word ReadHalfWord(uint byteAddress)
         {
             byteAddress = CheckAndCalculateAddress(byteAddress, 1);
-
+            if (changedWordAddresses.Contains(byteAddress))
+                changedWordAddresses.Remove(byteAddress);
             return new Word((uint) (memory[byteAddress] << 8 | memory[byteAddress + 1]));
         }
 
@@ -129,7 +153,8 @@ namespace MIPSCore.Util._Memory
         public Word ReadWord(uint byteAddress)
         {
             byteAddress = CheckAndCalculateAddress(byteAddress, 3);
-
+            if (changedWordAddresses.Contains(byteAddress))
+                changedWordAddresses.Remove(byteAddress);
             return new Word((uint)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
         }
 
@@ -155,12 +180,32 @@ namespace MIPSCore.Util._Memory
 
         public string Hexdump(uint startaddress, uint bytesToRead)
         {
-            uint realStartaddress = CheckAndCalculateAddress(startaddress, bytesToRead);
-            string result = "";
+            var realStartaddress = CheckAndCalculateAddress(startaddress, bytesToRead);
+            var result = "";
 
-            for (uint i = realStartaddress; i < realStartaddress + bytesToRead; i+=4)
+            for (var i = realStartaddress; i < realStartaddress + bytesToRead; i+=4)
                 result += string.Format("{0:X8} {1:X2} {2:X2} {3:X2} {4:X2}\n", i + Offset.UnsignedDecimal, memory[i], memory[i + 1], memory[i + 2], memory[i + 3]);
             return result;
+        }
+
+        public List<uint> ChangedWordAddresses
+        {
+            get
+            {
+                var helper = new List<uint>(changedWordAddresses);
+                changedWordAddresses.Clear();
+                return helper;
+            }
+        }
+
+        public LastChangedAddressDto LastChangedAddress
+        {
+            get
+            {
+                var helper = new LastChangedAddressDto(lastChangedAddress.Changed, lastChangedAddress.Address);
+                lastChangedAddress.Changed = false;
+                return helper;
+            }
         }
     }
 }

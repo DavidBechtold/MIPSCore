@@ -16,6 +16,7 @@ namespace MIPSCoreUI.Bootstrapper
         public static IMipsViewModel MipsMemoryViewModel { get; private set; }
         public static IMessageBoxService MessageBox { get; private set; }
         public static IOpenFileDialogService OpenFileDialog { get; private set; }
+        public static SettingsViewModel SettingsViewModel { get; private set; }
 
         public static void Init()
         {
@@ -33,6 +34,7 @@ namespace MIPSCoreUI.Bootstrapper
             MipsRegisterViewModel = new MipsRegisterViewModel(Core, Application.Current.Dispatcher);
             MipsMemoryViewModel = new MipsMemoryViewModel(Core, Application.Current.Dispatcher);
             MainWindowViewModel = new MainWindowViewModel(Core, MipsCoreViewModel, MipsRegisterViewModel, MipsMemoryViewModel, MessageBox, OpenFileDialog);
+            SettingsViewModel = new SettingsViewModel();
         }
     }
 }

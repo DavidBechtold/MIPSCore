@@ -1,4 +1,6 @@
-﻿namespace MIPSCore.Util._Memory
+﻿using System.Collections.Generic;
+
+namespace MIPSCore.Util._Memory
 {
     public interface IMemory
     {
@@ -18,7 +20,10 @@
         void Flush();
         string Hexdump(uint startaddress, uint bytesToRead);
 
-        MemSize Size { get; }
+        void SetSize(MemorySize size);
+        List<uint> ChangedWordAddresses { get; }
+        LastChangedAddressDto LastChangedAddress { get; }
+        MemorySize Size { get; }
         Word Offset { get; set; }
         uint GetLastByteAddress { get; }
         uint SizeBytes { get; }

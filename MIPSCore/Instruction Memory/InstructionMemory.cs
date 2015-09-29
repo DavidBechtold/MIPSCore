@@ -28,7 +28,7 @@ namespace MIPSCore.Instruction_Memory
         public Word GetActualInstruction { get; private set; }
         public Word SetAddressOffset { set { Offset = value; } }
 
-        public InstructionMemory(MemSize size)
+        public InstructionMemory(MemorySize size)
             : base(size)
         {
             Flush();

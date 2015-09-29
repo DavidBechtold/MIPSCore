@@ -31,13 +31,13 @@ namespace MIPSCore
         public event EventHandler Exception;
         
         private const ulong StdCoreFrequencyHz = 100;
-        private const MemSize StdInstructionMemorySizeKb = MemSize.Size1Kb;
-        private const MemSize StdDataMemorySizeKb = MemSize.Size1Kb;
+        private const MemorySize StdInstructionMemorySizeKb = MemorySize.Size1Kb;
+        private const MemorySize StdDataMemorySizeKb = MemorySize.Size1Kb;
         private const bool StdInitStackPointer = true;
 
         private ulong coreFrequencyHz;
-        private MemSize instructionMemorySizeKb;
-        private MemSize dataMemorySizeKb;
+        private MemorySize instructionMemorySizeKb;
+        private MemorySize dataMemorySizeKb;
         private bool initStackPointer;
         private bool programmCompleted;
 
@@ -185,7 +185,7 @@ namespace MIPSCore
             }
 
             /* InstructionMemorySize */
-            try { instructionMemorySizeKb = (MemSize)Enum.Parse(typeof(MemSize), ConfigurationManager.AppSettings["InstructionMemorySize_kB"]); }
+            try { instructionMemorySizeKb = (MemorySize)Enum.Parse(typeof(MemorySize), ConfigurationManager.AppSettings["InstructionMemorySize_kB"]); }
             catch (ArgumentNullException)
             {
                 Console.WriteLine("Configuration key for the instruction memory size not found. Standard value of " + StdInstructionMemorySizeKb + " kB is used.");
@@ -198,7 +198,7 @@ namespace MIPSCore
             }
 
             /* DataMemorySize */
-            try { dataMemorySizeKb = (MemSize)Enum.Parse(typeof(MemSize), ConfigurationManager.AppSettings["DataMemorySize_kB"]); }
+            try { dataMemorySizeKb = (MemorySize)Enum.Parse(typeof(MemorySize), ConfigurationManager.AppSettings["DataMemorySize_kB"]); }
             catch (ArgumentNullException)
             {
                 Console.WriteLine("Configuration key for the data memory size not found. Standard value of " + StdDataMemorySizeKb + " kB is used.");
@@ -292,6 +292,23 @@ namespace MIPSCore
         public Dictionary<uint, string> Code
         {
             get { return programmer.Code; }
+        }
+
+        public ulong FrequencyHz
+        {
+            get { return clock.FrequencyHz; }
+            set { clock.FrequencyHz = value; }
+        }
+
+        public void DataMemorySize(MemorySize size)
+        {
+            DataMemory.SetSize(size);
+        }
+
+        public void TextMemorySize(MemorySize size)
+        {
+            InstructionMemory.SetSize(size);
+            Code.Clear();
         }
     }
 }

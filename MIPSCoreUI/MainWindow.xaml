@@ -20,6 +20,7 @@
             <Menu Width="Auto" Height="20" FontSize="{StaticResource FontSize}">
                 <MenuItem Header="Core">
                     <MenuItem Header="Load File" HorizontalAlignment="Left" Command="{Binding LoadFile}"/>
+                    <MenuItem Header="Settings" HorizontalAlignment="Left" Command="{Binding Settings}"/>
                 </MenuItem>
                 <MenuItem Header="Register">
                     <MenuItem Header="View">

@@ -79,7 +79,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper\Bootstrapper.cs" />
-    <Compile Include="Converter\InstructionToColorConverter.cs" />
     <Compile Include="Services\IMessageBoxService.cs" />
     <Compile Include="Services\IOpenFileDialogService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
@@ -89,6 +88,7 @@
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\MipsMemoryViewModel.cs" />
     <Compile Include="ViewModel\MipsRegisterViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="View\MemoryListViewModel.cs" />
     <Compile Include="View\MipsCore.xaml.cs">
       <DependentUpon>MipsCore.xaml</DependentUpon>
@@ -98,6 +98,9 @@
     </Compile>
     <Compile Include="View\MipsRegister.xaml.cs">
       <DependentUpon>MipsRegister.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -125,6 +128,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MipsRegister.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -163,7 +170,9 @@
       <Name>MIPSCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Converter\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\MUX2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

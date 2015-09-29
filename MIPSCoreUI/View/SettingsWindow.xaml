@@ -1,0 +1,48 @@
+﻿<Window x:Class="MIPSCoreUI.View.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:MIPSCoreUI.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        d:DataContext="{d:DesignInstance d:Type=viewModel:SettingsViewModel, IsDesignTimeCreatable=False}"
+        mc:Ignorable="d"
+        Title="Settings" Height="223" Width="359"
+        Loaded="Window_Loaded"
+        x:Name="Window">
+    <Grid>
+        <StackPanel>
+            <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
+                <StackPanel Orientation="Vertical">
+                    <DockPanel Height="28" Margin="0,5,0,5">
+                        <Label Content="Text Memory Size:" Width="130"/>
+                        <ComboBox ItemsSource="{Binding TextMemorySize}" SelectedIndex="{Binding TextMemorySizeIndex}"/>
+                    </DockPanel>
+                    <DockPanel Height="28" VerticalAlignment="Stretch">
+                        <Label Content="Data Memory Size:" Width="130"/>
+                        <ComboBox ItemsSource="{Binding DataMemorySize}" SelectedIndex="{Binding DataMemorySizeIndex}"/>
+                    </DockPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Core Frequency" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
+                <StackPanel Orientation="Vertical">
+                    <DockPanel Height="28">
+                        <Label Content="Frequency in Hz:" Width="130"/>
+                        <TextBox Text="{Binding FrequencyHz}"/>
+                    </DockPanel>
+                </StackPanel>
+            </GroupBox>
+            <StackPanel Orientation="Horizontal" Height="40">
+                <Button Command="{Binding Apply}" Content="Apply" Width="50" Margin="5,5,5,5" FontSize="13"/>
+                <Button Content="Close" Width="50" Margin="5,5,5,5" FontSize="13">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:CallMethodAction TargetObject="{Binding ElementName=Window}" MethodName="Close"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

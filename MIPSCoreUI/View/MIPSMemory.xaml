@@ -9,10 +9,13 @@
              d:DataContext="{d:DesignInstance d:Type=vm:MipsMemoryViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300"
              Loaded="Window_Loaded">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-28">
         <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
-            <TabControl>
-                <TabItem Header="Text">
+            <TabControl SelectedIndex="{Binding SelectedMemoryIndex}">
+                <TabItem Header="Text" Height="24" VerticalAlignment="Bottom">
                     <ListBox ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
@@ -21,15 +24,50 @@
                         </i:Interaction.Triggers>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Name="TextBoxList" Text="{Binding Text}" Background="{Binding Background}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Margin="0,2,0,0" Fill="DarkRed" Height="10" Width="10" Stroke="DarkRed" Visibility="{Binding BreakpointVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <Trigger Property ="IsMouseOver" Value="True">
+                                                        <Setter Property= "Foreground" Value="Black"/>
+                                                    </Trigger>
+                                                    <Trigger Property ="IsMouseOver" Value="False">
+                                                        <Setter Property= "Foreground" Value="Black"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </TabItem>
-                <TabItem Header="Data">
-                    <ScrollViewer>
-                        <TextBlock Name="DataMemory" Text="{Binding MipsDataMemory}"/>
-                    </ScrollViewer>
+                <TabItem Header="Data" FontSize="13">
+                    <ListBox ItemsSource="{Binding Path=DataList, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <Trigger Property ="IsMouseOver" Value="True">
+                                                        <Setter Property= "Foreground" Value="Black"/>
+                                                    </Trigger>
+                                                    <Trigger Property ="IsMouseOver" Value="False">
+                                                        <Setter Property= "Foreground" Value="Black"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </TabItem>
             </TabControl>
         </GroupBox>

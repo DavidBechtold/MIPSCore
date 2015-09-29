@@ -6,5 +6,6 @@
         void Start();
         void Stop();
         bool SingleStep { get; set; }
+        ulong FrequencyHz { get; set; }
     }
 }

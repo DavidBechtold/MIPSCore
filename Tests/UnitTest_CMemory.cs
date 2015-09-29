@@ -11,7 +11,7 @@ namespace Tests
         [TestMethod]
         public void Memory_WriteAndRead()
         {
-            var mem = new Memory(MemSize.Size1Kb);
+            var mem = new Memory(MemorySize.Size1Kb);
 
             mem.WriteByte(new Word((uint)byte.MaxValue), 0);
             mem.WriteByte(new Word((uint)127), 1023);
@@ -46,7 +46,7 @@ namespace Tests
         [TestMethod]
         public void Memory_WriteAndReadWithOffset()
         {
-            var mem = new Memory(MemSize.Size1Kb) {Offset = new Word(0x00400000)};
+            var mem = new Memory(MemorySize.Size1Kb) {Offset = new Word(0x00400000)};
 
             mem.WriteByte(new Word((uint)byte.MaxValue), 0x00400000);
             mem.WriteByte(new Word((uint)127), 0x00400000 + 1023);
@@ -83,7 +83,7 @@ namespace Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Memory_AddressOutOfBound_WriteByte()
         {
-            var mem = new Memory(MemSize.Size4Kb);
+            var mem = new Memory(MemorySize.Size4Kb);
             mem.WriteByte(new Word(1), 4096*8);
         }
 
@@ -91,7 +91,7 @@ namespace Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Memory_AddressOutOfBound_WriteHalfWord()
         {
-            var mem = new Memory(MemSize.Size8Kb);
+            var mem = new Memory(MemorySize.Size8Kb);
             mem.WriteHalfWord(new Word(1), 8192 * 8 - 1);
         }
 
@@ -99,7 +99,7 @@ namespace Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Memory_AddressOutOfBound_WriteWord()
         {
-            var mem = new Memory(MemSize.Size8Kb);
+            var mem = new Memory(MemorySize.Size8Kb);
             mem.WriteWord(new Word(1), 8192 * 8 - 2);
         }
     }

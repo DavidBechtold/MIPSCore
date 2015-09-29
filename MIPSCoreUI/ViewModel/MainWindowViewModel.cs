@@ -7,7 +7,10 @@ using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
 using MIPSCore.Util;
 using MIPSCoreUI.Bootstrapper;
+using MIPSCoreUI.Properties;
 using MIPSCoreUI.Services;
+using MIPSCoreUI.View;
+using MipsCore = MIPSCore.MipsCore;
 
 namespace MIPSCoreUI.ViewModel
 {
@@ -29,6 +32,7 @@ namespace MIPSCoreUI.ViewModel
         public DelegateCommand ViewRegisterHex { get; private set; }
         public DelegateCommand ViewRegisterSignedDecimal { get; private set; }
         public DelegateCommand ViewRegisterUnsignedDecimal { get; private set; }
+        public DelegateCommand Settings { get; private set; }
 
         /* executed command */
         private string executedInstructionName;
@@ -76,6 +80,7 @@ namespace MIPSCoreUI.ViewModel
             ViewRegisterHex = new DelegateCommand(() => ViewRegister(RegisterView.HexaDecimal));
             ViewRegisterSignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.SignedDecimal));
             ViewRegisterUnsignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.UnsignedDecimal));
+            Settings = new DelegateCommand(OnSettings);
 
             /* state register */
             stateRegisterActive = new SolidColorBrush(Colors.DeepSkyBlue);
@@ -123,9 +128,18 @@ namespace MIPSCoreUI.ViewModel
             if (!openFileDialog.OpenFileDialog())
                 return;
 
+            core.StopCore();
+            core.SetMode(ExecutionMode.SingleStep);
             core.ProgramObjdump(openFileDialog.GetFileName());
             core.StartCore();
             mipsRegisterViewModel.Draw();
+            mipsMemoryViewModel.Draw();
+        }
+
+        private void OnSettings()
+        {
+            var window = new SettingsWindow();
+            window.ShowDialog();
             mipsMemoryViewModel.Draw();
         }
 

@@ -7,17 +7,28 @@ namespace MIPSCore.Timing
     {
         private readonly EventHandler callback;
         private readonly Timer timer;
+        private ulong frequencyHz;
 
         public Clock(ulong frequencyHz, EventHandler callback)
         {
             if (callback == null) throw new ArgumentNullException("callback");
-            if (frequencyHz == 0) throw new ArgumentException("Class Clock: Constructor: Argument frequency_Hz must be greater than zero.");
-            var frequencyMs = 1.0 / frequencyHz * 1E3;
+            this.frequencyHz = frequencyHz;
             this.callback = callback;
-            SingleStep = false;
-
-            timer = new Timer(frequencyMs);
+            timer = new Timer();
             timer.Elapsed += TimerCallback;
+            Init();
+        }
+
+        private void Init()
+        {
+            if (frequencyHz == 0)
+            {
+                timer.Interval = 0;
+                return;
+            }
+            var frequencyMs = 1.0 / frequencyHz * 1E3;
+            SingleStep = false;
+            timer.Interval = frequencyMs;
         }
 
         public void Step()
@@ -45,5 +56,7 @@ namespace MIPSCore.Timing
 
             callback.Invoke("Timer", new EventArgs());
         }
+
+        public ulong FrequencyHz { get { return frequencyHz; } set { frequencyHz = value; Init(); } }
     }
 }

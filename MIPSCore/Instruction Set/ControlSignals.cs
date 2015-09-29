@@ -127,7 +127,7 @@ namespace MIPSCore.Instruction_Set
 
         public override string ToString()
         {
-            string rString = "";
+            var rString = "";
 
             /* INSTRUCTION */
             rString += "Instruction:\t\t" + instruction.Name + "\n";
@@ -177,7 +177,7 @@ namespace MIPSCore.Instruction_Set
 
         private string RepeatString(string s, int count)
         {
-            string rString = "";
+            var rString = "";
             for (var i = 0; i < count; i++)
                 rString += s;
             return rString;
