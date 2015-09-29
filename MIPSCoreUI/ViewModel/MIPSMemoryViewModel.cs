@@ -4,12 +4,13 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.ViewModel;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Commands;
+using MIPSCore.Util._Memory;
 using MIPSCoreUI.Bootstrapper;
 using MipsCore = MIPSCore.MipsCore;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MipsMemoryViewModel : NotificationObject, IMipsViewModel
+    public class MipsMemoryViewModel : NotificationObject, IMipsExtendedViewModel
     {
         private readonly MipsCore core;
         private readonly Dispatcher dispatcher;
@@ -22,8 +23,9 @@ namespace MIPSCoreUI.ViewModel
         public ListTextDto SelectedItem { get; set; }
         public DelegateCommand AddBreakpoint { get; set; }
         public int SelectedMemoryIndex { get; set; }
+        public ValueView Display { get; set; }
 
-        private SolidColorBrush lineNotActiveColor;
+        private readonly SolidColorBrush lineNotActiveColor;
 
         public MipsMemoryViewModel(MipsCore core, Dispatcher dispatcher)
         {
@@ -40,6 +42,7 @@ namespace MIPSCoreUI.ViewModel
             oldProgramCounter = 0;
             oldDataChangedAddress = 0;
             lineNotActiveColor = new SolidColorBrush(Colors.White);
+            Display = ValueView.SignedDecimal;
         }
 
         public void Refresh()
@@ -82,7 +85,7 @@ namespace MIPSCoreUI.ViewModel
             for (uint i = 0; i < instructionMemory.GetLastByteAddress; i = i + 4, codeCounter++)
             {
                 var code = "";
-                var instruction = instructionMemory.ReadWord(i).Hexadecimal;
+                var instruction = ReadWordFromMemory(instructionMemory, i);
                 if ((codeCounter < codeDict.Count) && codeDict.ContainsKey(i))
                     code += codeDict[i];
                 List.Add(new ListTextDto(i, codeCounter, instruction, code, lineNotActiveColor));
@@ -96,7 +99,7 @@ namespace MIPSCoreUI.ViewModel
             var codeCounter = 0;
             for (uint i = 0; i < dataMemory.GetLastByteAddress; i = i + 4, codeCounter++)
             {
-                var value = dataMemory.ReadWord(i).Hexadecimal;
+                var value = ReadWordFromMemory(dataMemory, i);
                 DataList.Add(new DataTextDto(i, codeCounter, value, lineNotActiveColor));
             }
         }
@@ -107,7 +110,7 @@ namespace MIPSCoreUI.ViewModel
             var dataMemory = core.DataMemory;
             foreach (var address in dataMemory.ChangedWordAddresses)
             {
-                DataList[(int)address / 4].Value = dataMemory.ReadWord(address).Hexadecimal;
+                DataList[(int) address/4].Value = ReadWordFromMemory(dataMemory, address);
                 DataList[(int)address / 4].Changed();
             }
 
@@ -126,9 +129,20 @@ namespace MIPSCoreUI.ViewModel
             if (List.Count <= 0) return;
             List[oldProgramCounter / 4].Background = lineNotActiveColor;
             List[oldProgramCounter / 4].Changed();
-            oldProgramCounter = CBootstrapper.Core.InstructionMemory.GetProgramCounter.SignedDecimal;
+            oldProgramCounter = core.InstructionMemory.GetProgramCounter.SignedDecimal;
             List[oldProgramCounter / 4].Background = new SolidColorBrush(Colors.DarkGray);
             List[oldProgramCounter / 4].Changed();
+        }
+
+        private string ReadWordFromMemory(IMemory memory, uint address)
+        {
+            switch (Display)
+            {
+                case ValueView.HexaDecimal: return memory.ReadWord(address).Hexadecimal;
+                case ValueView.SignedDecimal: return memory.ReadWord(address).SignedDecimal.ToString();
+                case ValueView.UnsignedDecimal: return memory.ReadWord(address).UnsignedDecimal.ToString();
+            }
+            return "";
         }
     }
 

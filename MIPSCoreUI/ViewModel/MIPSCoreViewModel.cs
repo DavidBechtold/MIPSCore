@@ -60,8 +60,6 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush aluSourceControlLine;
         private SolidColorBrush regFileInputControlLine;
 
-
-
         public MipsCoreViewModel(IControlUnit controlUnit, Dispatcher dispatcher)
         {
             if (controlUnit == null) throw new ArgumentNullException("controlUnit");

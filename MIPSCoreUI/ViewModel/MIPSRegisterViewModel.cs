@@ -7,12 +7,12 @@ using MIPSCore.Register_File;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public enum RegisterView { HexaDecimal, SignedDecimal, UnsignedDecimal };
-    public class MipsRegisterViewModel : NotificationObject, IMipsRegisterViewModel
+    public enum ValueView { HexaDecimal, SignedDecimal, UnsignedDecimal };
+    public class MipsRegisterViewModel : NotificationObject, IMipsExtendedViewModel
     {
         private readonly MipsCore core;
         private readonly Dispatcher dispatcher;
-        public RegisterView Display { get; set; }
+        public ValueView Display { get; set; }
 
         public string MipsRegisters { get; private set; }
 
@@ -22,7 +22,7 @@ namespace MIPSCoreUI.ViewModel
             if (dispatcher == null) throw new ArgumentNullException("dispatcher");
             this.core = core;
             this.dispatcher = dispatcher;
-            Display = RegisterView.SignedDecimal;
+            Display = ValueView.SignedDecimal;
         }
 
         public void Refresh()
@@ -39,9 +39,9 @@ namespace MIPSCoreUI.ViewModel
         {
             switch (Display)
             {
-                case RegisterView.HexaDecimal: MipsRegisters = RegisterToHex(); break;
-                case RegisterView.UnsignedDecimal: MipsRegisters = RegisterToUnsignedDec(); break;
-                case RegisterView.SignedDecimal: MipsRegisters = RegisterToSignedDec(); break;
+                case ValueView.HexaDecimal: MipsRegisters = RegisterToHex(); break;
+                case ValueView.UnsignedDecimal: MipsRegisters = RegisterToUnsignedDec(); break;
+                case ValueView.SignedDecimal: MipsRegisters = RegisterToSignedDec(); break;
             }
             RaisePropertyChanged(() => MipsRegisters);
         }

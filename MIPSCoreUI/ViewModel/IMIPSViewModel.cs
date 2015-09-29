@@ -6,8 +6,8 @@
         void Draw();
     }
 
-    public interface IMipsRegisterViewModel : IMipsViewModel
+    public interface IMipsExtendedViewModel : IMipsViewModel
     {
-        RegisterView Display { get; set; }
+        ValueView Display { get; set; }
     }
 }

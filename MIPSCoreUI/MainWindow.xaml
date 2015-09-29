@@ -22,11 +22,11 @@
                     <MenuItem Header="Load File" HorizontalAlignment="Left" Command="{Binding LoadFile}"/>
                     <MenuItem Header="Settings" HorizontalAlignment="Left" Command="{Binding Settings}"/>
                 </MenuItem>
-                <MenuItem Header="Register">
-                    <MenuItem Header="View">
-                        <MenuItem Header="Hexadecimal" HorizontalAlignment="Left" Command="{Binding ViewRegisterHex}"/>
-                        <MenuItem Header="SignedDecimal" HorizontalAlignment="Left" Command="{Binding ViewRegisterSignedDecimal}"/>
-                        <MenuItem  Header="UnsignedDecimal" HorizontalAlignment="Left" Command="{Binding ViewRegisterUnsignedDecimal}"/>
+                <MenuItem Header="View">
+                    <MenuItem Header="Value Format">
+                        <MenuItem Header="Hexadecimal" HorizontalAlignment="Left" Command="{Binding ViewHexadecimal}"/>
+                        <MenuItem Header="SignedDecimal" HorizontalAlignment="Left" Command="{Binding ViewSignedDecimal}"/>
+                        <MenuItem  Header="UnsignedDecimal" HorizontalAlignment="Left" Command="{Binding ViewUnsignedDecimal}"/>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help">

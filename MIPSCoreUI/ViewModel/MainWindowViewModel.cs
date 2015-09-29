@@ -6,8 +6,6 @@ using MIPSCore;
 using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
 using MIPSCore.Util;
-using MIPSCoreUI.Bootstrapper;
-using MIPSCoreUI.Properties;
 using MIPSCoreUI.Services;
 using MIPSCoreUI.View;
 using MipsCore = MIPSCore.MipsCore;
@@ -20,8 +18,8 @@ namespace MIPSCoreUI.ViewModel
         private readonly IControlUnit controlUnit;
         private readonly IAlu alu;
         private readonly IMipsViewModel mipsCoreViewModel;
-        private readonly IMipsRegisterViewModel mipsRegisterViewModel;
-        private readonly IMipsViewModel mipsMemoryViewModel;
+        private readonly IMipsExtendedViewModel mipsRegisterViewModel;
+        private readonly IMipsExtendedViewModel mipsMemoryViewModel;
         private readonly IMessageBoxService messageBox;
         private readonly IOpenFileDialogService openFileDialog;
 
@@ -29,9 +27,9 @@ namespace MIPSCoreUI.ViewModel
         public DelegateCommand Run { get; private set; }
         public DelegateCommand Stop { get; private set; }
         public DelegateCommand LoadFile { get; private set; }
-        public DelegateCommand ViewRegisterHex { get; private set; }
-        public DelegateCommand ViewRegisterSignedDecimal { get; private set; }
-        public DelegateCommand ViewRegisterUnsignedDecimal { get; private set; }
+        public DelegateCommand ViewHexadecimal { get; private set; }
+        public DelegateCommand ViewSignedDecimal { get; private set; }
+        public DelegateCommand ViewUnsignedDecimal { get; private set; }
         public DelegateCommand Settings { get; private set; }
 
         /* executed command */
@@ -51,7 +49,7 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush stateRegisterOverflowFlag;
         private SolidColorBrush stateRegisterCarryFlag;
 
-        public MainWindowViewModel(MipsCore core, IMipsViewModel mipsCoreViewModel, IMipsRegisterViewModel mipsRegisterViewModel, IMipsViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
+        public MainWindowViewModel(MipsCore core, IMipsViewModel mipsCoreViewModel, IMipsExtendedViewModel mipsRegisterViewModel, IMipsExtendedViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (mipsCoreViewModel == null) throw new ArgumentNullException("mipsCoreViewModel");
@@ -77,9 +75,9 @@ namespace MIPSCoreUI.ViewModel
             Run = new DelegateCommand(OnRun);
             Stop = new DelegateCommand(OnStop);
             LoadFile = new DelegateCommand(OnLoadFile);
-            ViewRegisterHex = new DelegateCommand(() => ViewRegister(RegisterView.HexaDecimal));
-            ViewRegisterSignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.SignedDecimal));
-            ViewRegisterUnsignedDecimal = new DelegateCommand(() => ViewRegister(RegisterView.UnsignedDecimal));
+            ViewHexadecimal = new DelegateCommand(() => OnViewRegister(ValueView.HexaDecimal));
+            ViewSignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.SignedDecimal));
+            ViewUnsignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.UnsignedDecimal));
             Settings = new DelegateCommand(OnSettings);
 
             /* state register */
@@ -143,10 +141,12 @@ namespace MIPSCoreUI.ViewModel
             mipsMemoryViewModel.Draw();
         }
 
-        private void ViewRegister(RegisterView view)
+        private void OnViewRegister(ValueView view)
         {
             mipsRegisterViewModel.Display = view;
+            mipsMemoryViewModel.Display = view;
             mipsRegisterViewModel.Refresh();
+            mipsMemoryViewModel.Draw();
         }
 
         private void FillExecutedInstructionGroupBox()
