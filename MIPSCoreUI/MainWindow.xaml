@@ -38,7 +38,7 @@
         <view:MipsCore Margin="340,247,264,-16"/>
         <view:MipsRegister Margin="1312,31,10,10"/>
         <view:MipsMemory Margin="0,31,1231,36"/>
-        <view:LedsArray Margin="903,31,360,512"/>
+        <view:LedsArray Margin="903,31,360,534"/>
 
         <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="313,31,0,0" VerticalAlignment="Top" MinWidth="300" BorderThickness="2" BorderBrush="SlateGray" Width="325" FontSize="{StaticResource FontSize}">
             <StackPanel>

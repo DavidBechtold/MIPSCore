@@ -3,7 +3,7 @@ using System.Timers;
 
 namespace MIPSCore.Timing
 {
-    public class Clock: IClock
+    public class Clock: IClock, IDisposable
     {
         private readonly EventHandler callback;
         private readonly Timer timer;
@@ -58,5 +58,10 @@ namespace MIPSCore.Timing
         }
 
         public ulong FrequencyHz { get { return frequencyHz; } set { frequencyHz = value; Init(); } }
+
+        public void Dispose()
+        {
+            timer.Dispose();
+        }
     }
 }

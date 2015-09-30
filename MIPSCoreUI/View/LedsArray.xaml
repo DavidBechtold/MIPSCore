@@ -148,12 +148,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,2,0,2">
                     <Label Content="Data Word Address:"/>
-                    <TextBox MinWidth="133" Text="{Binding DataWordAddress}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="5,2,0,2">
-                    <Grid>
-                        <Button Command="{Binding ActivateDeactivateLeds}" Content="{Binding ActivateDeactivateLedsContent, FallbackValue=Activate}"/>
-                    </Grid>
+                    <TextBox MinWidth="133" Text="{Binding DataWordAddress, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
