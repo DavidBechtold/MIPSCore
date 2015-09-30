@@ -5,7 +5,6 @@ using Microsoft.Practices.Prism.ViewModel;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Commands;
 using MIPSCore.Util._Memory;
-using MIPSCoreUI.Bootstrapper;
 using MipsCore = MIPSCore.MipsCore;
 
 namespace MIPSCoreUI.ViewModel
@@ -68,10 +67,7 @@ namespace MIPSCoreUI.ViewModel
         {
             if (List.Count <= 0 || oldProgramCounter >= List.Count) return;
 
-            if (List[SelectedItem.Number].BreakpointVisible)
-                List[SelectedItem.Number].BreakpointVisible = false;
-            else
-                List[SelectedItem.Number].BreakpointVisible = true;
+            List[SelectedItem.Number].BreakpointVisible = !List[SelectedItem.Number].BreakpointVisible;
             //TODO Add breakpoint to the mips core
             List[SelectedItem.Number].Changed();
         }
@@ -85,7 +81,8 @@ namespace MIPSCoreUI.ViewModel
             for (uint i = 0; i < instructionMemory.GetLastByteAddress; i = i + 4, codeCounter++)
             {
                 var code = "";
-                var instruction = ReadWordFromMemory(instructionMemory, i);
+                //var instruction = ReadWordFromMemory(instructionMemory, i);
+                var instruction = instructionMemory.ReadWord(i).Hexadecimal;
                 if ((codeCounter < codeDict.Count) && codeDict.ContainsKey(i))
                     code += codeDict[i];
                 List.Add(new ListTextDto(i, codeCounter, instruction, code, lineNotActiveColor));

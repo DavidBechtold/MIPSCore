@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
-using MIPSCore.Util;
 using MIPSCore.Util._Memory;
 using MIPSCoreUI.Bootstrapper;
-using MIPSCoreUI.Services;
 
 namespace MIPSCoreUI.ViewModel
 {
     public class SettingsViewModel : NotificationObject
     {
-        private IMessageBoxService messageBox;
         private int textMemorySizeIndex;
         private int dataMemorySizeIndex;
 
@@ -25,7 +21,6 @@ namespace MIPSCoreUI.ViewModel
         public SettingsViewModel()
         {
             FrequencyHz = CBootstrapper.Core.FrequencyHz;
-            messageBox = CBootstrapper.MessageBox;
             Apply = new DelegateCommand(OnApply);
             TextMemorySize = new ObservableCollection<MemorySize>();
             DataMemorySize = new ObservableCollection<MemorySize>();

@@ -476,4 +476,5 @@ namespace MIPSCoreUI.ViewModel
             get { return regFileWriteControlLine; }
         }
     }
-}
+} 
+

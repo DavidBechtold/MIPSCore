@@ -6,7 +6,7 @@ namespace MIPSCoreUI.View
     /// <summary>
     /// Interaktionslogik für Window1.xaml
     /// </summary>
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow
     {
         public SettingsWindow()
         {
