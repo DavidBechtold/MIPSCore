@@ -1,9 +1,9 @@
 ﻿<Window x:Class="MIPSCoreUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:MIPSCoreUI.View"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModel="clr-namespace:MIPSCoreUI.ViewModel"
         d:DataContext="{d:DesignInstance d:Type=viewModel:MainWindowViewModel, IsDesignTimeCreatable=False}"
@@ -38,6 +38,7 @@
         <view:MipsCore Margin="340,247,264,-16"/>
         <view:MipsRegister Margin="1312,31,10,10"/>
         <view:MipsMemory Margin="0,31,1231,36"/>
+        <view:LedsArray Margin="903,31,360,512"/>
 
         <GroupBox Header="Executed Instruction" HorizontalAlignment="Left" Margin="313,31,0,0" VerticalAlignment="Top" MinWidth="300" BorderThickness="2" BorderBrush="SlateGray" Width="325" FontSize="{StaticResource FontSize}">
             <StackPanel>
@@ -72,14 +73,14 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Header="Excecute" Margin="639,31,642,0" VerticalAlignment="Top" MinHeight="50" BorderThickness="2" BorderBrush="SlateGray" FontSize="{StaticResource FontSize}" Height="55">
+        <GroupBox Header="Excecute" Margin="643,31,638,0" VerticalAlignment="Top" MinHeight="50" BorderThickness="2" BorderBrush="SlateGray" FontSize="{StaticResource FontSize}" Height="55">
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Button Command="{Binding Clock}" Content="Clock" MinWidth="62" HorizontalAlignment="Left"/>
                 <Button Command="{Binding Run}" Content="Run" MinWidth="62"  HorizontalAlignment="Center"/>
                 <Button Command="{Binding Stop}" Content="Stop" MinWidth="62" HorizontalAlignment="Right"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="State Register"  BorderThickness="2"  BorderBrush="SlateGray"  MinHeight="65" Margin="639,86,642,612" FontSize="{StaticResource FontSize}">
+        <GroupBox Header="State Register"  BorderThickness="2"  BorderBrush="SlateGray"  MinHeight="65" Margin="643,86,638,612" FontSize="{StaticResource FontSize}">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="2,0,0,0">
                 <Grid Height="30" Width="60">
                     <Rectangle  Stroke="Black" Fill="{Binding StateRegisterOverflowFlag}"/>

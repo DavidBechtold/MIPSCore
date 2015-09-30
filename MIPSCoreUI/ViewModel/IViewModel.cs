@@ -1,12 +1,12 @@
 ﻿namespace MIPSCoreUI.ViewModel
 {
-    public interface IMipsViewModel
+    public interface IViewModel
     {
         void Refresh();
         void Draw();
     }
 
-    public interface IMipsExtendedViewModel : IMipsViewModel
+    public interface IMipsExtendedViewModel : IViewModel
     {
         ValueView Display { get; set; }
     }

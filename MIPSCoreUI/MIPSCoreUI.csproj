@@ -83,12 +83,16 @@
     <Compile Include="Services\IOpenFileDialogService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="Services\OpenFileDialogService.cs" />
-    <Compile Include="ViewModel\IMipsViewModel.cs" />
+    <Compile Include="ViewModel\IViewModel.cs" />
+    <Compile Include="ViewModel\LedsViewModel.cs" />
     <Compile Include="ViewModel\MipsCoreViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\MipsMemoryViewModel.cs" />
     <Compile Include="ViewModel\MipsRegisterViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="View\LedsArray.xaml.cs">
+      <DependentUpon>LedsArray.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MemoryListViewModel.cs" />
     <Compile Include="View\MipsCore.xaml.cs">
       <DependentUpon>MipsCore.xaml</DependentUpon>
@@ -119,6 +123,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\LedsArray.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MipsCore.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

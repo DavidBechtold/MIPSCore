@@ -7,7 +7,7 @@ using MIPSCore.Instruction_Set;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MipsCoreViewModel : NotificationObject, IMipsViewModel
+    public class MipsCoreViewModel : NotificationObject, IViewModel
     {
         private readonly IControlUnit controlUnit;
         private readonly Dispatcher dispatcher;

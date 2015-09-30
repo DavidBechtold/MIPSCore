@@ -17,9 +17,10 @@ namespace MIPSCoreUI.ViewModel
         private readonly MipsCore core;
         private readonly IControlUnit controlUnit;
         private readonly IAlu alu;
-        private readonly IMipsViewModel mipsCoreViewModel;
+        private readonly IViewModel mipsCoreViewModel;
         private readonly IMipsExtendedViewModel mipsRegisterViewModel;
         private readonly IMipsExtendedViewModel mipsMemoryViewModel;
+        private readonly IViewModel ledsViewModel;
         private readonly IMessageBoxService messageBox;
         private readonly IOpenFileDialogService openFileDialog;
 
@@ -49,11 +50,13 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush stateRegisterOverflowFlag;
         private SolidColorBrush stateRegisterCarryFlag;
 
-        public MainWindowViewModel(MipsCore core, IMipsViewModel mipsCoreViewModel, IMipsExtendedViewModel mipsRegisterViewModel, IMipsExtendedViewModel mipsMemoryViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
+        public MainWindowViewModel(MipsCore core, IViewModel mipsCoreViewModel, IMipsExtendedViewModel mipsRegisterViewModel, IMipsExtendedViewModel mipsMemoryViewModel, 
+            IViewModel ledsViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (mipsCoreViewModel == null) throw new ArgumentNullException("mipsCoreViewModel");
             if (mipsCoreViewModel == null) throw new ArgumentNullException("mipsRegisterViewModel");
+            if (ledsViewModel == null) throw new ArgumentNullException("ledsViewModel");
             if (messageBox == null) throw new ArgumentNullException("messageBox");
             if (openFileDialog == null) throw new ArgumentNullException("openFileDialog");
 
@@ -63,6 +66,7 @@ namespace MIPSCoreUI.ViewModel
             this.mipsCoreViewModel = mipsCoreViewModel;
             this.mipsRegisterViewModel = mipsRegisterViewModel;
             this.mipsMemoryViewModel = mipsMemoryViewModel;
+            this.ledsViewModel = ledsViewModel;
             this.messageBox = messageBox;
             this.openFileDialog = openFileDialog;
 
@@ -92,6 +96,7 @@ namespace MIPSCoreUI.ViewModel
             mipsCoreViewModel.Refresh();
             mipsRegisterViewModel.Refresh();
             mipsMemoryViewModel.Refresh();
+            ledsViewModel.Refresh();
         }
 
         private void Completed(object sender, EventArgs args)
@@ -132,6 +137,7 @@ namespace MIPSCoreUI.ViewModel
             core.StartCore();
             mipsRegisterViewModel.Draw();
             mipsMemoryViewModel.Draw();
+            ledsViewModel.Draw();
         }
 
         private void OnSettings()

@@ -9,7 +9,7 @@ using MIPSCoreUI.ViewModel;
 
 namespace MIPSCoreUI.View
 {
-    public class MemoryListViewModel : NotificationObject, IMipsViewModel
+    public class MemoryListViewModel : NotificationObject, IViewModel
     {
         private readonly Dispatcher dispatcher;
         private ObservableCollection<ListTextDto> list;
