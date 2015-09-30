@@ -1,13 +1,9 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using MIPSCoreUI.Bootstrapper;
 
 namespace MIPSCoreUI.View
 {
-    /// <summary>
-    /// Interaktionslogik für LedArray.xaml
-    /// </summary>
-    public partial class LedsArray : UserControl
+    public partial class LedsArray
     {
         public LedsArray()
         {

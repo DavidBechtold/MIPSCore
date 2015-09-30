@@ -36,11 +36,7 @@ namespace MIPSCoreUI.ViewModel
 
         private void OnActivateDeactivateLeds()
         {
-            if (ActivateDeactivateLedsContent == Deactivate)
-                ActivateDeactivateLedsContent = Activate;
-            else
-                ActivateDeactivateLedsContent = Deactivate;
-
+            ActivateDeactivateLedsContent = ActivateDeactivateLedsContent == Deactivate ? Activate : Deactivate;
             Refresh();
         }
 
@@ -58,7 +54,6 @@ namespace MIPSCoreUI.ViewModel
                 else
                     Leds[i] = ledInactive;
             }
-                
             RaisePropertyChanged(() => Leds);
         }
 
