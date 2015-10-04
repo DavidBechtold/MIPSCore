@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="MIPSCoreUI.View.MipsCore"
+﻿<UserControl x:Class="MIPSCoreUI.View.CoreView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:core="clr-namespace:System;assembly=mscorlib"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:MIPSCoreUI.ViewModel" mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance d:Type=vm:MipsCoreViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance d:Type=vm:CoreViewModel, IsDesignTimeCreatable=False}"
              xmlns:baseObjects="clr-namespace:MIPSCoreUI.BaseObjects"
              d:DesignHeight="500" d:DesignWidth="940"
              Loaded="Window_Loaded">

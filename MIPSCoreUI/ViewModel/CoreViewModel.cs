@@ -7,7 +7,7 @@ using MIPSCore.Instruction_Set;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MipsCoreViewModel : NotificationObject, IViewModel
+    public class CoreViewModel : NotificationObject, IViewModel
     {
         private readonly IControlUnit controlUnit;
         private readonly Dispatcher dispatcher;
@@ -60,7 +60,7 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush aluSourceControlLine;
         private SolidColorBrush regFileInputControlLine;
 
-        public MipsCoreViewModel(IControlUnit controlUnit, Dispatcher dispatcher)
+        public CoreViewModel(IControlUnit controlUnit, Dispatcher dispatcher)
         {
             if (controlUnit == null) throw new ArgumentNullException("controlUnit");
             if (dispatcher == null) throw new ArgumentNullException("dispatcher");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
 using MIPSCore.Data_Memory;
@@ -45,6 +46,8 @@ namespace MIPSCore
         private readonly MipsProgrammer programmer;
         private string excetpionString;
 
+        private List<uint> breakpoints; 
+
         public MipsCore()
         {
             /* read config file */
@@ -58,6 +61,7 @@ namespace MIPSCore
             DataMemory = new DataMemory(dataMemorySizeKb);
             clock = new Clock(coreFrequencyHz, ClockTick);
             programmer = new MipsProgrammer(this);
+            breakpoints = new List<uint>();
 
             InstructionMemory.ControlUnit = ControlUnit;
             InstructionMemory.Alu = Alu;
@@ -159,7 +163,12 @@ namespace MIPSCore
                     if (Completed != null) Completed(this, new EventArgs());
                 }
                 else
-                    clock.Start();               
+                    clock.Start();    
+           
+                //check breakpoints
+                if (Mode != ExecutionMode.RunToCompletion) return;
+                foreach (var breakpoint in breakpoints.Where(breakpoint => InstructionMemory.GetProgramCounter.UnsignedDecimal == breakpoint))
+                    clock.Stop();
             }
             catch (Exception exeption)
             {
@@ -309,6 +318,17 @@ namespace MIPSCore
         {
             InstructionMemory.SetSize(size);
             Code.Clear();
+        }
+
+        public void AddBreakpoint(uint address)
+        {
+            breakpoints.Add(address);
+        }
+
+        public void RemoveBreakpoint(uint address)
+        {
+            if (breakpoints.Contains(address))
+                breakpoints.Remove(address);
         }
     }
 }

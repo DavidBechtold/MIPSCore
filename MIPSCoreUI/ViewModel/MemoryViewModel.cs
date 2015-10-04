@@ -9,7 +9,7 @@ using MipsCore = MIPSCore.MipsCore;
 
 namespace MIPSCoreUI.ViewModel
 {
-    public class MipsMemoryViewModel : NotificationObject, IMipsExtendedViewModel
+    public class MemoryViewModel : NotificationObject, IMipsExtendedViewModel
     {
         private readonly MipsCore core;
         private readonly Dispatcher dispatcher;
@@ -26,7 +26,7 @@ namespace MIPSCoreUI.ViewModel
 
         private readonly SolidColorBrush lineNotActiveColor;
 
-        public MipsMemoryViewModel(MipsCore core, Dispatcher dispatcher)
+        public MemoryViewModel(MipsCore core, Dispatcher dispatcher)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (dispatcher == null) throw new ArgumentException("dispatcher");
@@ -67,9 +67,14 @@ namespace MIPSCoreUI.ViewModel
         {
             if (List.Count <= 0 || oldProgramCounter >= List.Count) return;
 
+            if (List[SelectedItem.Number].BreakpointVisible)
+                core.RemoveBreakpoint(List[SelectedItem.Number].Address);
+            else
+                core.AddBreakpoint(List[SelectedItem.Number].Address);
             List[SelectedItem.Number].BreakpointVisible = !List[SelectedItem.Number].BreakpointVisible;
-            //TODO Add breakpoint to the mips core
             List[SelectedItem.Number].Changed();
+
+            
         }
 
         private void DrawInstructionMemory()

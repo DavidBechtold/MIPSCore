@@ -57,7 +57,7 @@ namespace MIPSCoreUI.ViewModel
         public uint DataWordAddress
         {
             get { return dataWordAddress; }
-            set { dataWordAddress = value; Refresh(); RaisePropertyChanged(() => DataWordAddress); }
+            set { dataWordAddress = value; Refresh(); }
         }
     }
 }

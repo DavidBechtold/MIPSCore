@@ -3,17 +3,19 @@ using MIPSCoreUI.Bootstrapper;
 
 namespace MIPSCoreUI.View
 {
-    public enum HighlightAction { Clear, AddNormal, AddHighlighted }
-    public partial class MipsMemory
+    /// <summary>
+    /// Interaktionslogik für MIPSRegister.xaml
+    /// </summary>
+    public partial class RegisterView
     {
-        public MipsMemory()
+        public RegisterView()
         {
             InitializeComponent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DataContext = CBootstrapper.MipsMemoryViewModel;
+            DataContext = CBootstrapper.MipsRegisterViewModel;
         }
     }
 }

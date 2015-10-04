@@ -3,9 +3,9 @@ using MIPSCoreUI.Bootstrapper;
 
 namespace MIPSCoreUI.View
 {
-    public partial class LedsArray
+    public partial class LedsArrayView
     {
-        public LedsArray()
+        public LedsArrayView()
         {
             InitializeComponent();
         }

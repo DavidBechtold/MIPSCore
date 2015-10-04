@@ -7,9 +7,9 @@ namespace MIPSCoreUI.View
     /// <summary>
     /// Interaktionslogik für UserControl1.xaml
     /// </summary>
-    public partial class MipsCore
+    public partial class CoreView
     {
-        public MipsCore()
+        public CoreView()
         {
             InitializeComponent();
         }

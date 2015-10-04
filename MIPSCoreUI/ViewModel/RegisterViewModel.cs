@@ -8,7 +8,7 @@ using MIPSCore.Register_File;
 namespace MIPSCoreUI.ViewModel
 {
     public enum ValueView { HexaDecimal, SignedDecimal, UnsignedDecimal };
-    public class MipsRegisterViewModel : NotificationObject, IMipsExtendedViewModel
+    public class RegisterViewModel : NotificationObject, IMipsExtendedViewModel
     {
         private readonly MipsCore core;
         private readonly Dispatcher dispatcher;
@@ -16,7 +16,7 @@ namespace MIPSCoreUI.ViewModel
 
         public string MipsRegisters { get; private set; }
 
-        public MipsRegisterViewModel(MipsCore core, Dispatcher dispatcher)
+        public RegisterViewModel(MipsCore core, Dispatcher dispatcher)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (dispatcher == null) throw new ArgumentNullException("dispatcher");

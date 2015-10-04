@@ -142,7 +142,7 @@ namespace MIPSCoreUI.ViewModel
 
         private void OnSettings()
         {
-            var window = new SettingsWindow();
+            var window = new SettingsView();
             window.ShowDialog();
             mipsMemoryViewModel.Draw();
         }

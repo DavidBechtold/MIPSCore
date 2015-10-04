@@ -31,9 +31,9 @@ namespace MIPSCoreUI.Bootstrapper
             Core.SetMode(ExecutionMode.SingleStep);
 
             /* init viewmodels */
-            MipsCoreViewModel = new MipsCoreViewModel(Core.ControlUnit, Application.Current.Dispatcher);
-            MipsRegisterViewModel = new MipsRegisterViewModel(Core, Application.Current.Dispatcher);
-            MipsMemoryViewModel = new MipsMemoryViewModel(Core, Application.Current.Dispatcher);
+            MipsCoreViewModel = new CoreViewModel(Core.ControlUnit, Application.Current.Dispatcher);
+            MipsRegisterViewModel = new RegisterViewModel(Core, Application.Current.Dispatcher);
+            MipsMemoryViewModel = new MemoryViewModel(Core, Application.Current.Dispatcher);
             SettingsViewModel = new SettingsViewModel(Core);
             LedsViewModel = new LedsViewModel(Core.DataMemory);
             MainWindowViewModel = new MainWindowViewModel(Core, MipsCoreViewModel, MipsRegisterViewModel, MipsMemoryViewModel, LedsViewModel, MessageBox, OpenFileDialog);

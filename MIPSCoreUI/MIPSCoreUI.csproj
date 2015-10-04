@@ -85,26 +85,26 @@
     <Compile Include="Services\OpenFileDialogService.cs" />
     <Compile Include="ViewModel\IViewModel.cs" />
     <Compile Include="ViewModel\LedsViewModel.cs" />
-    <Compile Include="ViewModel\MipsCoreViewModel.cs" />
+    <Compile Include="ViewModel\CoreViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="ViewModel\MipsMemoryViewModel.cs" />
-    <Compile Include="ViewModel\MipsRegisterViewModel.cs" />
+    <Compile Include="ViewModel\MemoryViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
-    <Compile Include="View\LedsArray.xaml.cs">
-      <DependentUpon>LedsArray.xaml</DependentUpon>
+    <Compile Include="View\LedsArrayView.xaml.cs">
+      <DependentUpon>LedsArrayView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MemoryListViewModel.cs" />
-    <Compile Include="View\MipsCore.xaml.cs">
-      <DependentUpon>MipsCore.xaml</DependentUpon>
+    <Compile Include="View\CoreView.xaml.cs">
+      <DependentUpon>CoreView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MipsMemory.xaml.cs">
-      <DependentUpon>MipsMemory.xaml</DependentUpon>
+    <Compile Include="View\MemoryView.xaml.cs">
+      <DependentUpon>MemoryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MipsRegister.xaml.cs">
-      <DependentUpon>MipsRegister.xaml</DependentUpon>
+    <Compile Include="View\RegisterView.xaml.cs">
+      <DependentUpon>RegisterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    <Compile Include="View\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -123,23 +123,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\LedsArray.xaml">
+    <Page Include="View\LedsArrayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MipsCore.xaml">
+    <Page Include="View\CoreView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MipsMemory.xaml">
+    <Page Include="View\MemoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MipsRegister.xaml">
+    <Page Include="View\RegisterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SettingsWindow.xaml">
+    <Page Include="View\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
