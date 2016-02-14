@@ -29,10 +29,19 @@ namespace MIPSCoreUI.ViewModel
 
         public void Refresh()
         {
-            // convert hex value to uint
             if (DataWordAddress.Length <= 0)
                 return;
-            var address = Convert.ToUInt32(DataWordAddress, 16);
+            
+            uint address = 0;
+            try
+            {
+                address = Convert.ToUInt32(DataWordAddress, 16);
+            }
+            catch
+            {
+                DataWordAddress = DataWordAddress.Remove(DataWordAddress.Length - 1);
+                return;
+            }
 
             if (address > dataMemory.GetLastByteAddress - 4)
                 return;
