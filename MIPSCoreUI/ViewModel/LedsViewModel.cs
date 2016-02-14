@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using Microsoft.Practices.Prism.ViewModel;
 using MIPSCore.Data_Memory;
+using MIPSCore.Util;
 
 namespace MIPSCoreUI.ViewModel
 {
@@ -12,14 +13,14 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush[] leds;
         private readonly SolidColorBrush ledInactive = new SolidColorBrush(Colors.DimGray);
         private readonly SolidColorBrush ledActive = new SolidColorBrush(Colors.DarkRed);
-        private uint dataWordAddress;
+        private string dataWordAddress;
 
         public LedsViewModel(IDataMemory dataMemory)
         {
             if (dataMemory == null) throw new ArgumentNullException("dataMemory");
             this.dataMemory = dataMemory;
 
-            dataWordAddress = 0;
+            dataWordAddress = "";
 
             Leds = new SolidColorBrush[LedCount];
             for (var i = 0; i < LedCount; i++)
@@ -28,9 +29,14 @@ namespace MIPSCoreUI.ViewModel
 
         public void Refresh()
         {
-            if (DataWordAddress > dataMemory.GetLastByteAddress - 4)
+            // convert hex value to uint
+            if (DataWordAddress.Length <= 0)
                 return;
-            var word = dataMemory.ReadWord(DataWordAddress).UnsignedDecimal;
+            var address = Convert.ToUInt32(DataWordAddress, 16);
+
+            if (address > dataMemory.GetLastByteAddress - 4)
+                return;
+            var word = dataMemory.ReadWord(address).UnsignedDecimal;
             for (var i = 0; i < LedCount; i++)
             {
                 var test = (uint) Math.Pow(2, i);
@@ -54,7 +60,7 @@ namespace MIPSCoreUI.ViewModel
             private set { leds = value; RaisePropertyChanged(() => Leds); }
         }
 
-        public uint DataWordAddress
+        public string DataWordAddress
         {
             get { return dataWordAddress; }
             set { dataWordAddress = value; Refresh(); }
