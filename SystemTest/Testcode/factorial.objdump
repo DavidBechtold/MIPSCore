@@ -1,0 +1,51 @@
+a.out:     file format elf32-littlemips
+
+
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	24040004 	li	a0,4
+   4:	23bdfff8 	addi	sp,sp,-8
+   8:	afa40000 	sw	a0,0(sp)
+   c:	0c000009 	jal	24 <factorial>
+  10:	00000000 	nop
+  14:	8fad0004 	lw	t5,4(sp)
+  18:	23bd0008 	addi	sp,sp,8
+  1c:	2402000a 	li	v0,10
+  20:	0000000c 	syscall
+
+00000024 <factorial>:
+  24:	afbffffc 	sw	ra,-4(sp)
+  28:	afa8fff8 	sw	t0,-8(sp)
+  2c:	afa9fff4 	sw	t1,-12(sp)
+  30:	8fa80000 	lw	t0,0(sp)
+  34:	8fa90004 	lw	t1,4(sp)
+  38:	23bdfff4 	addi	sp,sp,-12
+  3c:	24090001 	li	t1,1
+  40:	1128000a 	beq	t1,t0,6c <return>
+  44:	00000000 	nop
+  48:	2109ffff 	addi	t1,t0,-1
+  4c:	23bdfff8 	addi	sp,sp,-8
+  50:	afa90000 	sw	t1,0(sp)
+  54:	0c000009 	jal	24 <factorial>
+  58:	00000000 	nop
+  5c:	8fa90004 	lw	t1,4(sp)
+  60:	23bd0008 	addi	sp,sp,8
+  64:	01090019 	multu	t0,t1
+  68:	00004812 	mflo	t1
+
+0000006c <return>:
+  6c:	afa90010 	sw	t1,16(sp)
+  70:	afa8000c 	sw	t0,12(sp)
+  74:	8fbf0008 	lw	ra,8(sp)
+  78:	8fa80004 	lw	t0,4(sp)
+  7c:	8fa90000 	lw	t1,0(sp)
+  80:	23bd000c 	addi	sp,sp,12
+  84:	03e00008 	jr	ra
+  88:	00000000 	nop
+
+Disassembly of section .reginfo:
+
+00000000 <.reginfo>:
+   0:	a0002314 	sb	zero,8980(zero)
+	...

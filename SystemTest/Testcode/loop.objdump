@@ -1,0 +1,20 @@
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	24080000 	li	t0,0
+   4:	24090005 	li	t1,5
+
+00000008 <loop>:
+   8:	11090004 	beq	t0,t1,1c <end>
+   c:	00000000 	nop
+  10:	21080001 	addi	t0,t0,1
+  14:	08000002 	j	8 <loop>
+  18:	00000000 	nop
+
+0000001c <end>:
+  1c:	0000000c 	syscall
+
+Disassembly of section .reginfo:
+
+00000000 <.reginfo>:
+   0:	00000300 	sll	zero,zero,0xc
