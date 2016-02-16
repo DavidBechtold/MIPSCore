@@ -29,18 +29,17 @@ namespace MIPSCoreUI.ViewModel
 
         public void Refresh()
         {
-            if (DataWordAddress.Length <= 0)
-                return;
-            
             uint address = 0;
-            try
+            if (dataWordAddress.Length > 0)
             {
-                address = Convert.ToUInt32(DataWordAddress, 16);
-            }
-            catch
-            {
-                DataWordAddress = DataWordAddress.Remove(DataWordAddress.Length - 1);
-                return;
+                try
+                {
+                    address = Convert.ToUInt32(dataWordAddress, 16);
+                }
+                catch
+                {
+                    dataWordAddress = dataWordAddress.Remove(dataWordAddress.Length - 1);
+                }
             }
 
             if (address > dataMemory.GetLastByteAddress - 4)
