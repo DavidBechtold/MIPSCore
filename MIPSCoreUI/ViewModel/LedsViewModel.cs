@@ -42,7 +42,7 @@ namespace MIPSCoreUI.ViewModel
                 }
             }
 
-            if (address > dataMemory.GetLastByteAddress - 4)
+            if (address > dataMemory.GetLastByteAddress - 3)
                 return;
             var word = dataMemory.ReadWord(address).UnsignedDecimal;
             for (var i = 0; i < LedCount; i++)

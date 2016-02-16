@@ -105,7 +105,7 @@ namespace MIPSCore.Instruction_Memory
             }
         }
 
-        public override sealed void Flush()
+        public void Reset()
         {
             GetOpCode = new Word((uint)0);
             GetFunction = new Word((uint)0);
@@ -119,9 +119,15 @@ namespace MIPSCore.Instruction_Memory
             firstCommand = true;
             GetProgramCounter = new Word((uint)0);
             GetActualInstruction = new Word(0);
+        }
 
+        public override sealed void Flush()
+        {
+            Reset();
             base.Flush();
         }
+
+
 
         private Word ReadNextInstuction()
         {

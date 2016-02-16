@@ -7,8 +7,11 @@ namespace MIPSCore
         /* starts the core */
         void StartCore();
 
-        /* stopts the core */
+        /* stops the core */
         void StopCore();
+
+        /* start the loaded programm from new */
+        void ResetCore();
 
         /* set the execution mode to 
          * singleStep: core performs clock only if function singleStep is called 

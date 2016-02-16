@@ -9,6 +9,7 @@ namespace MIPSCore.Instruction_Memory
     public interface IInstructionMemory: IMemory
     {
         void Clock();
+        void Reset();
         new void Flush();
         Word GetOpCode { get; }
         Word GetFunction { get; }

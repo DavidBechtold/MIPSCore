@@ -27,6 +27,7 @@ namespace MIPSCoreUI.ViewModel
         public DelegateCommand Clock { get; private set; }
         public DelegateCommand Run { get; private set; }
         public DelegateCommand Stop { get; private set; }
+        public DelegateCommand Reset { get; private set; }
         public DelegateCommand LoadFile { get; private set; }
         public DelegateCommand ViewHexadecimal { get; private set; }
         public DelegateCommand ViewSignedDecimal { get; private set; }
@@ -78,6 +79,7 @@ namespace MIPSCoreUI.ViewModel
             Clock = new DelegateCommand(OnClock);
             Run = new DelegateCommand(OnRun);
             Stop = new DelegateCommand(OnStop);
+            Reset = new DelegateCommand(OnReset);
             LoadFile = new DelegateCommand(OnLoadFile);
             ViewHexadecimal = new DelegateCommand(() => OnViewRegister(ValueView.HexaDecimal));
             ViewSignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.SignedDecimal));
@@ -123,6 +125,14 @@ namespace MIPSCoreUI.ViewModel
         private void OnStop()
         {
             core.SetMode(ExecutionMode.SingleStep);
+        }
+
+        private void OnReset()
+        {
+            core.ResetCore();
+            mipsRegisterViewModel.Draw();
+            mipsMemoryViewModel.Draw();
+            ledsViewModel.Draw();
         }
 
         private void OnLoadFile()

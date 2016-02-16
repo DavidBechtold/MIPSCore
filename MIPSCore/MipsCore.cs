@@ -46,7 +46,9 @@ namespace MIPSCore
         private readonly MipsProgrammer programmer;
         private string excetpionString;
 
-        private List<uint> breakpoints; 
+        private List<uint> breakpoints;
+
+        private string programmedFilePath;
 
         public MipsCore()
         {
@@ -81,6 +83,8 @@ namespace MIPSCore
             programmCompleted = false;
             excetpionString = "";
             SetMode(ExecutionMode.SingleStep);
+
+            programmedFilePath = "";
         }
 
         private void InitCore()
@@ -105,6 +109,14 @@ namespace MIPSCore
             clock.Stop();
         }
 
+        public void ResetCore()
+        {
+            if (programmedFilePath.Length == 0)
+                return;
+
+            ProgramObjdump(programmedFilePath);
+        }
+
         public void ProgramObjdump(string path)
         {
             InitCore();
@@ -112,6 +124,7 @@ namespace MIPSCore
             try
             {
                 programmer.ProgramObjdump(path);
+                programmedFilePath = path;
             }
             catch (Exception exeption)
             {

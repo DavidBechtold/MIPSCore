@@ -5,18 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:MIPSCoreUI.ViewModel"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:converter="clr-namespace:MIPSCoreUI.Converter"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance d:Type=vm:MemoryViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300"
              Loaded="Window_Loaded">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
     <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-28">
         <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
             <TabControl SelectedIndex="{Binding SelectedMemoryIndex}">
-                <TabItem Header="Text" Height="24" VerticalAlignment="Bottom">
-                    <ListBox ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                <TabItem Header="Text" Height="24" VerticalAlignment="Bottom" >
+                    <ListBox ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
                                 <i:InvokeCommandAction Command="{Binding AddBreakpoint}"/>
@@ -25,7 +26,8 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Ellipse Margin="0,2,0,0" Fill="DarkRed" Height="10" Width="10" Stroke="DarkRed" Visibility="{Binding BreakpointVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                                    <Ellipse Margin="0,0,2,0" Fill="Red" Height="10" Width="10" Stroke="Red"  Visibility="{Binding BreakpointVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                     <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
@@ -46,7 +48,7 @@
                     </ListBox>
                 </TabItem>
                 <TabItem Header="Data" FontSize="13">
-                    <ListBox ItemsSource="{Binding Path=DataList, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                    <ListBox ItemsSource="{Binding Path=DataList, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
