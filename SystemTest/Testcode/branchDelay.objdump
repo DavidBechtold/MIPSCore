@@ -1,0 +1,5 @@
+Disassembly of section .text:
+
+00000000 <loop>:
+   0:	08000000 	j	0 <loop>
+   4:	20210001 	addi	at,at,1
