@@ -18,6 +18,11 @@ namespace MIPSCore
          * runToCompletion: core runs to the exit systemcall
         */
         void SetMode(ExecutionMode executionMode);
+        
+        /* enables the branch delay slot */
+        void SetBranchDelaySlot(bool branchDelay);
+
+        bool GetBranchDelaySlot();
 
         /* perform one clock in singleStep mode */ 
         void SingleClock();

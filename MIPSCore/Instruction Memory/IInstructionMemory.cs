@@ -10,6 +10,8 @@ namespace MIPSCore.Instruction_Memory
     {
         void Clock();
         void Reset();
+        void BranchDelaySlot(bool branchDelay);
+        bool GetBranchDelaySlot();
         new void Flush();
         Word GetOpCode { get; }
         Word GetFunction { get; }

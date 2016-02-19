@@ -46,7 +46,7 @@ namespace MIPSCore
         private readonly MipsProgrammer programmer;
         private string excetpionString;
 
-        private List<uint> breakpoints;
+        private readonly List<uint> breakpoints;
 
         private string programmedFilePath;
 
@@ -142,6 +142,11 @@ namespace MIPSCore
                 case ExecutionMode.RunToCompletion: clock.SingleStep = false; break;
                 default: throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public void SetBranchDelaySlot(bool branchDelay)
+        {
+            InstructionMemory.BranchDelaySlot(branchDelay);
         }
 
         public void SingleClock()
@@ -342,6 +347,16 @@ namespace MIPSCore
         {
             if (breakpoints.Contains(address))
                 breakpoints.Remove(address);
+        }
+
+        public void RemoveAllBreakpoints()
+        {
+            breakpoints.Clear();
+        }
+
+        public bool GetBranchDelaySlot()
+        {
+            return InstructionMemory.GetBranchDelaySlot();
         }
     }
 }

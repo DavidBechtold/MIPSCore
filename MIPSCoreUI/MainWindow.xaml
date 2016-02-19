@@ -21,6 +21,7 @@
                 <MenuItem Header="Core">
                     <MenuItem Header="Load File" HorizontalAlignment="Left" Command="{Binding LoadFile}"/>
                     <MenuItem Header="Settings" HorizontalAlignment="Left" Command="{Binding Settings}"/>
+                    <MenuItem Header="Exit" HorizontalAlignment="Left" Command="{Binding Exit}"/>
                 </MenuItem>
                 <MenuItem Header="View">
                     <MenuItem Header="Value Format">

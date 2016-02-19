@@ -11,6 +11,10 @@ namespace MIPSCore.Instruction_Memory
     public class InstructionMemory : Memory, IInstructionMemory
     {
         private bool firstCommand;
+        private bool branchDelaySlot;
+        private bool instructionDelayed;
+        private Word delayedProgramCounter;
+
 
         public IAlu Alu { get; set; }
         public IControlUnit ControlUnit { get; set; }
@@ -32,6 +36,9 @@ namespace MIPSCore.Instruction_Memory
             : base(size)
         {
             Flush();
+            branchDelaySlot = false;
+            instructionDelayed = false;
+            delayedProgramCounter = new Word((uint) 0);
         }
 
         public void Clock()
@@ -60,8 +67,20 @@ namespace MIPSCore.Instruction_Memory
             GetJumpTarget = GetActualInstruction.GetSubword(6, 26);
         }
 
+        public void BranchDelaySlot(bool branchDelay)
+        {
+            branchDelaySlot = branchDelay;
+        }
+
         private void CalcProgramCounter()
         {
+            if (instructionDelayed)
+            {
+                instructionDelayed = false;
+                GetProgramCounter = delayedProgramCounter;
+                return;
+            }
+
             switch (ControlUnit.ProgramCounterSource)
             {
                 case ProgramCounterSource.ProgramCounter:
@@ -72,33 +91,83 @@ namespace MIPSCore.Instruction_Memory
                     break;
                 case ProgramCounterSource.SignExtendEqual:
                     if (Alu.ZeroFlag)
-                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                    {
+                        if (branchDelaySlot)
+                        {
+                            instructionDelayed = true;
+                            delayedProgramCounter = GetProgramCounter + (uint) ((short) GetImmediate.SignedDecimal*4 + 4);
+                            GetProgramCounter += 4;
+                        }
+                        else
+                            GetProgramCounter += (uint) ((short) GetImmediate.SignedDecimal*4 + 4);
+                    }
                     else
                         GetProgramCounter += 4;
                     break;
                 case ProgramCounterSource.SignExtendUnequal:
                     if (!Alu.ZeroFlag)
-                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                    {
+                        if (branchDelaySlot)
+                        {
+                            instructionDelayed = true;
+                            delayedProgramCounter = GetProgramCounter + (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                            GetProgramCounter += 4;
+                        }
+                        else
+                            GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                    }
                     else
                         GetProgramCounter += 4;
                     break;
                 case ProgramCounterSource.SignExtendLessThanZero:
                     if (Alu.GetResultLo.UnsignedDecimal == 1)
-                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                    {
+                        if (branchDelaySlot)
+                        {
+                            instructionDelayed = true;
+                            delayedProgramCounter = GetProgramCounter + (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                            GetProgramCounter += 4;
+                        }
+                        else
+                            GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                    }
                     else
                         GetProgramCounter += 4;
                     break;
                 case ProgramCounterSource.SignExtendLessOrEqualZero:
                     if (!Alu.ZeroFlag || Alu.GetResultLo.UnsignedDecimal == 1)
-                        GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                    {
+                        if (branchDelaySlot)
+                        {
+                            instructionDelayed = true;
+                            delayedProgramCounter = GetProgramCounter + (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                            GetProgramCounter += 4;
+                        }
+                        else
+                            GetProgramCounter += (uint)((short)GetImmediate.SignedDecimal * 4 + 4);
+                    }
                     else
                         GetProgramCounter += 4;
                     break;
                 case ProgramCounterSource.Jump:
-                    GetProgramCounter = GetJumpTarget * 4;
+                    if (branchDelaySlot)
+                    {
+                        instructionDelayed = true;
+                        delayedProgramCounter = GetJumpTarget * 4;
+                        GetProgramCounter += 4;
+                    }
+                    else
+                        GetProgramCounter = GetJumpTarget*4;
                     break;
                 case ProgramCounterSource.Register:
-                    GetProgramCounter = RegisterFile.ReadRs();
+                    if (branchDelaySlot)
+                    {
+                        instructionDelayed = true;
+                        delayedProgramCounter = RegisterFile.ReadRs();
+                        GetProgramCounter += 4;
+                    }
+                    else
+                        GetProgramCounter = RegisterFile.ReadRs();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -127,7 +196,10 @@ namespace MIPSCore.Instruction_Memory
             base.Flush();
         }
 
-
+        public bool GetBranchDelaySlot()
+        {
+            return branchDelaySlot;
+        }
 
         private Word ReadNextInstuction()
         {

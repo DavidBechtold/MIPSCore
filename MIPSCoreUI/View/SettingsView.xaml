@@ -8,7 +8,7 @@
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         d:DataContext="{d:DesignInstance d:Type=viewModel:SettingsViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        Title="Settings" Height="223" Width="359"
+        Title="Settings" Height="279" Width="359"
         Loaded="Window_Loaded"
         x:Name="Window">
     <Grid>
@@ -33,6 +33,17 @@
                     </DockPanel>
                 </StackPanel>
             </GroupBox>
+            <StackPanel>
+                <GroupBox Header="Core Settings" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Height="28">
+                            <Label Content="Enable Branch Delay Slot:" Width="160"/>
+                            <CheckBox VerticalAlignment="Center" IsChecked="{Binding BranchDelaySlot}"/>
+                        </DockPanel>
+                        
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
             <StackPanel Orientation="Horizontal" Height="40">
                 <Button Command="{Binding Apply}" Content="Apply" Width="50" Margin="5,5,5,5" FontSize="13"/>
                 <Button Content="Close" Width="50" Margin="5,5,5,5" FontSize="13">
@@ -43,6 +54,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
+            
         </StackPanel>
     </Grid>
 </Window>

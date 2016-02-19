@@ -80,6 +80,7 @@ namespace MIPSCoreUI.ViewModel
         private void DrawInstructionMemory()
         {
             List.Clear();
+            core.RemoveAllBreakpoints();
             var instructionMemory = core.InstructionMemory;
             var codeDict = core.Code;
             var codeCounter = 0;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
@@ -33,6 +34,7 @@ namespace MIPSCoreUI.ViewModel
         public DelegateCommand ViewSignedDecimal { get; private set; }
         public DelegateCommand ViewUnsignedDecimal { get; private set; }
         public DelegateCommand Settings { get; private set; }
+        public DelegateCommand Exit { get; private set; }
 
         /* executed command */
         private string executedInstructionName;
@@ -85,6 +87,7 @@ namespace MIPSCoreUI.ViewModel
             ViewSignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.SignedDecimal));
             ViewUnsignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.UnsignedDecimal));
             Settings = new DelegateCommand(OnSettings);
+            Exit = new DelegateCommand(OnExit);
 
             /* state register */
             stateRegisterActive = new SolidColorBrush(Colors.DeepSkyBlue);
@@ -155,6 +158,11 @@ namespace MIPSCoreUI.ViewModel
             var window = new SettingsView();
             window.ShowDialog();
             mipsMemoryViewModel.Draw();
+        }
+
+        private void OnExit()
+        {
+            Application.Current.Shutdown();
         }
 
         private void OnViewRegister(ValueView view)

@@ -74,7 +74,7 @@ namespace MIPSCore.ALU
 
         private void PerformAddU()
         {
-            try { GetResultLo.Set(checked(arg1.UnsignedDecimal + arg2.UnsignedDecimal)); }
+            try { GetResultLo.Set((uint) checked(arg1.SignedDecimal + arg2.SignedDecimal)); }
             catch (OverflowException) { OverflowFlag = true; }
         }
 
@@ -101,7 +101,7 @@ namespace MIPSCore.ALU
 
         private void PerformSubU()
         {
-            try { GetResultLo.Set(checked(arg1.UnsignedDecimal - arg2.UnsignedDecimal)); }
+            try { GetResultLo.Set((uint) checked(arg1.SignedDecimal - arg2.SignedDecimal)); }
             catch (OverflowException) { OverflowFlag = true; }
         }
 

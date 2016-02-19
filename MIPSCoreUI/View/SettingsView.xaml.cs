@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using MIPSCoreUI.Bootstrapper;
+using MIPSCoreUI.ViewModel;
 
 namespace MIPSCoreUI.View
 {
@@ -15,7 +16,8 @@ namespace MIPSCoreUI.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DataContext = CBootstrapper.SettingsViewModel;
+
+            DataContext = new SettingsViewModel(CBootstrapper.Core);
         }
     }
 }
