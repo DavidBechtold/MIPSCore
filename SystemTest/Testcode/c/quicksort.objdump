@@ -1,0 +1,174 @@
+
+quicksort.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	27bdffe8 	addiu	sp,sp,-24
+   4:	afbf0014 	sw	ra,20(sp)
+   8:	afbe0010 	sw	s8,16(sp)
+   c:	03a0f021 	move	s8,sp
+  10:	3c020000 	lui	v0,0x0
+  14:	24430014 	addiu	v1,v0,20
+  18:	3c020000 	lui	v0,0x0
+  1c:	24440000 	addiu	a0,v0,0
+  20:	00602821 	move	a1,v1
+  24:	0c00002b 	jal	ac <quicksort>
+  28:	00000000 	nop
+  2c:	00001021 	move	v0,zero
+  30:	03c0e821 	move	sp,s8
+  34:	8fbf0014 	lw	ra,20(sp)
+  38:	8fbe0010 	lw	s8,16(sp)
+  3c:	27bd0018 	addiu	sp,sp,24
+  40:	03e00008 	jr	ra
+  44:	00000000 	nop
+
+00000048 <swap>:
+  48:	27bdfff0 	addiu	sp,sp,-16
+  4c:	afbe0008 	sw	s8,8(sp)
+  50:	03a0f021 	move	s8,sp
+  54:	afc40010 	sw	a0,16(s8)
+  58:	afc50014 	sw	a1,20(s8)
+  5c:	8fc20010 	lw	v0,16(s8)
+  60:	00000000 	nop
+  64:	8c420000 	lw	v0,0(v0)
+  68:	00000000 	nop
+  6c:	afc20000 	sw	v0,0(s8)
+  70:	8fc20014 	lw	v0,20(s8)
+  74:	00000000 	nop
+  78:	8c430000 	lw	v1,0(v0)
+  7c:	8fc20010 	lw	v0,16(s8)
+  80:	00000000 	nop
+  84:	ac430000 	sw	v1,0(v0)
+  88:	8fc30014 	lw	v1,20(s8)
+  8c:	8fc20000 	lw	v0,0(s8)
+  90:	00000000 	nop
+  94:	ac620000 	sw	v0,0(v1)
+  98:	03c0e821 	move	sp,s8
+  9c:	8fbe0008 	lw	s8,8(sp)
+  a0:	27bd0010 	addiu	sp,sp,16
+  a4:	03e00008 	jr	ra
+  a8:	00000000 	nop
+
+000000ac <quicksort>:
+  ac:	27bdffe0 	addiu	sp,sp,-32
+  b0:	afbf001c 	sw	ra,28(sp)
+  b4:	afbe0018 	sw	s8,24(sp)
+  b8:	03a0f021 	move	s8,sp
+  bc:	afc40020 	sw	a0,32(s8)
+  c0:	afc50024 	sw	a1,36(s8)
+  c4:	8fc30024 	lw	v1,36(s8)
+  c8:	8fc20020 	lw	v0,32(s8)
+  cc:	00000000 	nop
+  d0:	00621023 	subu	v0,v1,v0
+  d4:	28420008 	slti	v0,v0,8
+  d8:	14400038 	bnez	v0,1bc <quicksort+0x110>
+  dc:	00000000 	nop
+  e0:	8fc20020 	lw	v0,32(s8)
+  e4:	00000000 	nop
+  e8:	afc20014 	sw	v0,20(s8)
+  ec:	8fc20020 	lw	v0,32(s8)
+  f0:	00000000 	nop
+  f4:	24420004 	addiu	v0,v0,4
+  f8:	afc20010 	sw	v0,16(s8)
+  fc:	08000053 	j	14c <quicksort+0xa0>
+ 100:	00000000 	nop
+ 104:	8fc20014 	lw	v0,20(s8)
+ 108:	00000000 	nop
+ 10c:	8c430000 	lw	v1,0(v0)
+ 110:	8fc20020 	lw	v0,32(s8)
+ 114:	00000000 	nop
+ 118:	8c420000 	lw	v0,0(v0)
+ 11c:	00000000 	nop
+ 120:	0062102a 	slt	v0,v1,v0
+ 124:	10400009 	beqz	v0,14c <quicksort+0xa0>
+ 128:	00000000 	nop
+ 12c:	8fc40014 	lw	a0,20(s8)
+ 130:	8fc50010 	lw	a1,16(s8)
+ 134:	0c000012 	jal	48 <swap>
+ 138:	00000000 	nop
+ 13c:	8fc20010 	lw	v0,16(s8)
+ 140:	00000000 	nop
+ 144:	24420004 	addiu	v0,v0,4
+ 148:	afc20010 	sw	v0,16(s8)
+ 14c:	8fc20014 	lw	v0,20(s8)
+ 150:	00000000 	nop
+ 154:	24420004 	addiu	v0,v0,4
+ 158:	afc20014 	sw	v0,20(s8)
+ 15c:	8fc30014 	lw	v1,20(s8)
+ 160:	8fc20024 	lw	v0,36(s8)
+ 164:	00000000 	nop
+ 168:	0043102b 	sltu	v0,v0,v1
+ 16c:	1040ffe5 	beqz	v0,104 <quicksort+0x58>
+ 170:	00000000 	nop
+ 174:	8fc20010 	lw	v0,16(s8)
+ 178:	00000000 	nop
+ 17c:	2442fffc 	addiu	v0,v0,-4
+ 180:	8fc40020 	lw	a0,32(s8)
+ 184:	00402821 	move	a1,v0
+ 188:	0c000012 	jal	48 <swap>
+ 18c:	00000000 	nop
+ 190:	8fc20010 	lw	v0,16(s8)
+ 194:	00000000 	nop
+ 198:	2442fffc 	addiu	v0,v0,-4
+ 19c:	8fc40020 	lw	a0,32(s8)
+ 1a0:	00402821 	move	a1,v0
+ 1a4:	0c00002b 	jal	ac <quicksort>
+ 1a8:	00000000 	nop
+ 1ac:	8fc40010 	lw	a0,16(s8)
+ 1b0:	8fc50024 	lw	a1,36(s8)
+ 1b4:	0c00002b 	jal	ac <quicksort>
+ 1b8:	00000000 	nop
+ 1bc:	03c0e821 	move	sp,s8
+ 1c0:	8fbf001c 	lw	ra,28(sp)
+ 1c4:	8fbe0018 	lw	s8,24(sp)
+ 1c8:	27bd0020 	addiu	sp,sp,32
+ 1cc:	03e00008 	jr	ra
+ 1d0:	00000000 	nop
+Disassembly of section .data:
+
+00000000 <_data>:
+   0:	00000007 	srav	zero,zero,zero
+   4:	00000003 	sra	zero,zero,0x0
+   8:	00000004 	sllv	zero,zero,zero
+   c:	00000005 	0x5
+  10:	00000006 	srlv	zero,zero,zero
+  14:	00000001 	0x1
+Disassembly of section .reginfo:
+
+00000000 <.reginfo>:
+   0:	e000003c 	swc0	$0,60(zero)
+	...
+Disassembly of section .pdr:
+
+00000000 <.pdr>:
+   0:	00000000 	nop
+   4:	c0000000 	lwc0	$0,0(zero)
+   8:	fffffffc 	0xfffffffc
+	...
+  14:	00000018 	mult	zero,zero
+  18:	0000001e 	0x1e
+  1c:	0000001f 	0x1f
+  20:	00000048 	0x48
+  24:	40000000 	mfc0	zero,$0
+  28:	fffffff8 	0xfffffff8
+	...
+  34:	00000010 	mfhi	zero
+  38:	0000001e 	0x1e
+  3c:	0000001f 	0x1f
+  40:	000000ac 	0xac
+  44:	c0000000 	lwc0	$0,0(zero)
+  48:	fffffffc 	0xfffffffc
+	...
+  54:	00000020 	add	zero,zero,zero
+  58:	0000001e 	0x1e
+  5c:	0000001f 	0x1f
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	00474343 	0x474343
+   4:	3a202847 	xori	zero,s1,0x2847
+   8:	4e552920 	c3	0x552920
+   c:	342e312e 	ori	t6,at,0x312e
+  10:	Address 0x0000000000000010 is out of bounds.
+
