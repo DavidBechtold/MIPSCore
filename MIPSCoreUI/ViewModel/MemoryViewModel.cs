@@ -89,7 +89,7 @@ namespace MIPSCoreUI.ViewModel
                 var code = "";
                 //var instruction = ReadWordFromMemory(instructionMemory, i);
                 var instruction = instructionMemory.ReadWord(i).Hexadecimal;
-                if ((codeCounter < codeDict.Count) && codeDict.ContainsKey(i))
+                if (codeDict.ContainsKey(i))
                     code += codeDict[i];
                 List.Add(new ListTextDto(i, codeCounter, instruction, code, lineNotActiveColor));
             }

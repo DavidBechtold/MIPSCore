@@ -24,7 +24,7 @@ namespace MIPSCore.Util
             dataSegment = "";
             rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
             //rgxCode = new Regex("((?<=  )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C|\x3C|\x3E)*", RegexOptions.IgnoreCase);
-            rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C)*", RegexOptions.IgnoreCase);
+            rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t|\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C)*", RegexOptions.IgnoreCase);
             Code = new Dictionary<uint, string>();
         }
 
@@ -86,8 +86,7 @@ namespace MIPSCore.Util
                 {
                     var code = stringMatch.Replace('\t', ' ');
                     dict.Add(address, code);
-                }
-                    
+                } 
                 counter++;
             }
         }

@@ -186,7 +186,10 @@ namespace MIPSCore
                 //check breakpoints
                 if (Mode != ExecutionMode.RunToCompletion) return;
                 foreach (var breakpoint in breakpoints.Where(breakpoint => InstructionMemory.GetProgramCounter.UnsignedDecimal == breakpoint))
+                {
                     clock.Stop();
+                    SetMode(ExecutionMode.SingleStep);
+                }
             }
             catch (Exception exeption)
             {
