@@ -38,9 +38,13 @@ namespace MIPSCore.Data_Memory
             {
                 case DataMemoryWordSize.SingleByte:
                     LoadedValue = ReadByte(address);
+                    if (ControlUnit.MemorySignExtend)
+                        LoadedValue.SignExtendSigned(DataMemoryWordSize.SingleByte);
                     break;
                 case DataMemoryWordSize.HalfWord:
                     LoadedValue =  ReadHalfWord(address);
+                    if (ControlUnit.MemorySignExtend)
+                        LoadedValue.SignExtendSigned(DataMemoryWordSize.SingleByte);
                     break;
                 case DataMemoryWordSize.Word:
                     LoadedValue = ReadWord(address);
@@ -48,6 +52,8 @@ namespace MIPSCore.Data_Memory
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+           
         }
 
         private void StoreDataToMemory()

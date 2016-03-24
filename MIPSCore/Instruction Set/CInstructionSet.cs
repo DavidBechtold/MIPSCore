@@ -88,6 +88,9 @@ namespace MIPSCore.Instruction_Set
 
         [XmlElement("memWordSize")]
         public DataMemoryWordSize DataMemWordSize;
+
+        [XmlElement("memSignExtend")]
+        public bool MemSignExtend;
   
         [XmlElement("pcSource")]
         public ProgramCounterSource PcSource;
@@ -109,6 +112,7 @@ namespace MIPSCore.Instruction_Set
             MemWrite = false;
             MemRead = false;
             DataMemWordSize = DataMemoryWordSize.Word;
+            MemSignExtend = false;
             PcSource = ProgramCounterSource.ProgramCounter;
             Systemcall = false;
         }

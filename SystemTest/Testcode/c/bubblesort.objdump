@@ -128,11 +128,11 @@ Disassembly of section .text:
 Disassembly of section .data:
 
 00000000 <_data>:
-   0:	00000007 	srav	zero,zero,zero
-   4:	00000003 	sra	zero,zero,0x0
-   8:	00000004 	sllv	zero,zero,zero
-   c:	00000005 	0x5
-  10:	00000006 	srlv	zero,zero,zero
+   0:	000007de 	0x7de
+   4:	0000021d 	0x21d
+   8:	00000018 	mult	zero,zero
+   c:	00000078 	0x78
+  10:	00000037 	0x37
   14:	00000001 	0x1
 Disassembly of section .sdata:
 

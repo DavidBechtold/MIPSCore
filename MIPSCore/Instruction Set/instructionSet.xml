@@ -33,6 +33,7 @@
        aluSource:       from where the alu should the value to calculate the result
                         RegFile...take the values from the Register file (Rd = Rs + Rt => alu takes the Rs And Rt Register to calculate the value)
                         SignExtend...take the value from Register And signExtender (Rt = Rs + imm. => alu takes Rs And imm. to calculate the value)
+                        SignExtendZero...sign extend with zeros
                         
        aluControl:      which action the alu should perform
                         And...simple And
@@ -60,6 +61,9 @@
                         SingleByte...one byte
                         HalfWord...half Word
                         Word...Word
+                        
+      memSignExtend:    true if the loaded value needs to be sign extended (lb and lbu)
+      
       
       pcSource:         from where should the program counter take the next value
                         ProgramCounter...take the value from the program counter (pc = pc + 4)
@@ -92,6 +96,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -112,6 +117,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -132,6 +138,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>Register</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -152,6 +159,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>true</systemcall>
   </CInstruction>
@@ -172,6 +180,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -192,6 +201,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -212,6 +222,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -232,6 +243,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -252,6 +264,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -272,6 +285,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -292,6 +306,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -312,6 +327,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -332,6 +348,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -352,12 +369,13 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
 
   <CInstruction>
-    <name>exclusice or</name>
+    <name>exclusive or</name>
     <assembler>xor</assembler>
     <example>xor Rd, Rs, Rt</example>
     <meaning>Rd = Rs Xor Rt</meaning>
@@ -372,6 +390,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -392,6 +411,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -412,6 +432,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -432,6 +453,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -453,6 +475,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>SignExtendLessThanZero</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -473,6 +496,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>SignExtendEqual</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -493,6 +517,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>SignExtendUnequal</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -513,6 +538,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>SignExtendLessOrEqualZero</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -533,6 +559,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -553,6 +580,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -573,6 +601,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -588,11 +617,33 @@
     <regWrite>true</regWrite>
     <regDestination>Rt</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>SignExtendZero</aluSource>
     <aluControl>SetLessThanU</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>ProgramCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>And imm.</name>
+    <assembler>andi</assembler>
+    <example>andi Rt, Rs, imm</example>
+    <meaning>Rt = Rs And imm</meaning>
+    <format>I</format>
+    <opcode>12</opcode>
+    <function>0</function>
+    <regWrite>true</regWrite>
+    <regDestination>Rt</regDestination>
+    <regFileInput>AluLo</regFileInput>
+    <aluSource>SignExtendZero</aluSource>
+    <aluControl>And</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -608,11 +659,12 @@
     <regWrite>true</regWrite>
     <regDestination>Rt</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>SignExtendZero</aluSource>
     <aluControl>Or</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -628,11 +680,12 @@
     <regWrite>true</regWrite>
     <regDestination>Rt</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>SignExtendZero</aluSource>
     <aluControl>Xor</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -648,11 +701,12 @@
     <regWrite>true</regWrite>
     <regDestination>Rt</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>SignExtendZero</aluSource>
     <aluControl>ShiftLeft16</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -673,6 +727,7 @@
     <memWrite>false</memWrite>
     <memRead>true</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>true</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -693,6 +748,7 @@
     <memWrite>false</memWrite>
     <memRead>true</memRead>
     <memWordSize>HalfWord</memWordSize>
+    <memSignExtend>true</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -713,6 +769,7 @@
     <memWrite>false</memWrite>
     <memRead>true</memRead>
     <memWordSize>Word</memWordSize>
+    <memSignExtend>true</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -733,6 +790,7 @@
     <memWrite>false</memWrite>
     <memRead>true</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -753,6 +811,7 @@
     <memWrite>false</memWrite>
     <memRead>true</memRead>
     <memWordSize>HalfWord</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -773,6 +832,7 @@
     <memWrite>true</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -793,6 +853,7 @@
     <memWrite>true</memWrite>
     <memRead>false</memRead>
     <memWordSize>HalfWord</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -813,6 +874,7 @@
     <memWrite>true</memWrite>
     <memRead>false</memRead>
     <memWordSize>Word</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>ProgramCounter</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -834,6 +896,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>Jump</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
@@ -854,6 +917,7 @@
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
     <pcSource>Jump</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>

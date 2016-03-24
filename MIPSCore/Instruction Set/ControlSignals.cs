@@ -16,7 +16,8 @@ namespace MIPSCore.Instruction_Set
     }
     public enum AluSource { 
         [Text("Register file")] RegFile, 
-        [Text("Sign extend")] SignExtend 
+        [Text("Sign extend")] SignExtend,
+        [Text("Sign extend zero")] SignExtendZero
     }
     public enum AluControl {
         [Text("And")] And,
@@ -76,6 +77,7 @@ namespace MIPSCore.Instruction_Set
         public bool RegisterWrite { get; private set; }
         public bool MemoryWrite { get; private set; }
         public bool MemoryRead { get; private set; }
+        public bool MemorySignExtend { get; private set; }
         public RegisterFileInput RegisterFileInput { get; private set; }
         public ProgramCounterSource ProgramCounterSource { get; private set; }
         public DataMemoryWordSize DataMemoryWordSize { get; private set; }
@@ -119,6 +121,7 @@ namespace MIPSCore.Instruction_Set
             RegisterWrite = instruction.RegWrite;
             MemoryWrite = instruction.MemWrite;
             MemoryRead = instruction.MemRead;
+            MemorySignExtend = instruction.MemSignExtend;
             RegisterFileInput = instruction.RegFileInput;
             ProgramCounterSource = instruction.PcSource;
             DataMemoryWordSize = instruction.DataMemWordSize;
@@ -167,8 +170,14 @@ namespace MIPSCore.Instruction_Set
             else
                 rString += "no \n";
             rString += "Data Memory Size:\t" + DataMemoryWordSize.ToText() + "\n";
-            rString += RepeatString("-", 80);
+            
+            rString += "Data Memory Sign Extend:\t";
+            if (MemorySignExtend)
+                rString += "yes \n";
+            else
+                rString += "no \n";
 
+            rString += RepeatString("-", 80);
             /* PROGRAMCOUNTER */
             rString += "Program Counter Input:\t" + ProgramCounterSource.ToText() + "\n";
 

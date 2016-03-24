@@ -71,7 +71,6 @@ namespace MIPSCore.Util._Memory
         public void WriteByte(Word byteVal, uint byteAddress)
         {
             if (byteVal == null) throw new ArgumentNullException("byteVal");
-            if (byteVal.UnsignedDecimal > byte.MaxValue) throw new ArgumentOutOfRangeException("byteVal");
 
             byteAddress = CheckAndCalculateAddress(byteAddress, 0);
             changedWordAddresses.Add(byteAddress / 4);
@@ -88,7 +87,6 @@ namespace MIPSCore.Util._Memory
         public void WriteHalfWord(Word halfword, uint byteAddress)
         {
             if (halfword == null) throw new ArgumentNullException("halfword");
-            if (halfword.UnsignedDecimal > ushort.MaxValue) throw new ArgumentOutOfRangeException("halfword");
 
             byteAddress = CheckAndCalculateAddress(byteAddress, 1);
             changedWordAddresses.Add(byteAddress / 4);
@@ -155,7 +153,15 @@ namespace MIPSCore.Util._Memory
             byteAddress = CheckAndCalculateAddress(byteAddress, 3);
             if (changedWordAddresses.Contains(byteAddress))
                 changedWordAddresses.Remove(byteAddress);
+
+            var test = (memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) |
+                       (memory[byteAddress + 2] << 8 | memory[byteAddress + 3]);
+            var test1 = memory[byteAddress + 3];
+            var test2 = memory[byteAddress + 2];
+            var test3 = memory[byteAddress + 1];
+            var test4 = memory[byteAddress ];
             return new Word((uint)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
+            //return new Word((uint)((memory[byteAddress + 1] << 24 | memory[byteAddress] << 16) | (memory[byteAddress + 3] << 8 | memory[byteAddress + 2])));
         }
 
         public Word ReadWord(Word byteAddress)

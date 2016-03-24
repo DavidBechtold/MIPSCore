@@ -11,7 +11,7 @@ namespace MIPSCore.Util
         private readonly MipsCore core;
         private readonly Regex rgx;
         private readonly Regex rgxCode;
-        private readonly string[] segments = { ".text", ".reginfo", ".data" };
+        private readonly string[] segments = { ".text", ".rodata", ".data", ".pdr", ".sbss", ".comment", ".reginfo"};
         private string textSegment;
         private string dataSegment;
         public Dictionary<uint, string> Code { get; private set; }
@@ -23,7 +23,6 @@ namespace MIPSCore.Util
             textSegment = "";
             dataSegment = "";
             rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
-            //rgxCode = new Regex("((?<=  )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C|\x3C|\x3E)*", RegexOptions.IgnoreCase);
             rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t|\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C)*", RegexOptions.IgnoreCase);
             Code = new Dictionary<uint, string>();
         }
@@ -37,7 +36,7 @@ namespace MIPSCore.Util
             var dataMatch = rgx.Matches(dataSegment);
             var codeMatch = rgxCode.Matches(textSegment);
 
-            if (textMatch.Count / 2 * 4 >= core.InstructionMemory.SizeBytes)
+            if ((textMatch.Count)/ 2 * 4 >= core.InstructionMemory.SizeBytes)
                 throw new IndexOutOfRangeException(".text segment is greater than " + core.InstructionMemory.SizeBytes + ".");
             if(dataMatch.Count / 2 * 4 >= core.DataMemory.SizeBytes)
                 throw new IndexOutOfRangeException(".data segment is greater than " + core.DataMemory.SizeBytes + ".");
@@ -103,6 +102,8 @@ namespace MIPSCore.Util
 
             foreach (var s in segments)
             {
+                if(segment == s)
+                    continue;
                 var tempSegmentEnd = file.IndexOf(s, segmentStart, StringComparison.Ordinal);
                 if ((tempSegmentEnd > 0) && (tempSegmentEnd > segmentStart) && (tempSegmentEnd < segmentEnd))
                     segmentEnd = tempSegmentEnd;

@@ -73,8 +73,6 @@ namespace MIPSCoreUI.ViewModel
                 core.AddBreakpoint(List[SelectedItem.Number].Address);
             List[SelectedItem.Number].BreakpointVisible = !List[SelectedItem.Number].BreakpointVisible;
             List[SelectedItem.Number].Changed();
-
-            
         }
 
         private void DrawInstructionMemory()

@@ -17,6 +17,7 @@
         bool RegisterWrite { get; }
         bool MemoryWrite { get; }
         bool MemoryRead { get; }
+        bool MemorySignExtend { get; }
         RegisterFileInput RegisterFileInput { get; }
         ProgramCounterSource ProgramCounterSource { get; }
         DataMemoryWordSize DataMemoryWordSize { get; }

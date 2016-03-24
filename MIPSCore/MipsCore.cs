@@ -30,11 +30,6 @@ namespace MIPSCore
         public event EventHandler Completed;
         public event EventHandler Clocked;
         public event EventHandler Exception;
-        
-        private const ulong StdCoreFrequencyHz = 100;
-        private const MemorySize StdInstructionMemorySizeKb = MemorySize.Size1Kb;
-        private const MemorySize StdDataMemorySizeKb = MemorySize.Size1Kb;
-        private const bool StdInitStackPointer = true;
 
         private ulong coreFrequencyHz;
         private MemorySize instructionMemorySizeKb;
@@ -53,7 +48,12 @@ namespace MIPSCore
         public MipsCore()
         {
             /* read config file */
-            ReadConfigFile();
+            //ReadConfigFile();
+
+            coreFrequencyHz = 100;
+            instructionMemorySizeKb = MemorySize.Size1Kb;
+            dataMemorySizeKb = MemorySize.Size1Kb;
+            initStackPointer = true;
 
             /* bootstrapping */
             InstructionMemory = new InstructionMemory(instructionMemorySizeKb);
@@ -198,9 +198,9 @@ namespace MIPSCore
             }
         }
         
-        public void ReadConfigFile()
+        /*public void ReadConfigFile()
         {
-            /* CoreFrequency */
+            // CoreFrequency
             try { coreFrequencyHz = Convert.ToUInt64(ConfigurationManager.AppSettings["CoreFrequency_Hz"]); }
             catch (FormatException)
             {
@@ -214,7 +214,7 @@ namespace MIPSCore
                 coreFrequencyHz = StdCoreFrequencyHz; 
             }
 
-            /* InstructionMemorySize */
+            // InstructionMemorySize 
             try { instructionMemorySizeKb = (MemorySize)Enum.Parse(typeof(MemorySize), ConfigurationManager.AppSettings["InstructionMemorySize_kB"]); }
             catch (ArgumentNullException)
             {
@@ -227,7 +227,7 @@ namespace MIPSCore
                 instructionMemorySizeKb = StdInstructionMemorySizeKb; 
             }
 
-            /* DataMemorySize */
+            // DataMemorySize 
             try { dataMemorySizeKb = (MemorySize)Enum.Parse(typeof(MemorySize), ConfigurationManager.AppSettings["DataMemorySize_kB"]); }
             catch (ArgumentNullException)
             {
@@ -240,14 +240,14 @@ namespace MIPSCore
                 dataMemorySizeKb = StdDataMemorySizeKb;
             }
             
-            /* InitialiseStackPointer */
+            // InitialiseStackPointer 
             try { initStackPointer = Convert.ToBoolean(ConfigurationManager.AppSettings["InitialiseStackPointer"]); }
             catch (FormatException)
             {
                 Console.WriteLine("Configuration Value " + ConfigurationManager.AppSettings["InitialiseStackPointer"] + " can not be converted to an boolean value for InitialiseStackPointer. Standard value " + StdInitStackPointer + " is used.");
                 initStackPointer = StdInitStackPointer;
             }
-        }
+        }*/
 
         public uint DataMemorySizeBytes()
         {

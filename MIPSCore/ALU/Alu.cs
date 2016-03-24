@@ -204,6 +204,10 @@ namespace MIPSCore.ALU
                     InstructionMemory.GetImmediate.SignExtendSigned();
                     arg2 = InstructionMemory.GetImmediate;
                     break;
+                case AluSource.SignExtendZero:
+                    InstructionMemory.GetImmediate.SignExtendUnsigned();
+                    arg2 = InstructionMemory.GetImmediate;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(GetType().Name + ": AluSrc out of range");
             }

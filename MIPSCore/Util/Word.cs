@@ -1,4 +1,5 @@
 ﻿using System;
+using MIPSCore.Instruction_Set;
 
 namespace MIPSCore.Util
 {
@@ -28,9 +29,9 @@ namespace MIPSCore.Util
             SetBinary(binary);
         }
 
-        public void SignExtendSigned()
+        public void SignExtendSigned(uint msb)
         {
-            if ((SignedDecimal & 32768) == 32768)
+            if ((SignedDecimal & msb) == msb)
             {
                 Hexadecimal = Convert.ToString(SignedDecimal, 16).PadLeft(8, 'F').ToUpper();
                 SignedDecimal = Convert.ToInt32(Hexadecimal, 16);
@@ -45,6 +46,20 @@ namespace MIPSCore.Util
                 Binary = Convert.ToString(SignedDecimal, 2).PadLeft(32, '0');
                 signed = true;
             }
+        }
+
+        public void SignExtendSigned(DataMemoryWordSize dataSize)
+        {
+            switch (dataSize)
+            {
+                case DataMemoryWordSize.SingleByte: SignExtendSigned(128); break;
+                case DataMemoryWordSize.HalfWord: SignExtendSigned(32768); break;
+            }
+        }
+
+        public void SignExtendSigned()
+        {
+            SignExtendSigned(32768);
         }
 
         public void SignExtendUnsigned()
