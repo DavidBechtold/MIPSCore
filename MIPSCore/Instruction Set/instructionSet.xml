@@ -12,6 +12,7 @@
                         
         opcode:         the opcode of the instruction (UInt)
         function:       the function code of the instruction (UInt)
+        rd:             for special I Format branches
         
         regWrite:       declares if a value has to be written to a Register in the Registerfile
                         true...specified Register in the Registerfile gets overwritten (Rd = Rs + Rt => Rd gets overwritten)
@@ -29,11 +30,16 @@
                         AluHi...overwrite the Register value with the alu high Register
                         DataMemory...overwrite the Register value with the value from the data memory
                         ProgramCounter...overwrite the Register value with the value of the program counter (Rd = pc + 4)
-                        
+                     
        aluSource:       from where the alu should the value to calculate the result
-                        RegFile...take the values from the Register file (Rd = Rs + Rt => alu takes the Rs And Rt Register to calculate the value)
-                        SignExtend...take the value from Register And signExtender (Rt = Rs + imm. => alu takes Rs And imm. to calculate the value)
-                        SignExtendZero...sign extend with zeros
+                        Rt...take argument raw from Rt register
+                        RtSignExtend
+                        RtSignExtendZero
+                        Rd...take argument raw from Rd register
+                        RdSignExtend
+                        RdSignExtendZero
+                        ImmSignExtend...take argument raw from Immediate register
+                        ImmSignExtendZero...sign extend with zeros
                         
        aluControl:      which action the alu should perform
                         And...simple And
@@ -46,6 +52,7 @@
                         SetLessThan...set on less than
                         SetLessThanU...set on less than unsigned
                         SetLessThanZero...set on less than zero
+                        SetGreaterEqualZero...set on greater equal zero
                         Mult...Multiply
                         Div...divide
                         ShiftLeft...shift left
@@ -89,10 +96,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>ShiftLeft</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -110,10 +118,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>2</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>ShiftRight</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -131,10 +140,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>8</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Stall</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -152,10 +162,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>12</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Stall</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -173,10 +184,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>16</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluHi</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Stall</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -194,10 +206,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>18</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Stall</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -215,10 +228,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>24</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Mult</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -236,10 +250,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>25</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Multu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -257,10 +272,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>32</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -278,10 +294,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>33</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Addu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -299,10 +316,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>34</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Sub</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -320,10 +338,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>35</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Subu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -341,10 +360,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>36</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>And</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -362,10 +382,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>37</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Or</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -383,10 +404,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>38</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Xor</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -404,10 +426,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>39</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Nor</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -425,10 +448,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>42</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>RtSignExtend</aluSource>
     <aluControl>SetLessThan</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -446,10 +470,11 @@
     <format>R</format>
     <opcode>0</opcode>
     <function>43</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>RtSignExtendZero</aluSource>
     <aluControl>SetLessThanU</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -468,11 +493,36 @@
     <format>I</format>
     <opcode>1</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <!-- <aluSource>RegFile</aluSource> -->
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>SetLessThanZero</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>SignExtendLessThanZero</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>branch on greater equal zero</name>
+    <assembler>bgez</assembler>
+    <example>bgez Rs, imm</example>
+    <meaning>if Rs&gt;=0: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>1</opcode>
+    <function>0</function>
+    <rd>1</rd>
+    <regWrite>false</regWrite>
+    <regDestination>Rd</regDestination>
+    <regFileInput>AluLo</regFileInput>
+    <!-- <aluSource>RegFile</aluSource> -->
+    <aluSource>ImmSignExtend</aluSource>
+    <aluControl>SetGreaterEqualZero</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
@@ -484,15 +534,16 @@
   <CInstruction>
     <name>branch on equal</name>
     <assembler>beq</assembler>
-    <example>beq Rs, Rt, imm</example>
+    <example>beq Rd, Rs, imm</example>
     <meaning>if Rs==Rt: pc += imm * 4 + 4</meaning>
     <format>I</format>
     <opcode>4</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rd</aluSource>
     <aluControl>Subu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -505,15 +556,16 @@
   <CInstruction>
     <name>branch on not equal</name>
     <assembler>bneq</assembler>
-    <example>bneq Rs, Rt, imm</example>
-    <meaning>if Rs!=Rt: pc += imm * 4 + 4</meaning>
+    <example>bneq Rd, Rs, imm</example>
+    <meaning>if Rs!=Rd: pc += imm * 4 + 4</meaning>
     <format>I</format>
     <opcode>5</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rd</aluSource>
     <aluControl>Subu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -526,15 +578,16 @@
   <CInstruction>
     <name>branch on less than Or equal to zero</name>
     <assembler>blez</assembler>
-    <example>beq Rs, Rt, imm</example>
+    <example>beq Rd, Rt, imm</example>
     <meaning>if Rs&lt;=Rt: pc += imm * 4 + 4</meaning>
     <format>I</format>
     <opcode>6</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>SetLessThan</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -543,19 +596,22 @@
     <pcSource>SignExtendLessOrEqualZero</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
+  
+  <!--TODO BGTZ -->
 
   <CInstruction>
     <name>addition imm. unsigned</name>
     <assembler>addi</assembler>
-    <example>addi Rt, Rs, imm</example>
-    <meaning>Rt = Rs + imm</meaning>
+    <example>addi Rd, Rs, imm</example>
+    <meaning>Rd = Rs + imm</meaning>
     <format>I</format>
     <opcode>8</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -568,15 +624,16 @@
   <CInstruction>
     <name>addition imm. unsigned</name>
     <assembler>addiu</assembler>
-    <example>addiu Rt, Rs, imm</example>
-    <meaning>Rt = Rs + imm</meaning>
+    <example>addiu Rd, Rs, imm</example>
+    <meaning>Rd = Rs + imm</meaning>
     <format>I</format>
     <opcode>9</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Addu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -589,15 +646,16 @@
   <CInstruction>
     <name>set less than imm.</name>
     <assembler>slti</assembler>
-    <example>slti Rt, Rs, imm</example>
-    <meaning>if Rs&lt;imm: Rt=1 else Rt=0</meaning>
+    <example>slti Rd, Rs, imm</example>
+    <meaning>if Rs&lt;imm: Rd=1 else Rd=0</meaning>
     <format>I</format>
     <opcode>10</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>SetLessThan</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -610,15 +668,16 @@
   <CInstruction>
     <name>set less than imm. unsigned</name>
     <assembler>sltiu</assembler>
-    <example>sltiu Rt, Rs, imm</example>
+    <example>sltiu Rd, Rs, imm</example>
     <meaning>if Rs&lt;imm: Rt=1 else Rt=0</meaning>
     <format>I</format>
     <opcode>11</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtendZero</aluSource>
+    <aluSource>ImmSignExtendZero</aluSource>
     <aluControl>SetLessThanU</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -631,15 +690,16 @@
   <CInstruction>
     <name>And imm.</name>
     <assembler>andi</assembler>
-    <example>andi Rt, Rs, imm</example>
-    <meaning>Rt = Rs And imm</meaning>
+    <example>andi Rd, Rs, imm</example>
+    <meaning>Rd = Rs And imm</meaning>
     <format>I</format>
     <opcode>12</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtendZero</aluSource>
+    <aluSource>ImmSignExtendZero</aluSource>
     <aluControl>And</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -652,15 +712,16 @@
   <CInstruction>
     <name>Or imm.</name>
     <assembler>ori</assembler>
-    <example>ori Rt, Rs, imm</example>
-    <meaning>Rt = Rs Or imm</meaning>
+    <example>ori Rd, Rs, imm</example>
+    <meaning>Rd = Rs Or imm</meaning>
     <format>I</format>
     <opcode>13</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtendZero</aluSource>
+    <aluSource>ImmSignExtendZero</aluSource>
     <aluControl>Or</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -673,15 +734,16 @@
   <CInstruction>
     <name>Xor imm.</name>
     <assembler>xori</assembler>
-    <example>xori Rt, Rs, imm</example>
-    <meaning>Rt = Rs Xor imm</meaning>
+    <example>xori Rd, Rs, imm</example>
+    <meaning>Rd = Rs Xor imm</meaning>
     <format>I</format>
     <opcode>14</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtendZero</aluSource>
+    <aluSource>ImmSignExtendZero</aluSource>
     <aluControl>Xor</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -694,15 +756,16 @@
   <CInstruction>
     <name>load upper immediate</name>
     <assembler>lui</assembler>
-    <example>lui Register, imm</example>
-    <meaning>Register = imm &lt;&lt; 16</meaning>
+    <example>lui rd, imm</example>
+    <meaning>rd = imm &lt;&lt; 16</meaning>
     <format>I</format>
     <opcode>15</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtendZero</aluSource>
+    <aluSource>ImmSignExtendZero</aluSource>
     <aluControl>ShiftLeft16</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -715,15 +778,16 @@
   <CInstruction>
     <name>load byte</name>
     <assembler>lb</assembler>
-    <example>lb Rt, imm(Rs)</example>
-    <meaning>Rt = Mem[Rs + imm]</meaning>
+    <example>lb Rd, imm(Rs)</example>
+    <meaning>Rd = Mem[Rs + imm]</meaning>
     <format>I</format>
     <opcode>32</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>DataMemory</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>false</memWrite>
     <memRead>true</memRead>
@@ -736,15 +800,16 @@
   <CInstruction>
     <name>load half Word</name>
     <assembler>lh</assembler>
-    <example>lh Rt, imm(Rs)</example>
-    <meaning>Rt = Mem[Rs + imm]</meaning>
+    <example>lh Rd, imm(Rs)</example>
+    <meaning>Rd = Mem[Rs + imm]</meaning>
     <format>I</format>
     <opcode>33</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>DataMemory</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>false</memWrite>
     <memRead>true</memRead>
@@ -757,15 +822,16 @@
   <CInstruction>
     <name>load Word</name>
     <assembler>lw</assembler>
-    <example>lw Rt, imm(Rs)</example>
-    <meaning>Rt = Mem[Rs + imm]</meaning>
+    <example>lw Rd, imm(Rs)</example>
+    <meaning>Rd = Mem[Rs + imm]</meaning>
     <format>I</format>
     <opcode>35</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>DataMemory</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>false</memWrite>
     <memRead>true</memRead>
@@ -778,15 +844,16 @@
   <CInstruction>
     <name>load byte unsigned</name>
     <assembler>lbu</assembler>
-    <example>lbu Rt, imm(Rs)</example>
-    <meaning>Rt = Mem[Rs + imm]</meaning>
+    <example>lbu Rd, imm(Rs)</example>
+    <meaning>Rd = Mem[Rs + imm]</meaning>
     <format>I</format>
     <opcode>36</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>DataMemory</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Addu</aluControl>
     <memWrite>false</memWrite>
     <memRead>true</memRead>
@@ -799,15 +866,16 @@
   <CInstruction>
     <name>load half Word unsigned</name>
     <assembler>lhu</assembler>
-    <example>lhu Rt, imm(Rs)</example>
-    <meaning>Rt = Mem[Rs + imm]</meaning>
+    <example>lhu Rd, imm(Rs)</example>
+    <meaning>Rd = Mem[Rs + imm]</meaning>
     <format>I</format>
     <opcode>37</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>DataMemory</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Addu</aluControl>
     <memWrite>false</memWrite>
     <memRead>true</memRead>
@@ -820,15 +888,16 @@
   <CInstruction>
     <name>store byte</name>
     <assembler>sb</assembler>
-    <example>sb Rt, imm(Rs)</example>
-    <meaning>Mem[Rs + imm] = Rt</meaning>
+    <example>sb Rd, imm(Rs)</example>
+    <meaning>Mem[Rs + imm] = Rd</meaning>
     <format>I</format>
     <opcode>40</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>true</memWrite>
     <memRead>false</memRead>
@@ -841,15 +910,16 @@
   <CInstruction>
     <name>store half Word</name>
     <assembler>sh</assembler>
-    <example>sh Rt, imm(Rs)</example>
-    <meaning>Mem[Rs + imm] = Rt</meaning>
+    <example>sh Rd, imm(Rs)</example>
+    <meaning>Mem[Rs + imm] = Rd</meaning>
     <format>I</format>
     <opcode>41</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>true</memWrite>
     <memRead>false</memRead>
@@ -862,15 +932,16 @@
   <CInstruction>
     <name>store Word</name>
     <assembler>sw</assembler>
-    <example>sw Rt, imm(Rs)</example>
-    <meaning>Mem[Rs + imm] = Rt</meaning>
+    <example>sw Rd, imm(Rs)</example>
+    <meaning>Mem[Rs + imm] = Rd</meaning>
     <format>I</format>
     <opcode>43</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
-    <regDestination>Rt</regDestination>
+    <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource>SignExtend</aluSource>
+    <aluSource>ImmSignExtend</aluSource>
     <aluControl>Add</aluControl>
     <memWrite>true</memWrite>
     <memRead>false</memRead>
@@ -889,10 +960,11 @@
     <format>J</format>
     <opcode>2</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>false</regWrite>
     <regDestination>Ra</regDestination>
     <regFileInput>ProgramCounter</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Stall</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
@@ -910,10 +982,11 @@
     <format>J</format>
     <opcode>3</opcode>
     <function>0</function>
+    <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Ra</regDestination>
     <regFileInput>ProgramCounter</regFileInput>
-    <aluSource>RegFile</aluSource>
+    <aluSource>Rt</aluSource>
     <aluControl>Stall</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>

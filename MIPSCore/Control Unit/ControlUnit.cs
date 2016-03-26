@@ -13,11 +13,12 @@ namespace MIPSCore.Control_Unit
             // 1.) take the input from the instruction fetch
             var opCode = InstructionMemory.GetOpCode;
             var function = InstructionMemory.GetFunction;
+            var rd = InstructionMemory.GetRd;
 
             // 2.) interpret the opCode and function
             try
             {
-                PrepareControlSignals(opCode, function);
+                PrepareControlSignals(opCode, function, rd);
             }
             catch (ArgumentOutOfRangeException)
             {

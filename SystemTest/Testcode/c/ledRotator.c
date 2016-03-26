@@ -1,4 +1,6 @@
-const unsigned int msb = 0x80000000;
+#define msb 0x80000000
+
+//const unsigned int msb = 0x80000000;
 unsigned int *address = (unsigned int*) 0xA0;
 
 

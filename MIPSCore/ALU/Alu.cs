@@ -50,6 +50,7 @@ namespace MIPSCore.ALU
                 case AluControl.SetLessThan:    PerformSetOnLessThen(); break;
                 case AluControl.SetLessThanU:   PerformSetOnLessThenU();break;
                 case AluControl.SetLessThanZero:PerformSetOnLessThanZ();break;
+                case AluControl.SetGreaterEqualZero: PerformSetGreaterEqualZero(); break;
                 case AluControl.Mult:           PerformMult();          break;
                 case AluControl.Multu:          PerformMultU();         break;
                 case AluControl.Div:            PerformDiv();           break;
@@ -128,6 +129,14 @@ namespace MIPSCore.ALU
                 GetResultLo.Set((uint)0);
         }
 
+        private void PerformSetGreaterEqualZero()
+        {
+            if (arg1.SignedDecimal >= 0)
+                GetResultLo.Set((uint)1);
+            else
+                GetResultLo.Set((uint)0);
+        }
+
         private void PerformShift(bool left)
         {
             var shiftAmount = InstructionMemory.GetShiftAmount.UnsignedDecimal;
@@ -197,21 +206,15 @@ namespace MIPSCore.ALU
             arg1 = RegisterFile.ReadRs();
             switch (ControlUnit.AluSource)
             {
-                /* if the regFile signal is set take the rt register from the register file */
-                case AluSource.RegFile:
-                    arg2 = RegisterFile.ReadRt();
-                    break;
-                /* if the signExtend signal is set take the register from the sign extender */
-                case AluSource.SignExtend:
-                    InstructionMemory.GetImmediate.SignExtendSigned();
-                    arg2 = InstructionMemory.GetImmediate;
-                    break;
-                case AluSource.SignExtendZero:
-                    InstructionMemory.GetImmediate.SignExtendUnsigned();
-                    arg2 = InstructionMemory.GetImmediate;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(GetType().Name + ": AluSrc out of range");
+                case AluSource.Rd: arg2 = RegisterFile.ReadRd(); break;
+                case AluSource.RdSignExtend: arg2 = RegisterFile.ReadRd().SignExtend(); break;
+                case AluSource.RdSignExtendZero: arg2 = RegisterFile.ReadRd().SignExtendZero(); break;
+                case AluSource.Rt: arg2 = RegisterFile.ReadRt(); break;
+                case AluSource.RtSignExtend: arg2 = RegisterFile.ReadRt().SignExtend(); break;
+                case AluSource.RtSignExtendZero: arg2 = RegisterFile.ReadRt().SignExtendZero(); break;
+                case AluSource.ImmSignExtend: arg2 = InstructionMemory.GetImmediate.SignExtend(); break;
+                case AluSource.ImmSignExtendZero: arg2 = InstructionMemory.GetImmediate.SignExtendZero(); break;
+                default: throw new ArgumentOutOfRangeException();
             }
         }
 

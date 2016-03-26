@@ -15,9 +15,14 @@ namespace MIPSCore.Instruction_Set
         [Text("Ra")] Ra 
     }
     public enum AluSource { 
-        [Text("Register file")] RegFile, 
-        [Text("Sign extend")] SignExtend,
-        [Text("Sign extend zero")] SignExtendZero
+        [Text("Rt")] Rt,
+        [Text("Rt sign extend")]  RtSignExtend,
+        [Text("Rt sign extend zero")] RtSignExtendZero,
+        [Text("Rd")] Rd,
+        [Text("Rd sign extend")] RdSignExtend,
+        [Text("Rd sign extend zero")] RdSignExtendZero,
+        [Text("Immediate sign extend")] ImmSignExtend,
+        [Text("Immediate sign extend zero")] ImmSignExtendZero
     }
     public enum AluControl {
         [Text("And")] And,
@@ -30,6 +35,7 @@ namespace MIPSCore.Instruction_Set
         [Text("Set less than")] SetLessThan,
         [Text("Set less than unsigned")] SetLessThanU,
         [Text("set less than zero")] SetLessThanZero,
+        [Text("set less than zero")] SetGreaterEqualZero,
         [Text("Multiply")] Mult,
         [Text("Multiply unsigned")] Multu,
         [Text("Divide")] Div,
@@ -102,9 +108,9 @@ namespace MIPSCore.Instruction_Set
             instruction = new CInstruction();
         }
 
-        protected void PrepareControlSignals(Word opCode, Word function)
+        protected void PrepareControlSignals(Word opCode, Word function, Word rd)
         {
-            instruction = instructionSet.GetInstruction(opCode, function);
+            instruction = instructionSet.GetInstruction(opCode, function, rd);
 
             GetInstructionFriendlyName = instruction.Name;
             GetInstructionAssemblerName = instruction.Assembler;

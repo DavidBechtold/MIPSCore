@@ -21,23 +21,34 @@ namespace MIPSCore.Instruction_Set
             return Instructions[i].Opcode == opcode.UnsignedDecimal;
         }
 
-        public CInstruction GetInstruction(Word opcode, Word function)
+        private bool CheckOpCodeAndRd(int i, Word opcode, Word rd)
         {
-            if (opcode.UnsignedDecimal == 0)
-            {
-                /* R Format */
-                for (var i = 0; i < Instructions.Length; i++)
-                    if (CheckFunction(i, function))
-                        return Instructions[i];
-            }
-            else
-            {
-                /* I / J Format */
-                for (var i = 0; i < Instructions.Length; i++)
-                 if(CheckOpCode(i, opcode))
-                     return Instructions[i];
-            }
+            return (Instructions[i].Opcode == opcode.UnsignedDecimal) && (Instructions[i].Rd == rd.UnsignedDecimal);
+        }
 
+        public CInstruction GetInstruction(Word opcode, Word function, Word rd)
+        {
+            switch (opcode.UnsignedDecimal)
+            {
+                case 0:
+                    /* R Format */
+                    for (var i = 0; i < Instructions.Length; i++)
+                        if (CheckFunction(i, function))
+                            return Instructions[i];
+                    break;
+                case 1:
+                    /* I Format special branch */
+                    for (var i = 0; i < Instructions.Length; i++)
+                        if (CheckOpCodeAndRd(i, opcode, rd))
+                            return Instructions[i];
+                    break;
+                default:
+                    /* I / J Format */ 
+                    for (var i = 0; i < Instructions.Length; i++)
+                        if (CheckOpCode(i, opcode))
+                            return Instructions[i];
+                    break;
+            }
             throw new ArgumentOutOfRangeException();
         }
     }
@@ -64,6 +75,9 @@ namespace MIPSCore.Instruction_Set
 
         [XmlElement("function")]
         public UInt16 Function;
+
+        [XmlElement("rd")] 
+        public UInt16 Rd;
 
         [XmlElement("regWrite")]
         public bool RegWrite;
@@ -104,10 +118,11 @@ namespace MIPSCore.Instruction_Set
             Format = InstructionFormat.R;
             Opcode = 0;
             Function = 0;
+            Rd = 0;
             RegWrite = false;
             RegDestination = RegisterDestination.Rd;
             RegFileInput = RegisterFileInput.AluLo;
-            AluSource = AluSource.RegFile;
+            AluSource = AluSource.Rt;
             AluControl = AluControl.Add;
             MemWrite = false;
             MemRead = false;

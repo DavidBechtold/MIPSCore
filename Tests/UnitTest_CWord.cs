@@ -133,12 +133,12 @@ namespace Tests
         {
             Word arg = new Word(-5);
             arg = arg.GetSubword(16, 16);
-            arg.SignExtendSigned();
+            arg.SignExtend();
             Assert.AreEqual("FFFFFFFB", arg.Hexadecimal);
             Assert.AreEqual(-5, arg.SignedDecimal);
 
             arg = new Word(5);
-            arg.SignExtendSigned();
+            arg.SignExtend();
             Assert.AreEqual("00000005", arg.Hexadecimal);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using MIPSCore.Instruction_Set;
 
 namespace MIPSCore.Util
@@ -29,7 +30,7 @@ namespace MIPSCore.Util
             SetBinary(binary);
         }
 
-        public void SignExtendSigned(uint msb)
+        public Word SignExtend(uint msb)
         {
             if ((SignedDecimal & msb) == msb)
             {
@@ -46,28 +47,31 @@ namespace MIPSCore.Util
                 Binary = Convert.ToString(SignedDecimal, 2).PadLeft(32, '0');
                 signed = true;
             }
+            return this;
         }
 
-        public void SignExtendSigned(DataMemoryWordSize dataSize)
+        public Word SignExtend(DataMemoryWordSize dataSize)
         {
             switch (dataSize)
             {
-                case DataMemoryWordSize.SingleByte: SignExtendSigned(128); break;
-                case DataMemoryWordSize.HalfWord: SignExtendSigned(32768); break;
+                case DataMemoryWordSize.SingleByte: return SignExtend(128); 
+                case DataMemoryWordSize.HalfWord: return SignExtend(32768);
+                default: throw new ArgumentOutOfRangeException("dataSize", dataSize, null);
             }
         }
 
-        public void SignExtendSigned()
+        public Word SignExtend()
         {
-            SignExtendSigned(32768);
+            return SignExtend(32768);
         }
 
-        public void SignExtendUnsigned()
+        public Word SignExtendZero()
         {
             Hexadecimal = Convert.ToString(SignedDecimal, 16).PadLeft(8, '0').ToUpper();
-            UnsignedDecimal = Convert.ToUInt32((uint)SignedDecimal);
+            UnsignedDecimal = Convert.ToUInt32((uint) SignedDecimal);
             Binary = Convert.ToString(SignedDecimal, 2).PadLeft(32, '0');
             signed = false;
+            return this;
         }
 
         public static Word operator +(Word arg1, Word arg2)
@@ -95,12 +99,12 @@ namespace MIPSCore.Util
 
         public static Word operator *(Word arg1, uint arg2)
         {
-            return new Word(arg1.UnsignedDecimal * arg2);
+            return new Word(arg1.UnsignedDecimal*arg2);
         }
 
         public static Word operator /(Word arg1, uint arg2)
         {
-            return new Word(arg1.UnsignedDecimal / arg2);
+            return new Word(arg1.UnsignedDecimal/arg2);
         }
 
         public string GetSubBinary(ushort start, ushort length)
@@ -117,7 +121,7 @@ namespace MIPSCore.Util
         {
             UnsignedDecimal = value;
             Hexadecimal = Convert.ToString(UnsignedDecimal, 16).PadLeft(8, '0').ToUpper();
-            SignedDecimal = Convert.ToInt32((int)UnsignedDecimal);
+            SignedDecimal = Convert.ToInt32((int) UnsignedDecimal);
             Binary = Convert.ToString(UnsignedDecimal, 2).PadLeft(32, '0');
             signed = false;
         }
@@ -126,7 +130,7 @@ namespace MIPSCore.Util
         {
             SignedDecimal = value;
             Hexadecimal = Convert.ToString(SignedDecimal, 16).PadLeft(8, '0').ToUpper();
-            UnsignedDecimal = Convert.ToUInt32((uint)SignedDecimal);
+            UnsignedDecimal = Convert.ToUInt32((uint) SignedDecimal);
             Binary = Convert.ToString(SignedDecimal, 2).PadLeft(32, '0');
             signed = true;
         }

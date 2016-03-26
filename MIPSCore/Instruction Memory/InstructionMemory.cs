@@ -52,19 +52,25 @@ namespace MIPSCore.Instruction_Memory
             // TODO make converter class
             // 3.) divide instruction for the register file and the control unit
             GetOpCode = GetActualInstruction.GetSubword(0, 6);
-            GetRs = GetActualInstruction.GetSubword(6, 5);
-            GetRt = GetActualInstruction.GetSubword(6 + 5, 5);
 
-            /* R Format */
-            GetFunction = GetActualInstruction.GetSubword(32 - 6, 6);
-            GetShiftAmount = GetActualInstruction.GetSubword(6 + 5 + 5 + 5, 5);
-            GetRd = GetActualInstruction.GetSubword(6 + 5 + 5, 5);
-
-            /* I Format */
-            GetImmediate = GetActualInstruction.GetSubword(16, 16);
-
-            /* J Format */
-            GetJumpTarget = GetActualInstruction.GetSubword(6, 26);
+            if (GetOpCode.UnsignedDecimal == 0)
+            {
+                /* R - Format */
+                GetRs = GetActualInstruction.GetSubword(6, 5);
+                GetRt = GetActualInstruction.GetSubword(6 + 5, 5);
+                GetRd = GetActualInstruction.GetSubword(6 + 5 + 5, 5);
+                GetShiftAmount = GetActualInstruction.GetSubword(6 + 5 + 5 + 5, 5);
+                GetFunction = GetActualInstruction.GetSubword(32 - 6, 6);
+            }
+            else
+            {
+                /* I Format */
+                GetImmediate = GetActualInstruction.GetSubword(16, 16);
+                GetRs = GetActualInstruction.GetSubword(6, 5);
+                GetRd = GetActualInstruction.GetSubword(6 + 5, 5);
+                /* J Format */
+                GetJumpTarget = GetActualInstruction.GetSubword(6, 26);
+            }
         }
 
         public void BranchDelaySlot(bool branchDelay)
