@@ -10,5 +10,5 @@ SECTIONS
   .text 0x0000 : { *(.text) _etext = . ; }
   .data 0x0000 :
     AT ( ADDR (.text) + SIZEOF (.text) )
-    { _data = . ; *(.data); *(.rodata); _edata = . ;  }
+    { _data = . ; *(.data); *(.rodata); *(.sdata); _edata = . ;  }
 }

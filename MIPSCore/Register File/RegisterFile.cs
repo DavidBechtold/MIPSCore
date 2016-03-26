@@ -107,9 +107,10 @@ namespace MIPSCore.Register_File
             return registers.ToString();
         }
 
-        public void InitStackPointer()
+        public void InitStackAndGlobalPointer()
         {
-            registers.Write(29, DataMemory.SizeBytes);
+            registers.Write(29, DataMemory.SizeBytes);          //sp
+            //registers.Write(28, DataMemory.SizeBytes / 2);    //gp
         }
 
         public int[] ReadAllRegister()

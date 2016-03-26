@@ -11,9 +11,10 @@ namespace MIPSCore.Util
         private readonly MipsCore core;
         private readonly Regex rgx;
         private readonly Regex rgxCode;
-        private readonly string[] segments = { ".text", ".rodata", ".data", ".pdr", ".sbss", ".comment", ".reginfo"};
+        private readonly string[] segments = { ".text", ".rodata", ".data", ".sdata", ".pdr", ".sbss", ".comment", ".reginfo"};
         private string textSegment;
         private string dataSegment;
+        //private string sdataSegment;
         public Dictionary<uint, string> Code { get; private set; }
 
         public MipsProgrammer(MipsCore core)
@@ -22,6 +23,7 @@ namespace MIPSCore.Util
             this.core = core;
             textSegment = "";
             dataSegment = "";
+            //sdataSegment = "";
             rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
             rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t|\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C)*", RegexOptions.IgnoreCase);
             Code = new Dictionary<uint, string>();
@@ -34,15 +36,17 @@ namespace MIPSCore.Util
 
             var textMatch = rgx.Matches(textSegment);
             var dataMatch = rgx.Matches(dataSegment);
+            //var sdataMatch = rgx.Matches(sdataSegment);
             var codeMatch = rgxCode.Matches(textSegment);
 
             if ((textMatch.Count)/ 2 * 4 >= core.InstructionMemory.SizeBytes)
                 throw new IndexOutOfRangeException(".text segment is greater than " + core.InstructionMemory.SizeBytes + ".");
-            if(dataMatch.Count / 2 * 4 >= core.DataMemory.SizeBytes)
+            if((dataMatch.Count) / 2 * 4 >= core.DataMemory.SizeBytes)
                 throw new IndexOutOfRangeException(".data segment is greater than " + core.DataMemory.SizeBytes + ".");
 
             ProgramRegex(textMatch, core.InstructionMemory);
             ProgramRegex(dataMatch, core.DataMemory);
+            //ProgramRegex(sdataMatch, core.DataMemory);
             ProgramRegex(codeMatch, Code);
         }
 
@@ -53,6 +57,7 @@ namespace MIPSCore.Util
             textSegment = GetSegment(strCode, ".text");
             if (textSegment == "") throw new ArgumentException("The file " + path + "does not contain a .text segment");
             dataSegment = GetSegment(strCode, ".data");
+            //sdataSegment = GetSegment(strCode, ".sdata");
         }
 
         private void ProgramRegex(MatchCollection match, IMemory memory)

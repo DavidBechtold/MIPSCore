@@ -5,15 +5,8 @@
 #   all         generates object dumps off all testprogramms
 #
 
-FILENAMES = bubblesort.objdump	quicksort.objdump sevenSegmentDisplay.objdump
-OBJECTS   = bubblesort.o quicksort.o sevenSegmentDisplay.o
-
-CP					= mips-elf-gcc
-CPFLAGS 		= -c
-
-LD          = mips-elf-ld
-LDFLAGS     = -T MIPSCore.ld
-
+FILENAMES = bubblesort.objdump	quicksort.objdump sevenSegmentDisplay.objdump ledRotator.objdump
+OBJECTS   = bubblesort.o quicksort.o sevenSegmentDisplay.o ledRotator.o
 
 all: $(FILENAMES)
 
@@ -28,6 +21,6 @@ all: $(FILENAMES)
 	
 
 clean:
-	rm -f $(FILENAMES).elf $(OBJECTS)
+	rm -f $(FILENAMES) $(OBJECTS)
 
 

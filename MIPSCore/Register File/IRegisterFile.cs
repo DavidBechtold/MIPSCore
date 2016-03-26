@@ -15,7 +15,7 @@ namespace MIPSCore.Register_File
         Word ReadRt();
         Word ReadRd();
         string ToString();
-        void InitStackPointer();
+        void InitStackAndGlobalPointer();
         int[] ReadAllRegister();
         int ReadRegister(ushort num);
         uint ReadRegisterUnsigned(ushort num);

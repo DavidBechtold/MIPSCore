@@ -31,10 +31,7 @@ namespace MIPSCore
         public event EventHandler Clocked;
         public event EventHandler Exception;
 
-        private ulong coreFrequencyHz;
-        private MemorySize instructionMemorySizeKb;
-        private MemorySize dataMemorySizeKb;
-        private bool initStackPointer;
+        private readonly bool initStackAndGlobalPointer;
         private bool programmCompleted;
 
         private readonly IClock clock;
@@ -50,10 +47,10 @@ namespace MIPSCore
             /* read config file */
             //ReadConfigFile();
 
-            coreFrequencyHz = 100;
-            instructionMemorySizeKb = MemorySize.Size1Kb;
-            dataMemorySizeKb = MemorySize.Size1Kb;
-            initStackPointer = true;
+            ulong coreFrequencyHz = 100;
+            var instructionMemorySizeKb = MemorySize.Size1Kb;
+            var dataMemorySizeKb = MemorySize.Size1Kb;
+            initStackAndGlobalPointer = true;
 
             /* bootstrapping */
             InstructionMemory = new InstructionMemory(instructionMemorySizeKb);
@@ -95,8 +92,8 @@ namespace MIPSCore
             InstructionMemory.Flush();
             DataMemory.Flush();
 
-            if (initStackPointer)
-                RegisterFile.InitStackPointer();
+            if (initStackAndGlobalPointer)
+                RegisterFile.InitStackAndGlobalPointer();
         }
 
         public void StartCore()

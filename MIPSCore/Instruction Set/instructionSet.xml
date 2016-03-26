@@ -42,6 +42,7 @@
                         Add...addition
                         Addu...addition unsigned
                         Sub...subtraction
+                        SubU...subtraction unsigned
                         SetLessThan...set on less than
                         SetLessThanU...set on less than unsigned
                         SetLessThanZero...set on less than zero
@@ -492,7 +493,7 @@
     <regDestination>Rt</regDestination>
     <regFileInput>AluLo</regFileInput>
     <aluSource>RegFile</aluSource>
-    <aluControl>Sub</aluControl>
+    <aluControl>Subu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
@@ -503,8 +504,8 @@
 
   <CInstruction>
     <name>branch on not equal</name>
-    <assembler>beq</assembler>
-    <example>beq Rs, Rt, imm</example>
+    <assembler>bneq</assembler>
+    <example>bneq Rs, Rt, imm</example>
     <meaning>if Rs!=Rt: pc += imm * 4 + 4</meaning>
     <format>I</format>
     <opcode>5</opcode>
@@ -513,7 +514,7 @@
     <regDestination>Rt</regDestination>
     <regFileInput>AluLo</regFileInput>
     <aluSource>RegFile</aluSource>
-    <aluControl>Sub</aluControl>
+    <aluControl>Subu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
