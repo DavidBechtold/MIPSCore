@@ -497,7 +497,6 @@
     <regWrite>false</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <!-- <aluSource>RegFile</aluSource> -->
     <aluSource>ImmSignExtend</aluSource>
     <aluControl>SetLessThanZero</aluControl>
     <memWrite>false</memWrite>
@@ -520,7 +519,28 @@
     <regWrite>false</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <!-- <aluSource>RegFile</aluSource> -->
+    <aluSource>ImmSignExtend</aluSource>
+    <aluControl>SetGreaterEqualZero</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>SignExtendLessThanZero</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+  
+  <CInstruction>
+    <name>branch on greater equal zero</name>
+    <assembler>bgez</assembler>
+    <example>bgez Rs, imm</example>
+    <meaning>if Rs&gt;=0: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>1</opcode>
+    <function>0</function>
+    <rd>1</rd>
+    <regWrite>false</regWrite>
+    <regDestination>Rd</regDestination>
+    <regFileInput>AluLo</regFileInput>
     <aluSource>ImmSignExtend</aluSource>
     <aluControl>SetGreaterEqualZero</aluControl>
     <memWrite>false</memWrite>

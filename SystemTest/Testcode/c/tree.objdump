@@ -1,0 +1,338 @@
+
+tree.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	27bdffe0 	addiu	sp,sp,-32
+   4:	afbf001c 	sw	ra,28(sp)
+   8:	afbe0018 	sw	s8,24(sp)
+   c:	03a0f021 	move	s8,sp
+  10:	24040005 	li	a0,5
+  14:	0c00001e 	jal	78 <NewTree>
+  18:	00000000 	nop
+  1c:	afc20010 	sw	v0,16(s8)
+  20:	8fc40010 	lw	a0,16(s8)
+  24:	24050006 	li	a1,6
+  28:	0c000068 	jal	1a0 <AddNumberToTree>
+  2c:	00000000 	nop
+  30:	8fc40010 	lw	a0,16(s8)
+  34:	24050004 	li	a1,4
+  38:	0c000068 	jal	1a0 <AddNumberToTree>
+  3c:	00000000 	nop
+  40:	8fc40010 	lw	a0,16(s8)
+  44:	24050005 	li	a1,5
+  48:	0c000068 	jal	1a0 <AddNumberToTree>
+  4c:	00000000 	nop
+  50:	8fc40010 	lw	a0,16(s8)
+  54:	0c000038 	jal	e0 <DeleteTree>
+  58:	00000000 	nop
+  5c:	00001021 	move	v0,zero
+  60:	03c0e821 	move	sp,s8
+  64:	8fbf001c 	lw	ra,28(sp)
+  68:	8fbe0018 	lw	s8,24(sp)
+  6c:	27bd0020 	addiu	sp,sp,32
+  70:	03e00008 	jr	ra
+  74:	00000000 	nop
+
+00000078 <NewTree>:
+  78:	27bdffe0 	addiu	sp,sp,-32
+  7c:	afbf001c 	sw	ra,28(sp)
+  80:	afbe0018 	sw	s8,24(sp)
+  84:	03a0f021 	move	s8,sp
+  88:	afc40020 	sw	a0,32(s8)
+  8c:	2404000c 	li	a0,12
+  90:	0c0000da 	jal	368 <malloc>
+  94:	00000000 	nop
+  98:	afc20010 	sw	v0,16(s8)
+  9c:	8fc30010 	lw	v1,16(s8)
+  a0:	8fc20020 	lw	v0,32(s8)
+  a4:	00000000 	nop
+  a8:	ac620000 	sw	v0,0(v1)
+  ac:	8fc20010 	lw	v0,16(s8)
+  b0:	00000000 	nop
+  b4:	ac400004 	sw	zero,4(v0)
+  b8:	8fc20010 	lw	v0,16(s8)
+  bc:	00000000 	nop
+  c0:	ac400008 	sw	zero,8(v0)
+  c4:	8fc20010 	lw	v0,16(s8)
+  c8:	03c0e821 	move	sp,s8
+  cc:	8fbf001c 	lw	ra,28(sp)
+  d0:	8fbe0018 	lw	s8,24(sp)
+  d4:	27bd0020 	addiu	sp,sp,32
+  d8:	03e00008 	jr	ra
+  dc:	00000000 	nop
+
+000000e0 <DeleteTree>:
+  e0:	27bdffe0 	addiu	sp,sp,-32
+  e4:	afbf001c 	sw	ra,28(sp)
+  e8:	afbe0018 	sw	s8,24(sp)
+  ec:	03a0f021 	move	s8,sp
+  f0:	afc40020 	sw	a0,32(s8)
+  f4:	8fc20020 	lw	v0,32(s8)
+  f8:	00000000 	nop
+  fc:	afc20010 	sw	v0,16(s8)
+ 100:	8fc20010 	lw	v0,16(s8)
+ 104:	00000000 	nop
+ 108:	1040001f 	beqz	v0,188 <DeleteTree+0xa8>
+ 10c:	00000000 	nop
+ 110:	8fc20010 	lw	v0,16(s8)
+ 114:	00000000 	nop
+ 118:	8c420004 	lw	v0,4(v0)
+ 11c:	00000000 	nop
+ 120:	10400008 	beqz	v0,144 <DeleteTree+0x64>
+ 124:	00000000 	nop
+ 128:	8fc20010 	lw	v0,16(s8)
+ 12c:	00000000 	nop
+ 130:	8c420004 	lw	v0,4(v0)
+ 134:	00000000 	nop
+ 138:	00402021 	move	a0,v0
+ 13c:	0c000038 	jal	e0 <DeleteTree>
+ 140:	00000000 	nop
+ 144:	8fc20010 	lw	v0,16(s8)
+ 148:	00000000 	nop
+ 14c:	8c420008 	lw	v0,8(v0)
+ 150:	00000000 	nop
+ 154:	10400008 	beqz	v0,178 <DeleteTree+0x98>
+ 158:	00000000 	nop
+ 15c:	8fc20010 	lw	v0,16(s8)
+ 160:	00000000 	nop
+ 164:	8c420008 	lw	v0,8(v0)
+ 168:	00000000 	nop
+ 16c:	00402021 	move	a0,v0
+ 170:	0c000038 	jal	e0 <DeleteTree>
+ 174:	00000000 	nop
+ 178:	8fc40010 	lw	a0,16(s8)
+ 17c:	0c0000f7 	jal	3dc <free>
+ 180:	00000000 	nop
+ 184:	afc00010 	sw	zero,16(s8)
+ 188:	03c0e821 	move	sp,s8
+ 18c:	8fbf001c 	lw	ra,28(sp)
+ 190:	8fbe0018 	lw	s8,24(sp)
+ 194:	27bd0020 	addiu	sp,sp,32
+ 198:	03e00008 	jr	ra
+ 19c:	00000000 	nop
+
+000001a0 <AddNumberToTree>:
+ 1a0:	27bdffe0 	addiu	sp,sp,-32
+ 1a4:	afbf001c 	sw	ra,28(sp)
+ 1a8:	afbe0018 	sw	s8,24(sp)
+ 1ac:	03a0f021 	move	s8,sp
+ 1b0:	afc40020 	sw	a0,32(s8)
+ 1b4:	afc50024 	sw	a1,36(s8)
+ 1b8:	8fc20020 	lw	v0,32(s8)
+ 1bc:	00000000 	nop
+ 1c0:	afc20010 	sw	v0,16(s8)
+ 1c4:	8fc20010 	lw	v0,16(s8)
+ 1c8:	00000000 	nop
+ 1cc:	10400060 	beqz	v0,350 <AddNumberToTree+0x1b0>
+ 1d0:	00000000 	nop
+ 1d4:	8fc20010 	lw	v0,16(s8)
+ 1d8:	00000000 	nop
+ 1dc:	8c430000 	lw	v1,0(v0)
+ 1e0:	8fc20024 	lw	v0,36(s8)
+ 1e4:	00000000 	nop
+ 1e8:	10620059 	beq	v1,v0,350 <AddNumberToTree+0x1b0>
+ 1ec:	00000000 	nop
+ 1f0:	8fc20010 	lw	v0,16(s8)
+ 1f4:	00000000 	nop
+ 1f8:	8c430000 	lw	v1,0(v0)
+ 1fc:	8fc20024 	lw	v0,36(s8)
+ 200:	00000000 	nop
+ 204:	0062102a 	slt	v0,v1,v0
+ 208:	1040002a 	beqz	v0,2b4 <AddNumberToTree+0x114>
+ 20c:	00000000 	nop
+ 210:	8fc20010 	lw	v0,16(s8)
+ 214:	00000000 	nop
+ 218:	8c420004 	lw	v0,4(v0)
+ 21c:	00000000 	nop
+ 220:	1440001a 	bnez	v0,28c <AddNumberToTree+0xec>
+ 224:	00000000 	nop
+ 228:	2404000c 	li	a0,12
+ 22c:	0c0000da 	jal	368 <malloc>
+ 230:	00000000 	nop
+ 234:	00401821 	move	v1,v0
+ 238:	8fc20010 	lw	v0,16(s8)
+ 23c:	00000000 	nop
+ 240:	ac430004 	sw	v1,4(v0)
+ 244:	8fc20010 	lw	v0,16(s8)
+ 248:	00000000 	nop
+ 24c:	8c430004 	lw	v1,4(v0)
+ 250:	8fc20024 	lw	v0,36(s8)
+ 254:	00000000 	nop
+ 258:	ac620000 	sw	v0,0(v1)
+ 25c:	8fc20010 	lw	v0,16(s8)
+ 260:	00000000 	nop
+ 264:	8c420004 	lw	v0,4(v0)
+ 268:	00000000 	nop
+ 26c:	ac400004 	sw	zero,4(v0)
+ 270:	8fc20010 	lw	v0,16(s8)
+ 274:	00000000 	nop
+ 278:	8c420004 	lw	v0,4(v0)
+ 27c:	00000000 	nop
+ 280:	ac400008 	sw	zero,8(v0)
+ 284:	080000d4 	j	350 <AddNumberToTree+0x1b0>
+ 288:	00000000 	nop
+ 28c:	8fc20010 	lw	v0,16(s8)
+ 290:	00000000 	nop
+ 294:	8c420004 	lw	v0,4(v0)
+ 298:	00000000 	nop
+ 29c:	00402021 	move	a0,v0
+ 2a0:	8fc50024 	lw	a1,36(s8)
+ 2a4:	0c000068 	jal	1a0 <AddNumberToTree>
+ 2a8:	00000000 	nop
+ 2ac:	080000d4 	j	350 <AddNumberToTree+0x1b0>
+ 2b0:	00000000 	nop
+ 2b4:	8fc20010 	lw	v0,16(s8)
+ 2b8:	00000000 	nop
+ 2bc:	8c420008 	lw	v0,8(v0)
+ 2c0:	00000000 	nop
+ 2c4:	1440001a 	bnez	v0,330 <AddNumberToTree+0x190>
+ 2c8:	00000000 	nop
+ 2cc:	2404000c 	li	a0,12
+ 2d0:	0c0000da 	jal	368 <malloc>
+ 2d4:	00000000 	nop
+ 2d8:	00401821 	move	v1,v0
+ 2dc:	8fc20010 	lw	v0,16(s8)
+ 2e0:	00000000 	nop
+ 2e4:	ac430008 	sw	v1,8(v0)
+ 2e8:	8fc20010 	lw	v0,16(s8)
+ 2ec:	00000000 	nop
+ 2f0:	8c430008 	lw	v1,8(v0)
+ 2f4:	8fc20024 	lw	v0,36(s8)
+ 2f8:	00000000 	nop
+ 2fc:	ac620000 	sw	v0,0(v1)
+ 300:	8fc20010 	lw	v0,16(s8)
+ 304:	00000000 	nop
+ 308:	8c420008 	lw	v0,8(v0)
+ 30c:	00000000 	nop
+ 310:	ac400004 	sw	zero,4(v0)
+ 314:	8fc20010 	lw	v0,16(s8)
+ 318:	00000000 	nop
+ 31c:	8c420008 	lw	v0,8(v0)
+ 320:	00000000 	nop
+ 324:	ac400008 	sw	zero,8(v0)
+ 328:	080000d4 	j	350 <AddNumberToTree+0x1b0>
+ 32c:	00000000 	nop
+ 330:	8fc20010 	lw	v0,16(s8)
+ 334:	00000000 	nop
+ 338:	8c420008 	lw	v0,8(v0)
+ 33c:	00000000 	nop
+ 340:	00402021 	move	a0,v0
+ 344:	8fc50024 	lw	a1,36(s8)
+ 348:	0c000068 	jal	1a0 <AddNumberToTree>
+ 34c:	00000000 	nop
+ 350:	03c0e821 	move	sp,s8
+ 354:	8fbf001c 	lw	ra,28(sp)
+ 358:	8fbe0018 	lw	s8,24(sp)
+ 35c:	27bd0020 	addiu	sp,sp,32
+ 360:	03e00008 	jr	ra
+ 364:	00000000 	nop
+
+00000368 <malloc>:
+ 368:	27bdffe8 	addiu	sp,sp,-24
+ 36c:	afbe0010 	sw	s8,16(sp)
+ 370:	03a0f021 	move	s8,sp
+ 374:	afc40018 	sw	a0,24(s8)
+ 378:	8fc20018 	lw	v0,24(s8)
+ 37c:	00000000 	nop
+ 380:	1040000e 	beqz	v0,3bc <malloc+0x54>
+ 384:	00000000 	nop
+ 388:	8f820004 	lw	v0,4(gp)
+ 38c:	00000000 	nop
+ 390:	afc20000 	sw	v0,0(s8)
+ 394:	8f830004 	lw	v1,4(gp)
+ 398:	8fc20018 	lw	v0,24(s8)
+ 39c:	00000000 	nop
+ 3a0:	00621021 	addu	v0,v1,v0
+ 3a4:	af820004 	sw	v0,4(gp)
+ 3a8:	8fc20000 	lw	v0,0(s8)
+ 3ac:	00000000 	nop
+ 3b0:	afc20008 	sw	v0,8(s8)
+ 3b4:	080000f1 	j	3c4 <malloc+0x5c>
+ 3b8:	00000000 	nop
+ 3bc:	080000f2 	j	3c8 <malloc+0x60>
+ 3c0:	00000000 	nop
+ 3c4:	8fc20008 	lw	v0,8(s8)
+ 3c8:	03c0e821 	move	sp,s8
+ 3cc:	8fbe0010 	lw	s8,16(sp)
+ 3d0:	27bd0018 	addiu	sp,sp,24
+ 3d4:	03e00008 	jr	ra
+ 3d8:	00000000 	nop
+
+000003dc <free>:
+ 3dc:	27bdfff8 	addiu	sp,sp,-8
+ 3e0:	afbe0000 	sw	s8,0(sp)
+ 3e4:	03a0f021 	move	s8,sp
+ 3e8:	afc40008 	sw	a0,8(s8)
+ 3ec:	03c0e821 	move	sp,s8
+ 3f0:	8fbe0000 	lw	s8,0(sp)
+ 3f4:	27bd0008 	addiu	sp,sp,8
+ 3f8:	03e00008 	jr	ra
+ 3fc:	00000000 	nop
+Disassembly of section .data:
+
+00000000 <_data>:
+   0:	000000a0 	0xa0
+
+00000004 <address>:
+   4:	00000008 	jr	zero
+Disassembly of section .reginfo:
+
+00000000 <.reginfo>:
+   0:	f000003c 	0xf000003c
+	...
+Disassembly of section .pdr:
+
+00000000 <.pdr>:
+   0:	00000000 	nop
+   4:	c0000000 	lwc0	$0,0(zero)
+   8:	fffffffc 	0xfffffffc
+	...
+  14:	00000020 	add	zero,zero,zero
+  18:	0000001e 	0x1e
+  1c:	0000001f 	0x1f
+  20:	00000078 	0x78
+  24:	c0000000 	lwc0	$0,0(zero)
+  28:	fffffffc 	0xfffffffc
+	...
+  34:	00000020 	add	zero,zero,zero
+  38:	0000001e 	0x1e
+  3c:	0000001f 	0x1f
+  40:	000000e0 	0xe0
+  44:	c0000000 	lwc0	$0,0(zero)
+  48:	fffffffc 	0xfffffffc
+	...
+  54:	00000020 	add	zero,zero,zero
+  58:	0000001e 	0x1e
+  5c:	0000001f 	0x1f
+  60:	000001a0 	0x1a0
+  64:	c0000000 	lwc0	$0,0(zero)
+  68:	fffffffc 	0xfffffffc
+	...
+  74:	00000020 	add	zero,zero,zero
+  78:	0000001e 	0x1e
+  7c:	0000001f 	0x1f
+  80:	00000368 	0x368
+  84:	40000000 	mfc0	zero,$0
+  88:	fffffff8 	0xfffffff8
+	...
+  94:	00000018 	mult	zero,zero
+  98:	0000001e 	0x1e
+  9c:	0000001f 	0x1f
+  a0:	000003dc 	0x3dc
+  a4:	40000000 	mfc0	zero,$0
+  a8:	fffffff8 	0xfffffff8
+	...
+  b4:	00000008 	jr	zero
+  b8:	0000001e 	0x1e
+  bc:	0000001f 	0x1f
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	00474343 	0x474343
+   4:	3a202847 	xori	zero,s1,0x2847
+   8:	4e552920 	c3	0x552920
+   c:	342e312e 	ori	t6,at,0x312e
+  10:	Address 0x0000000000000010 is out of bounds.
+

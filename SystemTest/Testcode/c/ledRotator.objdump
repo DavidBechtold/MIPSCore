@@ -1,0 +1,62 @@
+
+ledRotator.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	27bdfff8 	addiu	sp,sp,-8
+   4:	afbe0000 	sw	s8,0(sp)
+   8:	03a0f021 	move	s8,sp
+   c:	8f830000 	lw	v1,0(gp)
+  10:	24020001 	li	v0,1
+  14:	ac620000 	sw	v0,0(v1)
+  18:	08000008 	j	20 <_edata+0x1c>
+  1c:	00000000 	nop
+  20:	8f820000 	lw	v0,0(gp)
+  24:	00000000 	nop
+  28:	8c420000 	lw	v0,0(v0)
+  2c:	00000000 	nop
+  30:	04410006 	bgez	v0,4c <_edata+0x48>
+  34:	00000000 	nop
+  38:	8f830000 	lw	v1,0(gp)
+  3c:	24020001 	li	v0,1
+  40:	ac620000 	sw	v0,0(v1)
+  44:	08000008 	j	20 <_edata+0x1c>
+  48:	00000000 	nop
+  4c:	8f830000 	lw	v1,0(gp)
+  50:	8f820000 	lw	v0,0(gp)
+  54:	00000000 	nop
+  58:	8c420000 	lw	v0,0(v0)
+  5c:	00000000 	nop
+  60:	00021040 	sll	v0,v0,0x1
+  64:	ac620000 	sw	v0,0(v1)
+  68:	08000008 	j	20 <_edata+0x1c>
+  6c:	00000000 	nop
+Disassembly of section .data:
+
+00000000 <_data>:
+   0:	000000a0 	0xa0
+Disassembly of section .reginfo:
+
+00000000 <.reginfo>:
+   0:	7000000c 	0x7000000c
+	...
+Disassembly of section .pdr:
+
+00000000 <.pdr>:
+   0:	00000000 	nop
+   4:	40000000 	mfc0	zero,$0
+   8:	fffffff8 	0xfffffff8
+	...
+  14:	00000008 	jr	zero
+  18:	0000001e 	0x1e
+  1c:	0000001f 	0x1f
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	00474343 	0x474343
+   4:	3a202847 	xori	zero,s1,0x2847
+   8:	4e552920 	c3	0x552920
+   c:	342e312e 	ori	t6,at,0x312e
+  10:	Address 0x0000000000000010 is out of bounds.
+

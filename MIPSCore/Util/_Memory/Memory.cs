@@ -154,12 +154,6 @@ namespace MIPSCore.Util._Memory
             if (changedWordAddresses.Contains(byteAddress))
                 changedWordAddresses.Remove(byteAddress);
 
-            var test = (memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) |
-                       (memory[byteAddress + 2] << 8 | memory[byteAddress + 3]);
-            var test1 = memory[byteAddress + 3];
-            var test2 = memory[byteAddress + 2];
-            var test3 = memory[byteAddress + 1];
-            var test4 = memory[byteAddress ];
             return new Word((uint)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
             //return new Word((uint)((memory[byteAddress + 1] << 24 | memory[byteAddress] << 16) | (memory[byteAddress + 3] << 8 | memory[byteAddress + 2])));
         }

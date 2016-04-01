@@ -42,6 +42,7 @@ namespace MIPSCoreUI.ViewModel
             oldDataChangedAddress = 0;
             lineNotActiveColor = new SolidColorBrush(Colors.White);
             Display = ValueView.SignedDecimal;
+            SelectedItem = new ListTextDto();
         }
 
         public void Refresh()
