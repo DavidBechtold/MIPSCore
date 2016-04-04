@@ -88,8 +88,11 @@ namespace MIPSCore.Instruction_Set
         [XmlElement("regFileInput")]
         public RegisterFileInput RegFileInput;
 
-        [XmlElement("aluSource")]
-        public AluSource AluSource;
+        [XmlElement("aluSource1")]
+        public AluSource1 AluSource1;
+
+        [XmlElement("aluSource2")]
+        public AluSource2 AluSource2;
 
         [XmlElement("aluControl")]
         public AluControl AluControl;
@@ -122,7 +125,8 @@ namespace MIPSCore.Instruction_Set
             RegWrite = false;
             RegDestination = RegisterDestination.Rd;
             RegFileInput = RegisterFileInput.AluLo;
-            AluSource = AluSource.Rt;
+            AluSource1 = AluSource1.Rs;
+            AluSource2 = AluSource2.Rt;
             AluControl = AluControl.Add;
             MemWrite = false;
             MemRead = false;

@@ -52,8 +52,6 @@ namespace MIPSCore.Data_Memory
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-           
         }
 
         private void StoreDataToMemory()

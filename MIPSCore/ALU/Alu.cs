@@ -30,6 +30,8 @@ namespace MIPSCore.ALU
             OverflowFlag = false;
             GetResultLo = new Word((uint) 0);
             GetResultHi = new Word((uint) 0);
+            arg1 = new Word(0);
+            arg2 = new Word(0);
         }
 
         public void Clock()
@@ -56,6 +58,7 @@ namespace MIPSCore.ALU
                 case AluControl.Div:            PerformDiv();           break;
                 case AluControl.ShiftLeft:      PerformShift(true);     break;
                 case AluControl.ShiftRight:     PerformShift(false);    break;
+                case AluControl.ShiftRightArithmetic: PerformShiftArithmetic(false); break;
                 case AluControl.ShiftLeft16:    PerformShiftLeft16();   break;
                 case AluControl.Nor:
                     throw new NotImplementedException();
@@ -139,35 +142,39 @@ namespace MIPSCore.ALU
 
         private void PerformShift(bool left)
         {
-            var shiftAmount = InstructionMemory.GetShiftAmount.UnsignedDecimal;
-            var valueToShift = arg2.UnsignedDecimal;
-            Shift(left, valueToShift, shiftAmount);
+            Shift(left,  false);
         }
 
         private void PerformShiftLeft16()
         {
-            const uint shiftAmount = 16;
-            var valueToShift = arg2.UnsignedDecimal;
-            Shift(true, valueToShift, shiftAmount);
+            arg1 = new Word((uint) 16);
+            Shift(true, false);
         }
 
-        private void Shift(bool left, uint valueToShift, uint shiftAmount)
+        private void PerformShiftArithmetic(bool left)
         {
+            Shift(left, true);
+        }
+
+        private void Shift(bool left, bool arithmetic)
+        {
+            uint shiftAmount = arg1.UnsignedDecimal;
+            uint valueToShift = arg2.UnsignedDecimal;
             for (var i = 0; i < shiftAmount; i++)
             {
                 if (left)
                 {
-                    if ((valueToShift & 0x80000000) == 0x80000000)
-                        CarryFlag = true;
-                        //OverflowFlag = true;
+                    CarryFlag = (valueToShift & 0x80000000) == 0x80000000;
                     valueToShift = valueToShift << 1;
+                    if (arithmetic && CarryFlag)
+                        valueToShift |= 0x00000001;
                 }
                 else
                 {
-                    if ((valueToShift & 0x00000001) == 0x00000001)
-                        CarryFlag = true;
-                        //OverflowFlag = true;
+                    CarryFlag = (valueToShift & 0x00000001) == 0x00000001;
                     valueToShift = valueToShift >> 1;
+                    if (arithmetic && CarryFlag)
+                        valueToShift |= 0x80000000;
                 }
             }
             GetResultLo.Set(valueToShift);
@@ -175,18 +182,14 @@ namespace MIPSCore.ALU
 
         private void PerformMult()
         {
-            long res = 0;
-            try { checked { res = arg1.SignedDecimal*arg2.SignedDecimal; } }
-            catch (OverflowException) { OverflowFlag = true; }
+            long res = (long)arg1.SignedDecimal * (long)arg2.SignedDecimal;
             GetResultLo.Set((int) res);
             GetResultHi.Set((int) (res >> 32));
         }
 
         private void PerformMultU()
         {
-            ulong res = 0;
-            try { checked { res = arg1.UnsignedDecimal * arg2.UnsignedDecimal; } }
-            catch (OverflowException) { OverflowFlag = true; }
+            ulong res = (ulong)arg1.UnsignedDecimal * (ulong)arg2.UnsignedDecimal;
             GetResultLo.Set((uint)res);
             GetResultHi.Set((uint)(res >> 32));
         }
@@ -203,17 +206,27 @@ namespace MIPSCore.ALU
             ZeroFlag = false;
             SignFlag = false;
             CarryFlag = false;
-            arg1 = RegisterFile.ReadRs();
-            switch (ControlUnit.AluSource)
+            
+            switch (ControlUnit.AluSource1)
             {
-                case AluSource.Rd: arg2 = RegisterFile.ReadRd(); break;
-                case AluSource.RdSignExtend: arg2 = RegisterFile.ReadRd().SignExtend(); break;
-                case AluSource.RdSignExtendZero: arg2 = RegisterFile.ReadRd().SignExtendZero(); break;
-                case AluSource.Rt: arg2 = RegisterFile.ReadRt(); break;
-                case AluSource.RtSignExtend: arg2 = RegisterFile.ReadRt().SignExtend(); break;
-                case AluSource.RtSignExtendZero: arg2 = RegisterFile.ReadRt().SignExtendZero(); break;
-                case AluSource.ImmSignExtend: arg2 = InstructionMemory.GetImmediate.SignExtend(); break;
-                case AluSource.ImmSignExtendZero: arg2 = InstructionMemory.GetImmediate.SignExtendZero(); break;
+                case AluSource1.Rs: arg1 = RegisterFile.ReadRs(); break;
+                case AluSource1.RsSignExtend: arg1 = RegisterFile.ReadRs().SignExtend(); break;
+                case AluSource1.RsSignExtendZero: arg1 = RegisterFile.ReadRs().SignExtendZero(); break;
+                case AluSource1.Rs40: arg1 = new Word(((uint)RegisterFile.ReadRs().UnsignedDecimal & 0x0000001F)); break;
+                case AluSource1.Shamt: arg1= new Word((InstructionMemory.GetShiftAmount.UnsignedDecimal)); break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            switch (ControlUnit.AluSource2)
+            {
+                case AluSource2.Rd: arg2 = RegisterFile.ReadRd(); break;
+                case AluSource2.RdSignExtend: arg2 = RegisterFile.ReadRd().SignExtend(); break;
+                case AluSource2.RdSignExtendZero: arg2 = RegisterFile.ReadRd().SignExtendZero(); break;
+                case AluSource2.Rt: arg2 = RegisterFile.ReadRt(); break;
+                case AluSource2.RtSignExtend: arg2 = RegisterFile.ReadRt().SignExtend(); break;
+                case AluSource2.RtSignExtendZero: arg2 = RegisterFile.ReadRt().SignExtendZero(); break;
+                case AluSource2.ImmSignExtend: arg2 = InstructionMemory.GetImmediate.SignExtend(); break;
+                case AluSource2.ImmSignExtendZero: arg2 = InstructionMemory.GetImmediate.SignExtendZero(); break;
                 default: throw new ArgumentOutOfRangeException();
             }
         }

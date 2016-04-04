@@ -14,7 +14,15 @@ namespace MIPSCore.Instruction_Set
         [Text("Rd")] Rd, 
         [Text("Ra")] Ra 
     }
-    public enum AluSource { 
+    public enum AluSource1
+    {
+        [Text("Rs")] Rs,
+        [Text("Rs sign extend")] RsSignExtend,
+        [Text("Rs sign extend zero")] RsSignExtendZero,
+        [Text("Rs4:0")] Rs40,
+        [Text("Shift amount")] Shamt
+    }
+    public enum AluSource2 { 
         [Text("Rt")] Rt,
         [Text("Rt sign extend")]  RtSignExtend,
         [Text("Rt sign extend zero")] RtSignExtendZero,
@@ -41,6 +49,7 @@ namespace MIPSCore.Instruction_Set
         [Text("Divide")] Div,
         [Text("Shift left")] ShiftLeft,
         [Text("Shift right")] ShiftRight,
+         [Text("Shift right arithmetic")] ShiftRightArithmetic,
         [Text("Shift 16 left")] ShiftLeft16,
         [Text("Nor")] Nor,
         [Text("Stall")] Stall,
@@ -78,7 +87,8 @@ namespace MIPSCore.Instruction_Set
 
         public InstructionFormat InstructionFormat { get; private set; }
         public RegisterDestination RegisterDestination { get; private set; }
-        public AluSource AluSource { get; private set; }
+        public AluSource1 AluSource1 { get; private set; }
+        public AluSource2 AluSource2 { get; private set; }
         public AluControl AluControl { get; private set; }
         public bool RegisterWrite { get; private set; }
         public bool MemoryWrite { get; private set; }
@@ -122,7 +132,8 @@ namespace MIPSCore.Instruction_Set
 
             InstructionFormat = instruction.Format;
             RegisterDestination = instruction.RegDestination;
-            AluSource = instruction.AluSource;
+            AluSource1 = instruction.AluSource1;
+            AluSource2 = instruction.AluSource2;
             AluControl = instruction.AluControl;
             RegisterWrite = instruction.RegWrite;
             MemoryWrite = instruction.MemWrite;
@@ -159,7 +170,8 @@ namespace MIPSCore.Instruction_Set
             rString += RepeatString("-", 80);
 
             /* ALU */
-            rString += "ALU Source:\t\t" + AluSource.ToText() + "\n";
+            rString += "ALU Source1:\t\t" + AluSource1.ToText() + "\n";
+            rString += "ALU Source2:\t\t" + AluSource2.ToText() + "\n";
             rString += "ALU Control:\t\t" + AluControl.ToText() + "\n";
             rString += RepeatString("-", 80);
 

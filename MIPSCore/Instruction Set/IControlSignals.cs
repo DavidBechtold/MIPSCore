@@ -12,7 +12,8 @@
 
         InstructionFormat InstructionFormat { get; }
         RegisterDestination RegisterDestination { get; }
-        AluSource AluSource { get; }
+        AluSource1 AluSource1 { get; }
+        AluSource2 AluSource2 { get; }
         AluControl AluControl { get; }
         bool RegisterWrite { get; }
         bool MemoryWrite { get; }

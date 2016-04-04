@@ -1,7 +1,8 @@
 //--- Projekt ---//
-Packet Manager:		Nuget
-MVVM Helper Lib:	Prism
-Repository:		Github
+Packet Manager:			Nuget
+MVVM Helper Lib:		Prism
+Repository:			Github
+Coding Standards Tester:	Resharper
 
 
 ### Compile for this Machine

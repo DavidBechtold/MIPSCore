@@ -1,0 +1,98 @@
+
+mult.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	27bdffd8 	addiu	sp,sp,-40
+   4:	afbf0024 	sw	ra,36(sp)
+   8:	afbe0020 	sw	s8,32(sp)
+   c:	03a0f021 	move	s8,sp
+  10:	3c023b9a 	lui	v0,0x3b9a
+  14:	3444ca00 	ori	a0,v0,0xca00
+  18:	24050005 	li	a1,5
+  1c:	0c00001b 	jal	6c <multi>
+  20:	00000000 	nop
+  24:	afc3001c 	sw	v1,28(s8)
+  28:	afc20018 	sw	v0,24(s8)
+  2c:	8fc20018 	lw	v0,24(s8)
+  30:	00000000 	nop
+  34:	00022f40 	sll	a1,v0,0x1d
+  38:	8fc4001c 	lw	a0,28(s8)
+  3c:	8fc60018 	lw	a2,24(s8)
+  40:	000418c2 	srl	v1,a0,0x3
+  44:	00651825 	or	v1,v1,a1
+  48:	000610c3 	sra	v0,a2,0x3
+  4c:	afc30010 	sw	v1,16(s8)
+  50:	00001021 	move	v0,zero
+  54:	03c0e821 	move	sp,s8
+  58:	8fbf0024 	lw	ra,36(sp)
+  5c:	8fbe0020 	lw	s8,32(sp)
+  60:	27bd0028 	addiu	sp,sp,40
+  64:	03e00008 	jr	ra
+  68:	00000000 	nop
+
+0000006c <multi>:
+  6c:	27bdfff8 	addiu	sp,sp,-8
+  70:	afbe0000 	sw	s8,0(sp)
+  74:	03a0f021 	move	s8,sp
+  78:	afc40008 	sw	a0,8(s8)
+  7c:	afc5000c 	sw	a1,12(s8)
+  80:	8fc20008 	lw	v0,8(s8)
+  84:	00000000 	nop
+  88:	000217c3 	sra	v0,v0,0x1f
+  8c:	8fc50008 	lw	a1,8(s8)
+  90:	00402021 	move	a0,v0
+  94:	8fc2000c 	lw	v0,12(s8)
+  98:	00000000 	nop
+  9c:	000237c3 	sra	a2,v0,0x1f
+  a0:	8fc3000c 	lw	v1,12(s8)
+  a4:	00c01021 	move	v0,a2
+  a8:	00830018 	mult	a0,v1
+  ac:	00003012 	mflo	a2
+	...
+  b8:	00450018 	mult	v0,a1
+  bc:	00003812 	mflo	a3
+  c0:	00c73021 	addu	a2,a2,a3
+  c4:	00000000 	nop
+  c8:	00a30019 	multu	a1,v1
+  cc:	00001812 	mflo	v1
+  d0:	00001010 	mfhi	v0
+  d4:	00c23021 	addu	a2,a2,v0
+  d8:	00c01021 	move	v0,a2
+  dc:	03c0e821 	move	sp,s8
+  e0:	8fbe0000 	lw	s8,0(sp)
+  e4:	27bd0008 	addiu	sp,sp,8
+  e8:	03e00008 	jr	ra
+  ec:	00000000 	nop
+Disassembly of section .reginfo:
+
+00000000 <.reginfo>:
+   0:	e00000fc 	swc0	$0,252(zero)
+	...
+Disassembly of section .pdr:
+
+00000000 <.pdr>:
+   0:	00000000 	nop
+   4:	c0000000 	lwc0	$0,0(zero)
+   8:	fffffffc 	0xfffffffc
+	...
+  14:	00000028 	0x28
+  18:	0000001e 	0x1e
+  1c:	0000001f 	0x1f
+  20:	0000006c 	0x6c
+  24:	40000000 	mfc0	zero,$0
+  28:	fffffff8 	0xfffffff8
+	...
+  34:	00000008 	jr	zero
+  38:	0000001e 	0x1e
+  3c:	0000001f 	0x1f
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	00474343 	0x474343
+   4:	3a202847 	xori	zero,s1,0x2847
+   8:	4e552920 	c3	0x552920
+   c:	342e312e 	ori	t6,at,0x312e
+  10:	Address 0x0000000000000010 is out of bounds.
+
