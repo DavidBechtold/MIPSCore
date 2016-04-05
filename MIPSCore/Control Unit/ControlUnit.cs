@@ -22,7 +22,6 @@ namespace MIPSCore.Control_Unit
             }
             catch (ArgumentOutOfRangeException)
             {
-                // TODO make own exception
                 throw new ArgumentOutOfRangeException();
             }
         }

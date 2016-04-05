@@ -52,6 +52,8 @@ namespace MIPSCore.ALU
                 case AluControl.SetLessThan:    PerformSetOnLessThen(); break;
                 case AluControl.SetLessThanU:   PerformSetOnLessThenU();break;
                 case AluControl.SetLessThanZero:PerformSetOnLessThanZ();break;
+                case AluControl.SetLessThanEqualZero: PerformSetOnLessThanEqualZ(); break;
+                case AluControl.SetGreaterThanZero: PerformSetOnGreaterThanZ(); break;
                 case AluControl.SetGreaterEqualZero: PerformSetGreaterEqualZero(); break;
                 case AluControl.Mult:           PerformMult();          break;
                 case AluControl.Multu:          PerformMultU();         break;
@@ -123,6 +125,22 @@ namespace MIPSCore.ALU
         private void PerformSetOnLessThanZ()
         {
             if (arg1.SignedDecimal < 0)
+                GetResultLo.Set((uint)1);
+            else
+                GetResultLo.Set((uint)0);
+        }
+
+        private void PerformSetOnLessThanEqualZ()
+        {
+            if (arg1.SignedDecimal <= 0)
+                GetResultLo.Set((uint)1);
+            else
+                GetResultLo.Set((uint)0);
+        }
+
+        private void PerformSetOnGreaterThanZ()
+        {
+            if (arg1.SignedDecimal > 0)
                 GetResultLo.Set((uint)1);
             else
                 GetResultLo.Set((uint)0);

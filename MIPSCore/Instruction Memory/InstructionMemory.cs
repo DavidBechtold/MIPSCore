@@ -125,7 +125,7 @@ namespace MIPSCore.Instruction_Memory
                     else
                         GetProgramCounter += 4;
                     break;
-                case ProgramCounterSource.SignExtendLessThanZero:
+                case ProgramCounterSource.SignExtendAluResultOne:
                     if (Alu.GetResultLo.UnsignedDecimal == 1)
                     {
                         if (branchDelaySlot)

@@ -20,7 +20,7 @@ namespace MIPSCore.Instruction_Set
         [Text("Rs sign extend")] RsSignExtend,
         [Text("Rs sign extend zero")] RsSignExtendZero,
         [Text("Rs4:0")] Rs40,
-        [Text("Shift amount")] Shamt
+        [Text("Shift amount")] Shamt,
     }
     public enum AluSource2 { 
         [Text("Rt")] Rt,
@@ -30,7 +30,7 @@ namespace MIPSCore.Instruction_Set
         [Text("Rd sign extend")] RdSignExtend,
         [Text("Rd sign extend zero")] RdSignExtendZero,
         [Text("Immediate sign extend")] ImmSignExtend,
-        [Text("Immediate sign extend zero")] ImmSignExtendZero
+        [Text("Immediate sign extend zero")] ImmSignExtendZero,
     }
     public enum AluControl {
         [Text("And")] And,
@@ -43,7 +43,9 @@ namespace MIPSCore.Instruction_Set
         [Text("Set less than")] SetLessThan,
         [Text("Set less than unsigned")] SetLessThanU,
         [Text("set less than zero")] SetLessThanZero,
-        [Text("set less than zero")] SetGreaterEqualZero,
+        [Text("set less than equal zero")] SetLessThanEqualZero,
+        [Text("set greater than zero")] SetGreaterThanZero,
+        [Text("set greater equal zero")] SetGreaterEqualZero,
         [Text("Multiply")] Mult,
         [Text("Multiply unsigned")] Multu,
         [Text("Divide")] Div,
@@ -64,7 +66,7 @@ namespace MIPSCore.Instruction_Set
         [Text("program counter")] ProgramCounter, 
         [Text("sign extend equal")] SignExtendEqual, 
         [Text("sign extend unequal")] SignExtendUnequal,
-        [Text("sign extend on less than zero")]SignExtendLessThanZero, 
+        [Text("sign extend on less than zero")] SignExtendAluResultOne, 
         [Text("sign extend on less or equal than zero")] SignExtendLessOrEqualZero, 
         [Text("jump")] Jump, 
         [Text("register")] Register 

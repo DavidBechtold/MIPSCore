@@ -59,6 +59,8 @@
                         SetLessThan...set on less than
                         SetLessThanU...set on less than unsigned
                         SetLessThanZero...set on less than zero
+                        SetLessThanEqualZero...set on less than or equal zero
+                        SetGreaterThanZero...set on greater tahan zero
                         SetGreaterEqualZero...set on greater equal zero
                         Mult...Multiply
                         Div...divide
@@ -85,7 +87,7 @@
                         ProgramCounter...take the value from the program counter (pc = pc + 4)
                         SignExtendEqual...take the value from the sign extender, but only if the zero flag of the alu is set (pc += imm. * 4 + 4 else pc += 4)
                         SignExtendUnequal...take the value from the sign extender, but only if the zero flag of the alu is not set (pc += imm. * 4 + 4 else pc += 4)
-                        SignExtendLessThanZero...take the value from the sign extender, if AluLo result is 1 (pc += imm. * 4 + 4 else pc += 4)
+                        SignExtendAluResultOne...take the value from the sign extender, if AluLo result is 1 (pc += imm. * 4 + 4 else pc += 4)
                         SignExtendLessOrEqualZero...take the value form the sing extender, but only if the zero flag of the alu is not set Or the alu result is 1 (pc += imm. * 4 + 4 else pc += 4)
                         Jump...take the value from the jumpTarget(24 bit) (pc = jumpTarget * 4)
                         Register...take the value from the Rs Register (pc = Rs)
@@ -246,6 +248,29 @@
     <regWrite>false</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
+    <aluSource1>Rs</aluSource1>
+    <aluSource2>Rt</aluSource2>
+    <aluControl>Stall</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>Register</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>Jump and link register</name>
+    <assembler>jalr</assembler>
+    <example>jalr rd, rs</example>
+    <meaning>pc = rs; rd=pc+4</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>9</function>
+    <rd>0</rd>
+    <regWrite>true</regWrite>
+    <regDestination>Rd</regDestination>
+    <regFileInput>ProgramCounter</regFileInput>
     <aluSource1>Rs</aluSource1>
     <aluSource2>Rt</aluSource2>
     <aluControl>Stall</aluControl>
@@ -622,7 +647,7 @@
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
     <memSignExtend>false</memSignExtend>
-    <pcSource>SignExtendLessThanZero</pcSource>
+    <pcSource>SignExtendLessOrEqualZero</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
 
@@ -645,7 +670,53 @@
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
     <memSignExtend>false</memSignExtend>
-    <pcSource>SignExtendLessThanZero</pcSource>
+    <pcSource>SignExtendAluResultOne</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>branch on less than zero and link</name>
+    <assembler>bltzal</assembler>
+    <example>bltzal Rs, imm18</example>
+    <meaning>r31=pc+4; if Rs&lt;0: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>1</opcode>
+    <function>0</function>
+    <rd>16</rd>
+    <regWrite>true</regWrite>
+    <regDestination>Ra</regDestination>
+    <regFileInput>ProgramCounter</regFileInput>
+    <aluSource1>Rs</aluSource1>
+    <aluSource2>Rt</aluSource2>
+    <aluControl>SetLessThanZero</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>SignExtendAluResultOne</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>branch on greater equal than zero and link</name>
+    <assembler>bgezal</assembler>
+    <example>bgezal Rs, imm18</example>
+    <meaning>r31=pc+4; if Rs&gt;=0: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>1</opcode>
+    <function>0</function>
+    <rd>17</rd>
+    <regWrite>true</regWrite>
+    <regDestination>Ra</regDestination>
+    <regFileInput>ProgramCounter</regFileInput>
+    <aluSource1>Rs</aluSource1>
+    <aluSource2>Rt</aluSource2>
+    <aluControl>SetGreaterEqualZero</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>SignExtendAluResultOne</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
     
@@ -698,8 +769,8 @@
   <CInstruction>
     <name>branch on less than Or equal to zero</name>
     <assembler>blez</assembler>
-    <example>beq Rd, Rt, imm</example>
-    <meaning>if Rs&lt;=Rt: pc += imm * 4 + 4</meaning>
+    <example>blez Rs, imm18</example>
+    <meaning>if Rs&lt;=0: pc += imm * 4 + 4</meaning>
     <format>I</format>
     <opcode>6</opcode>
     <function>0</function>
@@ -717,8 +788,29 @@
     <pcSource>SignExtendLessOrEqualZero</pcSource>
     <systemcall>false</systemcall>
   </CInstruction>
-  
-  <!--TODO BGTZ -->
+
+  <CInstruction>
+    <name>branch on greater than zero</name>
+    <assembler>bgtz</assembler>
+    <example>bgtz Rs, imm18</example>
+    <meaning>if Rs&gt;0: pc += imm * 4 + 4</meaning>
+    <format>I</format>
+    <opcode>7</opcode>
+    <function>0</function>
+    <rd>0</rd>
+    <regWrite>false</regWrite>
+    <regDestination>Rd</regDestination>
+    <regFileInput>AluLo</regFileInput>
+    <aluSource1>RsSignExtend</aluSource1>
+    <aluSource2>Rt</aluSource2>
+    <aluControl>SetGreaterThanZero</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>SignExtendAluResultOne</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
 
   <CInstruction>
     <name>addition imm. unsigned</name>
