@@ -615,7 +615,7 @@
     <regWrite>false</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource1>RsSignExtend</aluSource1>
+    <aluSource1>Rs</aluSource1>
     <aluSource2>ImmSignExtend</aluSource2>
     <aluControl>SetLessThanZero</aluControl>
     <memWrite>false</memWrite>
@@ -638,7 +638,7 @@
     <regWrite>false</regWrite>
     <regDestination>Rd</regDestination>
     <regFileInput>AluLo</regFileInput>
-    <aluSource1>RsSignExtend</aluSource1>
+    <aluSource1>Rs</aluSource1>
     <aluSource2>ImmSignExtend</aluSource2>
     <aluControl>SetGreaterEqualZero</aluControl>
     <memWrite>false</memWrite>
