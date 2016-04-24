@@ -5,7 +5,7 @@ using MIPSCore.Util;
 namespace MIPSCore.Instruction_Set
 {
     [XmlRoot("CInstructionSet")]
-    public class CInstructionSet
+    public class InstructionSet
     {
         [XmlElement("CInstruction")]
         public CInstruction[] Instructions;

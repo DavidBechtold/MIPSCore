@@ -61,7 +61,7 @@
     <Compile Include="MipsCore.cs" />
     <Compile Include="IMipsCore.cs" />
     <Compile Include="Data Memory\DataMemory.cs" />
-    <Compile Include="Instruction Set\CInstructionSet.cs" />
+    <Compile Include="Instruction Set\InstructionSet.cs" />
     <Compile Include="Instruction Set\ControlSignals.cs" />
     <Compile Include="Instruction Set\IControlSignals.cs" />
     <Compile Include="Register File\RegisterFile.cs" />

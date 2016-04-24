@@ -101,7 +101,7 @@ namespace MIPSCore.Instruction_Set
         public DataMemoryWordSize DataMemoryWordSize { get; private set; }
         public bool Systemcall { get; private set; }
 
-        private readonly CInstructionSet instructionSet;
+        private readonly InstructionSet instructionSet;
         private CInstruction instruction;
 
         public ControlSignals()
@@ -114,8 +114,8 @@ namespace MIPSCore.Instruction_Set
                 throw new FileNotFoundException("File \"Instruction Set/instructionSet.xml\" not found.");
 
             var reader = new FileStream("Instruction Set//instructionSet.xml", FileMode.Open);
-            var ser = new XmlSerializer(typeof(CInstructionSet));
-            instructionSet = ser.Deserialize(reader) as CInstructionSet;
+            var ser = new XmlSerializer(typeof(InstructionSet));
+            instructionSet = ser.Deserialize(reader) as InstructionSet;
             reader.Close();
             instruction = new CInstruction();
         }

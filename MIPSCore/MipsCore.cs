@@ -103,10 +103,12 @@ namespace MIPSCore
         public void StopCore()
         {
             clock.Stop();
+            SetMode(ExecutionMode.SingleStep);
         }
 
         public void ResetCore()
         {
+            StopCore();
             if (programmedFilePath.Length == 0)
                 return;
 

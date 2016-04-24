@@ -8,7 +8,7 @@
         xmlns:viewModel="clr-namespace:MIPSCoreUI.ViewModel"
         d:DataContext="{d:DesignInstance d:Type=viewModel:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="798.5" Width="1550" 
+        Title="MIPS Sim" Height="798.5" Width="1550" 
         WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
 
     <Window.Resources>
