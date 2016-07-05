@@ -126,6 +126,8 @@
       <baseObjects:ArrowPolyline Points="490,247 490,190 130,190 130,251 146,251" Stroke="{Binding JumpRegisterLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}" CircleStart="True"/>
       <baseObjects:ArrowPolyline Points="480,293 520,293" Stroke="{Binding RegisterFileRtOutLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
       <baseObjects:ArrowPolyline Points="540,293 580,293" Stroke="{Binding AluRead2Line, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}" />
+      <baseObjects:ArrowPolyline Points="480,326 530,326 530,350 700,350 700,310 760,310" Stroke="{Binding DataMemoryValueLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
+      <baseObjects:ArrowPolyline Points="480,293 520,293" Stroke="{Binding RegisterFileRtOutLine, FallbackValue=Black}" StrokeThickness="{StaticResource PathThickness}" ArrowLength="{StaticResource ArrowLength}"/>
 
       <TextBlock HorizontalAlignment="Left" Margin="300,259,0,0" Text="31:0" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top"/>
       <TextBlock HorizontalAlignment="Left" Margin="341,88,0,0" Text="31:26" FontSize="{StaticResource PathFontSize}" VerticalAlignment="Top"/>
@@ -157,6 +159,7 @@
           <TextBlock Text="Write" Foreground="{Binding RegisterFileWriteBackLine}" Margin="0,90,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="rs" Margin="0,35,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="rt" Margin="0,81,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="rd" Margin="0,115,1,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
         </Grid>
       </Border>
 
@@ -262,6 +265,7 @@
         <Grid>
           <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="{StaticResource RectFontSizeHeader}" TextWrapping="Wrap">Data Memory</TextBlock>
           <TextBlock Text="address" Foreground="{Binding DataMemoryAddressLine}" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
+          <TextBlock Text="value" Foreground="{Binding DataMemoryValueLine}" Margin="0,76,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="data" Foreground="{Binding DataMemoryOutLine}" Margin="0,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource RectFontSize}"/>
           <TextBlock Text="r/w" Margin="0,18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{Binding DataMemoryControlLine}" FontSize="{StaticResource RectFontSize}"/>
         </Grid>

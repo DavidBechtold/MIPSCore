@@ -42,6 +42,7 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush dataMemoryAddressLine;
         private SolidColorBrush registerFileWriteBackLine;
         private SolidColorBrush branchOrWriteProgramCounterLine;
+        private SolidColorBrush dataMemoryValueLine;
 
         /* muxes */
         private SolidColorBrush branchMux;
@@ -70,7 +71,7 @@ namespace MIPSCoreUI.ViewModel
             JumpLine = JumpRegisterLine = JumpRegisterAluRead1Line = ProgramCounterLine = 
                 BranchLine = ImmediateOrBranchLine = InstructionMemoryLine =
                 ProgramCounterOrRegisterFileInputLine = lineInactive;
-            RegisterFileWriteBackLine = BranchOrWriteProgramCounterLine = RegisterFileRsRdLine = RegisterFileRsRdRtLine = RegisterFileRtLine = RegisterFileRdLine = RegisterFileRsLine = JumpBranchLine = ImmediateLine = lineInactive;
+            DataMemoryValueLine = RegisterFileWriteBackLine = BranchOrWriteProgramCounterLine = RegisterFileRsRdLine = RegisterFileRsRdRtLine = RegisterFileRtLine = RegisterFileRdLine = RegisterFileRsLine = JumpBranchLine = ImmediateLine = lineInactive;
         
             DataMemoryAddressLine = WritePcToRegisterLine = WriteAluResultLine = AluResultLine = DataMemoryOutLine = DataMemoryMux = AluSourceMux = RegisterFileRtOutLine = BranchMux = JumpMux = BranchMuxLine = JumpMuxLine = AluRead1Line = AluRead2Line = lineInactive;
 
@@ -130,6 +131,7 @@ namespace MIPSCoreUI.ViewModel
             DataMemoryAddressLine = lineInactive;
             RegisterFileWriteBackLine = lineInactive;
             BranchOrWriteProgramCounterLine = lineInactive;
+            DataMemoryValueLine = lineInactive;
 
             /* Control Lines */
             if (controlUnit.AluControl != AluControl.Stall)
@@ -170,12 +172,15 @@ namespace MIPSCoreUI.ViewModel
                 DataMemoryControlLine = controlLineActive;
                 DataMemoryAddressLine = lineActive;
                 AluResultLine = lineActive;
+                RegisterFileRdLine = lineActive;
             }
-            else if (controlUnit.MemoryRead)
+            if (controlUnit.MemoryRead)
             {
                 DataMemoryMux = lineActive;
                 DataMemoryOutLine = lineActive;
             }
+            if (controlUnit.MemoryWrite)
+                DataMemoryValueLine = lineActive;
 
             /* Branch Lines */
             if (controlUnit.ProgramCounterSource == ProgramCounterSource.ProgramCounter)
@@ -235,7 +240,8 @@ namespace MIPSCoreUI.ViewModel
             else if (controlUnit.InstructionFormat == InstructionFormat.I && Equals(BranchLine, lineInactive))
             {
                 RegisterFileRsLine = lineActive;
-                RegisterFileRtLine = lineActive;
+                if (!controlUnit.MemoryRead)
+                    RegisterFileRtLine = lineActive;
                 RegisterFileRsRdLine = lineActive;
                 RegisterFileRsRdRtLine = lineActive;
                 JumpBranchLine = lineActive;
@@ -406,6 +412,12 @@ namespace MIPSCoreUI.ViewModel
         {
             set { branchOrWriteProgramCounterLine = value; RaisePropertyChanged(() => BranchOrWriteProgramCounterLine); }
             get { return branchOrWriteProgramCounterLine; }
+        }
+
+        public SolidColorBrush DataMemoryValueLine
+        {
+            set { dataMemoryValueLine = value; RaisePropertyChanged(() => DataMemoryValueLine); }
+            get { return dataMemoryValueLine; }
         }
 
         /* Muxes */

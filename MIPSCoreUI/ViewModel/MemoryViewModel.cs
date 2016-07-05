@@ -60,8 +60,8 @@ namespace MIPSCoreUI.ViewModel
 
         public void RefreshGui()
         {
-                RefreshInstructionMemory();
-                RefreshDataMemory();
+            RefreshInstructionMemory();
+            RefreshDataMemory();
         }
 
         private void OnAddBreakpoint()
