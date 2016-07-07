@@ -47,8 +47,8 @@ namespace MIPSCore
             //ReadConfigFile();
 
             ulong coreFrequencyHz = 100;
-            var instructionMemorySizeKb = MemorySize.Size1Kb;
-            var dataMemorySizeKb = MemorySize.Size1Kb;
+            var instructionMemorySizeKb = MemorySize.Size4Kb;
+            var dataMemorySizeKb = MemorySize.Size4Kb;
             initStackAndGlobalPointer = true;
 
             /* bootstrapping */

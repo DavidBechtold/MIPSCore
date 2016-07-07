@@ -3,8 +3,26 @@ using System.Collections.Generic;
 
 namespace MIPSCore.Util._Memory
 {
-    public enum MemorySize { [Text("128 Byte")] Size128Byte = 1, [Text("512 Byte")] Size512Byte, [Text("1 KByte")] Size1Kb,
-    [Text("2 KByte")] Size2Kb, [Text("4 KByte")] Size4Kb, [Text("8 KByte")] Size8Kb, [Text("16 KByte")] Size16Kb }
+    public enum MemorySize {
+    [Text("4 KByte")]
+    Size4Kb,
+    [Text("8 KByte")]
+    Size8Kb,
+    [Text("16 KByte")]
+    Size16Kb,
+    [Text("32 KByte")]
+    Size32Kb,
+    [Text("64 KByte")]
+    Size64Kb,
+    [Text("128 KByte")]
+    Size128Kb,
+    /*[Text("256 KByte")]
+    Size256Kb,
+    [Text("512 KByte")]
+    Size512Kb,
+    [Text("1024 KByte")]
+    Size1024Kb,*/
+    }
 
     public class Memory : IMemory
     {
@@ -35,34 +53,42 @@ namespace MIPSCore.Util._Memory
         {
             switch (size)
             {
-                case MemorySize.Size128Byte:
-                    memory = new byte[128 * 8];
-                    GetLastByteAddress = 128 * 8 - 1;
-                    break;
-                case MemorySize.Size512Byte:
-                    memory = new byte[512 * 8];
-                    GetLastByteAddress = 512 * 8 - 1;
-                    break;
-                case MemorySize.Size1Kb:
-                    memory = new byte[1024 * 8];
-                    GetLastByteAddress = 1024 * 8 - 1;
-                    break;
-                case MemorySize.Size2Kb:
-                    memory = new byte[2048 * 8];
-                    GetLastByteAddress = 2048 * 8 - 1;
-                    break;
                 case MemorySize.Size4Kb:
-                    memory = new byte[4096 * 8];
-                    GetLastByteAddress = 4096 * 8 - 1;
+                    memory = new byte[1024 * 4];
+                    GetLastByteAddress = 1024 * 4 - 1;
                     break;
                 case MemorySize.Size8Kb:
-                    memory = new byte[8192 * 8];
-                    GetLastByteAddress = 8192 * 8 - 1;
+                    memory = new byte[8192];
+                    GetLastByteAddress = 8192 - 1;
                     break;
                 case MemorySize.Size16Kb:
-                    memory = new byte[16384 * 8];
-                    GetLastByteAddress = 16384 * 8 - 1;
+                    memory = new byte[16384];
+                    GetLastByteAddress = 16384 - 1;
                     break;
+                case MemorySize.Size32Kb:
+                    memory = new byte[32768];
+                    GetLastByteAddress = 32768 - 1;
+                    break;
+                case MemorySize.Size64Kb:
+                    memory = new byte[65536];
+                    GetLastByteAddress = 65536 - 1;
+                    break;
+                case MemorySize.Size128Kb:
+                    memory = new byte[131072];
+                    GetLastByteAddress = 131072 - 1;
+                    break;
+                /*case MemorySize.Size256Kb:
+                    memory = new byte[262144];
+                    GetLastByteAddress = 262144 - 1;
+                    break;
+                case MemorySize.Size512Kb:
+                    memory = new byte[524288];
+                    GetLastByteAddress = 524288 - 1;
+                    break;
+                case MemorySize.Size1024Kb:
+                    memory = new byte[1048576];
+                    GetLastByteAddress = 1048576 - 1;
+                    break;*/
                 default:
                     throw new ArgumentOutOfRangeException("size");
             }

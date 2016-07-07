@@ -32,8 +32,8 @@ namespace MIPSCoreUI.ViewModel
 
             InitCollection(TextMemorySize);
             InitCollection(DataMemorySize);
-            TextMemorySizeIndex = (int) core.InstructionMemory.Size - 1;
-            DataMemorySizeIndex = (int) core.DataMemory.Size - 1;
+            TextMemorySizeIndex = (int) core.InstructionMemory.Size;
+            DataMemorySizeIndex = (int) core.DataMemory.Size;
             branchDelaySlot = core.GetBranchDelaySlot();
         }
 
