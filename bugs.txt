@@ -1,0 +1,3 @@
+//--- Missing MUX ---//
+For example the beq instruction take the rd and rs register values for alu operands. 
+The mux to forward the rd register value to the alu is missing.
