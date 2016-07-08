@@ -168,7 +168,7 @@ namespace MIPSCore.Util
                 case 27: return "$k1";
                 case 28: return "$gp";
                 case 29: return "$sp";
-                case 30: return "$fp";
+                case 30: return "$fp/$s8";
                 case 31: return "$ra";
             }
             throw new ArgumentOutOfRangeException();
