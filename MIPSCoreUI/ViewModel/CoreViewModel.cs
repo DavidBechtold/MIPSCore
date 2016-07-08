@@ -94,11 +94,10 @@ namespace MIPSCoreUI.ViewModel
             AluOperationControlLine = controlLineInactive;
             BranchControlLine = controlLineInactive;
             JumpControlLine = controlLineInactive;
-            AluSourceControlLine = controlLineInactive;
+            AluSourceControlLine = controlLineActive;
             RegFileWriteControlLine = controlLineInactive;
             DataMemoryControlLine = controlLineInactive;
 
-            AluSourceMux = lineInactive;
             JumpMux = lineActive;
             JumpMuxLine = lineActive;
             AluSourceMux = lineActive;
@@ -137,22 +136,25 @@ namespace MIPSCoreUI.ViewModel
             if (controlUnit.AluControl != AluControl.Stall)
             {
                 AluOperationControlLine = controlLineActive;
-                AluRead1Line = lineActive;
+                if (controlUnit.AluControl != AluControl.ShiftLeft16)
+                {
+                    AluRead1Line = lineActive;
+                    JumpRegisterAluRead1Line = lineActive;
+                }
                 AluRead2Line = lineActive;
-                JumpRegisterAluRead1Line = lineActive;
             }
 
             if (controlUnit.RegisterWrite)
             {
                 RegFileWriteControlLine = controlLineActive;
                 DataMemoryMux = lineActive;
-                AluResultLine = lineActive;
+                
                 RegisterFileWriteBackLine = lineActive;
 
                 if (controlUnit.RegisterFileInput == RegisterFileInput.AluLo)
                 {
                     WriteAluResultLine = lineActive;
-                    
+                    AluResultLine = lineActive;
                 }
                 else if (controlUnit.RegisterFileInput == RegisterFileInput.ProgramCounter)
                 {
@@ -193,6 +195,7 @@ namespace MIPSCoreUI.ViewModel
             else if (controlUnit.ProgramCounterSource == ProgramCounterSource.Jump)
             {
                 JumpControlLine = controlLineActive;
+                AluSourceControlLine = controlLineInactive;
 
                 JumpLine = lineActive;
                 RegisterFileRsRdLine = lineActive;
@@ -200,10 +203,12 @@ namespace MIPSCoreUI.ViewModel
                 JumpBranchLine= lineActive;
                 AluSourceMux = lineInactive;
 
+
             }
             else if (controlUnit.ProgramCounterSource == ProgramCounterSource.Register)
             {
                 JumpControlLine = controlLineActive;
+                AluSourceControlLine = controlLineInactive;
 
                 JumpRegisterLine = lineActive;
                 JumpRegisterAluRead1Line = lineActive;
@@ -220,10 +225,13 @@ namespace MIPSCoreUI.ViewModel
                 BranchMuxLine = lineActive;
                 ProgramCounterOrRegisterFileInputLine = lineActive;
                 RegisterFileRsLine = lineActive;
+
+                if(controlUnit.AluSource2 == AluSource2.Rd || controlUnit.AluSource2 == AluSource2.RdSignExtend || controlUnit.AluSource2 == AluSource2.RdSignExtendZero)
+                    RegisterFileRdLine = lineActive;
+
                 RegisterFileRsRdLine = lineActive;
                 RegisterFileRsRdRtLine= lineActive;
                 JumpBranchLine= lineActive;
-                RegisterFileRtOutLine = lineActive;
             }
 
             /* instruction memory lines */
@@ -239,15 +247,20 @@ namespace MIPSCoreUI.ViewModel
             }
             else if (controlUnit.InstructionFormat == InstructionFormat.I && Equals(BranchLine, lineInactive))
             {
-                RegisterFileRsLine = lineActive;
-                if (!controlUnit.MemoryRead)
-                    RegisterFileRtLine = lineActive;
+                if (controlUnit.AluControl != AluControl.ShiftLeft16)
+                {
+                    RegisterFileRsLine = lineActive;
+
+                    if (!controlUnit.MemoryRead)
+                        RegisterFileRdLine = lineActive;
+                }
+                
+                
                 RegisterFileRsRdLine = lineActive;
                 RegisterFileRsRdRtLine = lineActive;
                 JumpBranchLine = lineActive;
                 ImmediateOrBranchLine = lineActive;
                 ImmediateLine = lineActive;
-                AluSourceControlLine = controlLineActive;
             }
         }
 

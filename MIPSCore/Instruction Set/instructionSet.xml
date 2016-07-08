@@ -724,7 +724,7 @@
     <name>branch on equal</name>
     <assembler>beq</assembler>
     <example>beq Rd, Rs, imm</example>
-    <meaning>if Rs==Rt: pc += imm * 4 + 4</meaning>
+    <meaning>if Rs==Rd: pc += imm * 4 + 4</meaning>
     <format>I</format>
     <opcode>4</opcode>
     <function>0</function>
