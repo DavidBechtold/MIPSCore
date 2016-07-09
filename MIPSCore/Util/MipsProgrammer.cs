@@ -16,6 +16,7 @@ namespace MIPSCore.Util
         private string dataSegment;
         //private string sdataSegment;
         public Dictionary<uint, string> Code { get; private set; }
+        public uint TextSegmentEndAddress;
 
         public MipsProgrammer(MipsCore core)
         {
@@ -24,6 +25,7 @@ namespace MIPSCore.Util
             textSegment = "";
             dataSegment = "";
             //sdataSegment = "";
+            TextSegmentEndAddress = 0;
             rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
             rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t|\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C)*", RegexOptions.IgnoreCase);
             Code = new Dictionary<uint, string>();
@@ -44,7 +46,7 @@ namespace MIPSCore.Util
             if((dataMatch.Count) / 2 * 4 >= core.DataMemory.SizeBytes)
                 throw new IndexOutOfRangeException(".data segment is greater than " + core.DataMemory.SizeBytes + ".");
 
-            ProgramRegex(textMatch, core.InstructionMemory);
+            TextSegmentEndAddress = ProgramRegex(textMatch, core.InstructionMemory);
             ProgramRegex(dataMatch, core.DataMemory);
             //ProgramRegex(sdataMatch, core.DataMemory);
             ProgramRegex(codeMatch, Code);
@@ -60,7 +62,7 @@ namespace MIPSCore.Util
             //sdataSegment = GetSegment(strCode, ".sdata");
         }
 
-        private void ProgramRegex(MatchCollection match, IMemory memory)
+        private uint ProgramRegex(MatchCollection match, IMemory memory)
         {
             uint counter = 0;
             uint address = 0;
@@ -75,6 +77,7 @@ namespace MIPSCore.Util
                 }
                 counter++;
             }
+            return address;
         }
 
         private void ProgramRegex(MatchCollection match, IDictionary<uint, string> dict)

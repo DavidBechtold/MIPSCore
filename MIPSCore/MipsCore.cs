@@ -310,6 +310,11 @@ namespace MIPSCore
             return InstructionMemory.GetBranchDelaySlot();
         }
 
+        public uint GetTextSegmentEndAddress()
+        {
+            return programmer.TextSegmentEndAddress;
+        }
+
         /*public void ReadConfigFile()
         {
             // CoreFrequency
