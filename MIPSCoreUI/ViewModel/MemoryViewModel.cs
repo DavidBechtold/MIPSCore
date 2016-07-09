@@ -53,6 +53,9 @@ namespace MIPSCoreUI.ViewModel
 
         public void Draw()
         {
+            /* draw gets invoked when we draw something new. now we need to set the old programcounter to zero, because if we executed a program before reset
+             * the programcounter has the old value of the old program */
+            oldProgramCounter = 0;  
             DrawDataMemory();
             DrawInstructionMemory();
             RaisePropertyChanged(() => MipsDataMemory);
@@ -66,7 +69,7 @@ namespace MIPSCoreUI.ViewModel
 
         private void OnAddBreakpoint()
         {
-            if (List.Count <= 0 || oldProgramCounter >= List.Count) return;
+            if (List.Count <= 0) return;
 
             if (List[SelectedItem.Number].BreakpointVisible)
                 core.RemoveBreakpoint(List[SelectedItem.Number].Address);
@@ -81,9 +84,10 @@ namespace MIPSCoreUI.ViewModel
             List.Clear();
             core.RemoveAllBreakpoints();
             var instructionMemory = core.InstructionMemory;
+            var textSegmentEndAddress = core.GetTextSegmentEndAddress();
             var codeDict = core.Code;
             var codeCounter = 0;
-            for (uint i = 0; i < instructionMemory.GetLastByteAddress; i = i + 4, codeCounter++)
+            for (uint i = 0; i <= textSegmentEndAddress + 4; i = i + 4, codeCounter++)
             {
                 var code = "";
                 //var instruction = ReadWordFromMemory(instructionMemory, i);
@@ -128,10 +132,19 @@ namespace MIPSCoreUI.ViewModel
 
         private void RefreshInstructionMemory()
         {
-            if (List.Count <= 0) return;
+            if (List.Count <= 0 || oldProgramCounter / 4 >= List.Count)
+            {
+                /* if something happens with the programcounter, and it is out of bounds
+                 * we try to stabilize it with a new value of the programcounter */
+                oldProgramCounter = core.InstructionMemory.GetProgramCounter.SignedDecimal;
+                return;
+            }
+            
             List[oldProgramCounter / 4].Background = lineNotActiveColor;
             List[oldProgramCounter / 4].Changed();
             oldProgramCounter = core.InstructionMemory.GetProgramCounter.SignedDecimal;
+            if(oldProgramCounter / 4 >= List.Count)
+                return;
             List[oldProgramCounter / 4].Background = new SolidColorBrush(Colors.DarkGray);
             List[oldProgramCounter / 4].Changed();
         }
