@@ -9,7 +9,8 @@
         d:DataContext="{d:DesignInstance d:Type=viewModel:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Title="MIPS Sim" Height="798.5" Width="1550" 
-        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded"
+        ResizeMode="NoResize">
 
     <Window.Resources>
         <system:Double x:Key="FontSize">13</system:Double>

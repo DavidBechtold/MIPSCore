@@ -1,4 +1,4 @@
-unsigned int *address = (unsigned int*) 0xA0;
+unsigned int *address = (unsigned int*) 0xA0; //Decimal 160
 
 void showValue(unsigned char value);
 unsigned int segmentA(void);

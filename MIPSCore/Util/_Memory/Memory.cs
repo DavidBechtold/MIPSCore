@@ -170,7 +170,8 @@ namespace MIPSCore.Util._Memory
 
         public Word ReadHalfWord(Word byteAddress)
         {
-            if (byteAddress == null) throw new ArgumentNullException("byteAddress");
+            if (byteAddress == null) 
+                throw new ArgumentNullException("byteAddress");
             return ReadHalfWord(byteAddress.UnsignedDecimal);
         }
 
@@ -181,12 +182,12 @@ namespace MIPSCore.Util._Memory
                 changedWordAddresses.Remove(byteAddress);
 
             return new Word((uint)((memory[byteAddress] << 24 | memory[byteAddress + 1] << 16) | (memory[byteAddress + 2] << 8 | memory[byteAddress + 3])));
-            //return new Word((uint)((memory[byteAddress + 1] << 24 | memory[byteAddress] << 16) | (memory[byteAddress + 3] << 8 | memory[byteAddress + 2])));
         }
 
         public Word ReadWord(Word byteAddress)
         {
-            if (byteAddress == null) throw new ArgumentNullException("byteAddress");
+            if (byteAddress == null) 
+                throw new ArgumentNullException("byteAddress");
             return ReadWord(byteAddress.UnsignedDecimal);
         }
 
@@ -194,7 +195,8 @@ namespace MIPSCore.Util._Memory
         private uint CheckAndCalculateAddress(uint byteAddress, uint bytesRead)
         {
             var realAddress = byteAddress - Offset.UnsignedDecimal;
-            if (realAddress + bytesRead > GetLastByteAddress) throw new ArgumentOutOfRangeException("byteAddress");
+            if (realAddress + bytesRead > GetLastByteAddress) 
+                throw new ArgumentOutOfRangeException("byteAddress");
             return realAddress;
         }
 
