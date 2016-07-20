@@ -26,8 +26,9 @@ namespace MIPSCore.Util
             dataSegment = "";
             //sdataSegment = "";
             TextSegmentEndAddress = 0;
-            rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
-            rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f]){8}( *\t|\t))([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|-|\x2C)*", RegexOptions.IgnoreCase);
+            //rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
+            rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])+:\\s+)([0-9]|[a-f]){8}", RegexOptions.IgnorePatternWhitespace);
+            rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])+:\\s+([0-9]|[a-f]){8}\\s+)([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|,|-|\x2C)*", RegexOptions.IgnoreCase);
             Code = new Dictionary<uint, string>();
         }
 
@@ -87,11 +88,21 @@ namespace MIPSCore.Util
             dict.Clear();
             foreach (var stringMatch in from Match codeMatch in match select codeMatch.Value)
             {
-                if (counter%2 == 0)
-                    address = Convert.ToUInt32(stringMatch, 16);
+                if (counter % 2 == 0)
+                {
+                    try
+                    {
+                        address = Convert.ToUInt32(stringMatch, 16);
+                    }
+                    catch
+                    {
+                        throw new Exception("Object dump file has wrong format");
+                    }
+                }
                 else
                 {
-                    var code = stringMatch.Replace('\t', ' ');
+                    //var code = stringMatch.Replace('\t', ' ');
+                    string code = System.Text.RegularExpressions.Regex.Replace(stringMatch.Trim(), @"\s+", " ");
                     dict.Add(address, code);
                 } 
                 counter++;
