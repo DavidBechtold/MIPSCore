@@ -14,5 +14,7 @@ namespace MIPSCore.Data_Memory
         IControlUnit ControlUnit { get; set; }
         Word LoadedValue { get; }
         Word AddressOffset { set; }
+
+        string ReadNullTerminatedString(uint address);
     }
 }

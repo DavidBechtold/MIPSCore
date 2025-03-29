@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="MIPSCoreUI.View.OutputView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:vm="clr-namespace:MIPSCoreUI.ViewModel" mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance d:Type=vm:RegisterViewModel, IsDesignTimeCreatable=False}"
+        d:DesignHeight="730" d:DesignWidth="300"
+        Loaded="Window_Loaded">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <GroupBox Header="Output" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
+            <Border Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBlock 
+                        FontSize="13" 
+                        TextWrapping="Wrap" 
+                        Foreground="{Binding OutputTextColor, FallbackValue=Red}" 
+                        Text="{Binding OutputText, FallbackValue=Output}" />
+                </ScrollViewer>
+            </Border>
+        </GroupBox>
+    </Grid>
+</UserControl>

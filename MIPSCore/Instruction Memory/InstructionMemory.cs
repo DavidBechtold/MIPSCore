@@ -169,11 +169,11 @@ namespace MIPSCore.Instruction_Memory
                     if (branchDelaySlot)
                     {
                         instructionDelayed = true;
-                        delayedProgramCounter = RegisterFile.ReadRs();
+                        delayedProgramCounter = new Word((uint) RegisterFile.ReadRs().UnsignedDecimal);
                         GetProgramCounter += 4;
                     }
                     else
-                        GetProgramCounter = RegisterFile.ReadRs();
+                        GetProgramCounter = new Word((uint)RegisterFile.ReadRs().UnsignedDecimal);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

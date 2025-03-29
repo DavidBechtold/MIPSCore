@@ -43,6 +43,10 @@ namespace MIPSCore
 
         string GetExceptionString();
 
+        /* notification event */
+        event EventHandler Notification;
+        string GetNotificationMessage();
+
         /* get actual Instruction */
         string ActualInstruction();
 
@@ -72,5 +76,7 @@ namespace MIPSCore
 
         /* read control unit signals */
         string ReadControlUnitSignals();
+
+
     }
 }

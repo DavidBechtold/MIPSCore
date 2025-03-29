@@ -1,0 +1,121 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AE009F91-5511-4A92-85CA-0FCBAE708889}|MIPSCoreUI\\MIPSCoreUI.csproj|c:\\users\\david\\dropbox\\tu wien_david\\bachelor arbeit\\mipscore\\mipscoreui\\view\\outputview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{AE009F91-5511-4A92-85CA-0FCBAE708889}|MIPSCoreUI\\MIPSCoreUI.csproj|solutionrelative:mipscoreui\\view\\outputview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE009F91-5511-4A92-85CA-0FCBAE708889}|MIPSCoreUI\\MIPSCoreUI.csproj|c:\\users\\david\\dropbox\\tu wien_david\\bachelor arbeit\\mipscore\\mipscoreui\\viewmodel\\outputviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE009F91-5511-4A92-85CA-0FCBAE708889}|MIPSCoreUI\\MIPSCoreUI.csproj|solutionrelative:mipscoreui\\viewmodel\\outputviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE009F91-5511-4A92-85CA-0FCBAE708889}|MIPSCoreUI\\MIPSCoreUI.csproj|c:\\users\\david\\dropbox\\tu wien_david\\bachelor arbeit\\mipscore\\mipscoreui\\viewmodel\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE009F91-5511-4A92-85CA-0FCBAE708889}|MIPSCoreUI\\MIPSCoreUI.csproj|solutionrelative:mipscoreui\\viewmodel\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8167717C-DF36-4477-AD3F-F655F4C4033E}|MIPSCore\\MIPSCore.csproj|c:\\users\\david\\dropbox\\tu wien_david\\bachelor arbeit\\mipscore\\mipscore\\imipscore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8167717C-DF36-4477-AD3F-F655F4C4033E}|MIPSCore\\MIPSCore.csproj|solutionrelative:mipscore\\imipscore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8167717C-DF36-4477-AD3F-F655F4C4033E}|MIPSCore\\MIPSCore.csproj|c:\\users\\david\\dropbox\\tu wien_david\\bachelor arbeit\\mipscore\\mipscore\\mipscore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8167717C-DF36-4477-AD3F-F655F4C4033E}|MIPSCore\\MIPSCore.csproj|solutionrelative:mipscore\\mipscore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8167717C-DF36-4477-AD3F-F655F4C4033E}|MIPSCore\\MIPSCore.csproj|c:\\users\\david\\dropbox\\tu wien_david\\bachelor arbeit\\mipscore\\mipscore\\compiler\\compiler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8167717C-DF36-4477-AD3F-F655F4C4033E}|MIPSCore\\MIPSCore.csproj|solutionrelative:mipscore\\compiler\\compiler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OutputView.xaml",
+              "DocumentMoniker": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCoreUI\\View\\OutputView.xaml",
+              "RelativeDocumentMoniker": "MIPSCoreUI\\View\\OutputView.xaml",
+              "ToolTip": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCoreUI\\View\\OutputView.xaml",
+              "RelativeToolTip": "MIPSCoreUI\\View\\OutputView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-03-29T20:10:40.192Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OutputViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCoreUI\\ViewModel\\OutputViewModel.cs",
+              "RelativeDocumentMoniker": "MIPSCoreUI\\ViewModel\\OutputViewModel.cs",
+              "ToolTip": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCoreUI\\ViewModel\\OutputViewModel.cs",
+              "RelativeToolTip": "MIPSCoreUI\\ViewModel\\OutputViewModel.cs",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAMwCMAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-29T20:09:35.265Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Compiler.cs",
+              "DocumentMoniker": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCore\\Compiler\\Compiler.cs",
+              "RelativeDocumentMoniker": "MIPSCore\\Compiler\\Compiler.cs",
+              "ToolTip": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCore\\Compiler\\Compiler.cs",
+              "RelativeToolTip": "MIPSCore\\Compiler\\Compiler.cs",
+              "ViewState": "AQIAAGYAAAAAAAAAAAAgwG0AAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-29T20:01:59.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IMipsCore.cs",
+              "DocumentMoniker": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCore\\IMipsCore.cs",
+              "RelativeDocumentMoniker": "MIPSCore\\IMipsCore.cs",
+              "ToolTip": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCore\\IMipsCore.cs",
+              "RelativeToolTip": "MIPSCore\\IMipsCore.cs",
+              "ViewState": "AQIAADgAAAAAAAAAAAAwwEIAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-29T19:57:21.347Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MipsCore.cs",
+              "DocumentMoniker": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCore\\MipsCore.cs",
+              "RelativeDocumentMoniker": "MIPSCore\\MipsCore.cs",
+              "ToolTip": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCore\\MipsCore.cs",
+              "RelativeToolTip": "MIPSCore\\MipsCore.cs",
+              "ViewState": "AQIAAOQAAAAAAAAAAAAswO8AAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-29T19:55:36.985Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainWindowViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCoreUI\\ViewModel\\MainWindowViewModel.cs",
+              "RelativeDocumentMoniker": "MIPSCoreUI\\ViewModel\\MainWindowViewModel.cs",
+              "ToolTip": "C:\\Users\\david\\Dropbox\\TU Wien_David\\Bachelor Arbeit\\MIPSCore\\MIPSCoreUI\\ViewModel\\MainWindowViewModel.cs",
+              "RelativeToolTip": "MIPSCoreUI\\ViewModel\\MainWindowViewModel.cs",
+              "ViewState": "AQIAAHgAAAAAAAAAAAApwIQAAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-29T19:53:53.132Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

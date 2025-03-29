@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
 using MIPSCore.Instruction_Set;
@@ -72,6 +73,22 @@ namespace MIPSCore.Data_Memory
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public string ReadNullTerminatedString(uint address)
+        {
+            var sb = new StringBuilder();
+            uint currentByte;
+
+            do
+            {
+                currentByte = ReadByte(new Word(address)).UnsignedDecimal;
+                if (currentByte != 0)
+                    sb.Append((char)currentByte);
+                address++;
+            } while (currentByte != 0);
+
+            return sb.ToString();
         }
     }
 }

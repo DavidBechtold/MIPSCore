@@ -14,6 +14,7 @@
     <core:Double x:Key="PathThickness">1.5</core:Double>
     <core:Double x:Key="RectHeight">140</core:Double>
     <core:Double x:Key="RectWidth">100</core:Double>
+    <core:Double x:Key="ControlRectWidth">150</core:Double>
     <Thickness x:Key="BorderThickness">2</Thickness>
     <core:Double x:Key="RectFontSizeHeader">14</core:Double>
     <core:Double x:Key="RectFontSize">12</core:Double>
@@ -163,7 +164,7 @@
         </Grid>
       </Border>
 
-      <Border CornerRadius="7" BorderThickness="{StaticResource BorderThickness}" Background="White" Margin="380,0,0,0" Width="{StaticResource RectWidth}" Height="{StaticResource RectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Border CornerRadius="7" BorderThickness="{StaticResource BorderThickness}" Background="White" Margin="380,0,0,0" Width="{StaticResource ControlRectWidth}" Height="{StaticResource RectHeight}" MouseLeftButtonDown="InstructionMemory_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left">
         <Border.Style>
           <Style TargetType="Border">
             <Style.Triggers>

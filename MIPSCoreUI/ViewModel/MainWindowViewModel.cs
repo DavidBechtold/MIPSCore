@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
@@ -22,6 +24,7 @@ namespace MIPSCoreUI.ViewModel
         private readonly IMipsExtendedViewModel mipsRegisterViewModel;
         private readonly IMipsExtendedViewModel mipsMemoryViewModel;
         private readonly IViewModel ledsViewModel;
+        private readonly IMessageableViewModel outputViewModel;
         private readonly IMessageBoxService messageBox;
         private readonly IOpenFileDialogService openFileDialog;
 
@@ -29,7 +32,10 @@ namespace MIPSCoreUI.ViewModel
         public DelegateCommand Run { get; private set; }
         public DelegateCommand Stop { get; private set; }
         public DelegateCommand Reset { get; private set; }
+        public DelegateCommand LoadCFile { get; private set; }
         public DelegateCommand LoadFile { get; private set; }
+        public DelegateCommand LoadAsmFile { get; private set; }
+        public DelegateCommand SaveFile { get; private set; }
         public DelegateCommand ViewHexadecimal { get; private set; }
         public DelegateCommand ViewSignedDecimal { get; private set; }
         public DelegateCommand ViewUnsignedDecimal { get; private set; }
@@ -54,7 +60,7 @@ namespace MIPSCoreUI.ViewModel
         private SolidColorBrush stateRegisterCarryFlag;
 
         public MainWindowViewModel(MipsCore core, IViewModel mipsCoreViewModel, IMipsExtendedViewModel mipsRegisterViewModel, IMipsExtendedViewModel mipsMemoryViewModel, 
-            IViewModel ledsViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog)
+            IViewModel ledsViewModel, IMessageBoxService messageBox, IOpenFileDialogService openFileDialog, IMessageableViewModel outputViewModel)
         {
             if (core == null) throw new ArgumentNullException("core");
             if (mipsCoreViewModel == null) throw new ArgumentNullException("mipsCoreViewModel");
@@ -72,17 +78,22 @@ namespace MIPSCoreUI.ViewModel
             this.ledsViewModel = ledsViewModel;
             this.messageBox = messageBox;
             this.openFileDialog = openFileDialog;
+            this.outputViewModel = outputViewModel;
 
             core.Clocked += Clocked;
             core.Completed += Completed;
             core.Exception += Exception;
+            core.Notification += Notification;
 
             /* install delegates für command bindings */
             Clock = new DelegateCommand(OnClock);
             Run = new DelegateCommand(OnRun);
             Stop = new DelegateCommand(OnStop);
             Reset = new DelegateCommand(OnReset);
+            LoadCFile = new DelegateCommand(OnLoadCFile);
             LoadFile = new DelegateCommand(OnLoadFile);
+            LoadAsmFile = new DelegateCommand(OnLoadAsmFile);
+            SaveFile = new DelegateCommand(OnSaveFile);
             ViewHexadecimal = new DelegateCommand(() => OnViewRegister(ValueView.HexaDecimal));
             ViewSignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.SignedDecimal));
             ViewUnsignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.UnsignedDecimal));
@@ -102,6 +113,7 @@ namespace MIPSCoreUI.ViewModel
             mipsRegisterViewModel.Refresh();
             mipsMemoryViewModel.Refresh();
             ledsViewModel.Refresh();
+            outputViewModel.Refresh();
         }
 
         private void Completed(object sender, EventArgs args)
@@ -111,8 +123,16 @@ namespace MIPSCoreUI.ViewModel
 
         private void Exception(object sender, EventArgs args)
         {
-            messageBox.ShowNotification(core.GetExceptionString());
+            //messageBox.ShowNotification(core.GetExceptionString());
+            outputViewModel.ErrorMessage(core.GetExceptionString());
         }
+
+        private void Notification(object sender, EventArgs args)
+        {
+            //messageBox.ShowNotification(core.GetExceptionString());
+            outputViewModel.NotificationMessage(core.GetNotificationMessage());
+        }
+
 
         private void OnClock()
         {
@@ -136,6 +156,7 @@ namespace MIPSCoreUI.ViewModel
             mipsRegisterViewModel.Draw();
             mipsMemoryViewModel.Draw();
             ledsViewModel.Draw();
+            outputViewModel.Draw();
         }
 
         private void OnLoadFile()
@@ -151,7 +172,67 @@ namespace MIPSCoreUI.ViewModel
             mipsRegisterViewModel.Draw();
             mipsMemoryViewModel.Draw();
             ledsViewModel.Draw();
+            outputViewModel.Refresh();
         }
+
+        private void OnLoadCFile()
+        {
+            openFileDialog.SetFilter("C Files (*.c)|*.c");
+            if (!openFileDialog.OpenFileDialog())
+                return;
+
+            core.StopCore();
+            core.SetMode(ExecutionMode.SingleStep);
+            core.ProgramC(openFileDialog.GetFileName());
+            core.StartCore();
+            mipsRegisterViewModel.Draw();
+            mipsMemoryViewModel.Draw();
+            ledsViewModel.Draw();
+        }
+
+        private void OnLoadAsmFile()
+        {
+            openFileDialog.SetFilter("C Files (*.s)|*.asm");
+            if (!openFileDialog.OpenFileDialog())
+                return;
+
+            core.StopCore();
+            core.SetMode(ExecutionMode.SingleStep);
+            core.ProgramAssembler(openFileDialog.GetFileName());
+            core.StartCore();
+            mipsRegisterViewModel.Draw();
+            mipsMemoryViewModel.Draw();
+            ledsViewModel.Draw();
+        }
+
+        private void OnSaveFile()
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Object Dumps (*.objdump)|*.objdump|All files (*.*)|*.*",
+                Title = "Datei speichern",
+                DefaultExt = "objdump",
+                AddExtension = true
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+
+                try
+                {
+                    // Hier sollte der Core den aktuellen Speicherinhalt oder das Programm speichern
+                    File.WriteAllText(filePath, core.programmedFile);
+
+                    messageBox.ShowNotification($"Datei erfolgreich gespeichert: {filePath}");
+                }
+                catch (Exception ex)
+                {
+                    messageBox.ShowNotification($"Fehler beim Speichern: {ex.Message}");
+                }
+            }
+        }
+
 
         private void OnSettings()
         {
@@ -162,7 +243,7 @@ namespace MIPSCoreUI.ViewModel
 
         private void OnExit()
         {
-            Application.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void OnViewRegister(ValueView view)

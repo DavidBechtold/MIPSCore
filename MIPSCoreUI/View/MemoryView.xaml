@@ -13,11 +13,11 @@
     <UserControl.Resources>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
-    <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,-28">
-        <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray" FontSize="13">
-            <TabControl SelectedIndex="{Binding SelectedMemoryIndex}">
-                <TabItem Header="Text" Height="24" VerticalAlignment="Bottom" >
-                    <ListBox ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TabControl SelectedIndex="{Binding SelectedMemoryIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TabItem Header="Text" Height="24" VerticalAlignment="Bottom">
+                    <ListBox ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
                                 <i:InvokeCommandAction Command="{Binding AddBreakpoint}"/>
@@ -26,46 +26,19 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-
-                                    <Ellipse Margin="0,0,2,0" Fill="Red" Height="10" Width="10" Stroke="Red"  Visibility="{Binding BreakpointVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <Trigger Property ="IsMouseOver" Value="True">
-                                                        <Setter Property= "Foreground" Value="Black"/>
-                                                    </Trigger>
-                                                    <Trigger Property ="IsMouseOver" Value="False">
-                                                        <Setter Property= "Foreground" Value="Black"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <Ellipse Margin="0,0,2,0" Fill="Red" Height="10" Width="10" Stroke="Red" Visibility="{Binding BreakpointVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </TabItem>
                 <TabItem Header="Data" FontSize="13">
-                    <ListBox ItemsSource="{Binding Path=DataList, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New">
+                    <ListBox ItemsSource="{Binding Path=DataList, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <Trigger Property ="IsMouseOver" Value="True">
-                                                        <Setter Property= "Foreground" Value="Black"/>
-                                                    </Trigger>
-                                                    <Trigger Property ="IsMouseOver" Value="False">
-                                                        <Setter Property= "Foreground" Value="Black"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

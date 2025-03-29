@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE board SYSTEM "board.dtd">
+<!-- Description for MIPS Malta
+
+     Version: Sourcery CodeBench Lite 2016.05-8
+     Support: https://sourcery.mentor.com/GNUToolchain/
+
+     Copyright (c) 2007-2010 CodeSourcery, Inc.
+     Copyright (c) 2010-2016 Mentor Graphics, Inc.
+
+     THIS FILE CONTAINS PROPRIETARY, CONFIDENTIAL, AND TRADE SECRET
+     INFORMATION OF CODESOURCERY AND/OR ITS LICENSORS.
+
+     You may not use or distribute this file without the express written
+     permission of CodeSourcery or its authorized distributor.  This file is
+     licensed only for use with Sourcery CodeBench.  No other use is permitted.
+     -->
+<board>
+  <properties>
+    <description>
+      Board:	MIPS Malta
+CPU:	Unspecified
+    </description>
+  </properties>
+  <memory-map>
+    <memory-device address="0x80000000" size="128M" type="ram">
+      <description>
+	ram
+      </description>
+    </memory-device>
+  </memory-map>
+</board>
+<!-- checksum: 384526610c1830c98e49c6235 -->

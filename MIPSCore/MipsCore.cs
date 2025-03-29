@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
 using MIPSCore.Data_Memory;
@@ -29,6 +30,7 @@ namespace MIPSCore
         public event EventHandler Completed;
         public event EventHandler Clocked;
         public event EventHandler Exception;
+        public event EventHandler Notification;
 
         private readonly bool initStackAndGlobalPointer;
         private bool programmCompleted;
@@ -36,10 +38,11 @@ namespace MIPSCore
         private readonly IClock clock;
         private readonly MipsProgrammer programmer;
         private string excetpionString;
+        private string notificationMessage;
 
         private readonly List<uint> breakpoints;
 
-        private string programmedFilePath;
+        public string programmedFile { get; private set; }
 
         public MipsCore()
         {
@@ -80,7 +83,7 @@ namespace MIPSCore
             excetpionString = "";
             SetMode(ExecutionMode.SingleStep);
 
-            programmedFilePath = "";
+            programmedFile = "";
         }
 
         private void InitCore()
@@ -93,6 +96,11 @@ namespace MIPSCore
 
             if (initStackAndGlobalPointer)
                 RegisterFile.InitStackAndGlobalPointer();
+
+            /*var compiler = new Compiler();
+            string[] files = new string[1];
+            files[0] = @"C:\test.c";
+            programmer.ProgramObjdump(compiler.Compile(files));*/
         }
 
         public void StartCore()
@@ -109,10 +117,57 @@ namespace MIPSCore
         public void ResetCore()
         {
             StopCore();
-            if (programmedFilePath.Length == 0)
+            if (programmedFile.Length == 0)
                 return;
 
-            ProgramObjdump(programmedFilePath);
+            try
+            {
+                InitCore();
+                programmer.Program(programmedFile);
+            }
+            catch (Exception exeption)
+            {
+                excetpionString = exeption.ToString();
+                if (Exception != null) Exception(this, new EventArgs());
+            }
+        }
+
+        public void ProgramC(string file)
+        {
+            InitCore();
+
+            try
+            {
+                var compiler = new Compiler();
+                var files = new string[1];
+                files[0] = file;
+                programmedFile = compiler.Compile(files);
+                programmer.Program(programmedFile);
+            }
+            catch (Exception exeption)
+            {
+                excetpionString = exeption.Message;
+                if (Exception != null) Exception(this, new EventArgs());
+            }
+        }
+
+        public void ProgramAssembler(string file)
+        {
+            InitCore();
+
+            try
+            {
+                var compiler = new Compiler();
+                var files = new string[1];
+                files[0] = file;
+                programmedFile = compiler.CompileAssembler(files);
+                programmer.Program(programmedFile);
+            }
+            catch (Exception exeption)
+            {
+                excetpionString = exeption.Message;
+                if (Exception != null) Exception(this, new EventArgs());
+            }
         }
 
         public void ProgramObjdump(string path)
@@ -121,8 +176,8 @@ namespace MIPSCore
 
             try
             {
-                programmer.ProgramObjdump(path);
-                programmedFilePath = path;
+                programmedFile = System.IO.File.ReadAllText(path);
+                programmer.Program(programmedFile);
             }
             catch (Exception exeption)
             {
@@ -174,10 +229,32 @@ namespace MIPSCore
 
                 if (ControlUnit.Systemcall)
                 {
+                    // read the $v0 register to get the syscall
+                    int v0 = RegisterFile.ReadRegister(2);
+                    switch (v0)
+                    {
+                        case 1: // Print integer
+                            int value = RegisterFile.ReadRegister(4); // $a0
+                            notificationMessage = $"{value}\n";
+                            Notification(this, new EventArgs());
+                            break;
+
+                        case 4: // Print string
+                            uint address = RegisterFile.ReadRegisterUnsigned(4); // $a0
+                            notificationMessage = DataMemory.ReadNullTerminatedString(address) + "\n";
+                            Notification(this, new EventArgs());
+                            break;
+
+                        case 10: // Exit
+                            programmCompleted = true;
+                            if (Completed != null) Completed(this, new EventArgs());
+                            break;
+                        default:
+                            throw new ArgumentException($"Unbekannter Syscall Code ($v0): {v0}");
+                    }
                     //Systemcall occur => stop the clock
                     // TODO check if the exit systemcall has occured
-                    programmCompleted = true;
-                    if (Completed != null) Completed(this, new EventArgs());
+                    
                 }
                 else
                     clock.Start();    
@@ -265,6 +342,11 @@ namespace MIPSCore
         public string GetExceptionString()
         {
             return excetpionString;
+        }
+
+        public string GetNotificationMessage()
+        {
+            return notificationMessage;
         }
 
         public Dictionary<uint, string> Code

@@ -65,6 +65,9 @@
     <Compile Include="Instruction Set\ControlSignals.cs" />
     <Compile Include="Instruction Set\IControlSignals.cs" />
     <Compile Include="Register File\RegisterFile.cs" />
+    <Compile Include="Compiler\Compiler.cs" />
+    <Compile Include="Util\Exceptions\Class1.cs" />
+    <Compile Include="Util\Exceptions\CompileErrorException.cs" />
     <Compile Include="Util\_Memory\LastChangedAddressDto.cs" />
     <Compile Include="Util\_Memory\Memory.cs" />
     <Compile Include="Util\MipsProgrammer.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -14,9 +15,9 @@ namespace MIPSCore.Util
         private readonly string[] segments = { ".text", ".rodata", ".data", ".sdata", ".pdr", ".sbss", ".comment", ".reginfo"};
         private string textSegment;
         private string dataSegment;
-        //private string sdataSegment;
         public Dictionary<uint, string> Code { get; private set; }
         public uint TextSegmentEndAddress;
+        public uint DataSegmentEndAddress;
 
         public MipsProgrammer(MipsCore core)
         {
@@ -24,56 +25,62 @@ namespace MIPSCore.Util
             this.core = core;
             textSegment = "";
             dataSegment = "";
-            //sdataSegment = "";
             TextSegmentEndAddress = 0;
-            //rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])*:\t*)([0-9]|[a-f]){8}", RegexOptions.IgnoreCase);
+            DataSegmentEndAddress = 0;
             rgx = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])+:\\s+)([0-9]|[a-f]){8}", RegexOptions.IgnorePatternWhitespace);
             rgxCode = new Regex("((?<= )([0-9]|[a-f])+(?=\\:{1}))|(?<=([0-9]|[a-f])+:\\s+([0-9]|[a-f]){8}\\s+)([a-z]|[A-Z]|[0-9]|\t|\x20|\\(|\\)|,|-|\x2C)*", RegexOptions.IgnoreCase);
             Code = new Dictionary<uint, string>();
         }
 
-        public void ProgramObjdump(string path)
+        public void Program(string code)
         {
-            if (path == null) throw new ArgumentNullException("path");
-            ExtractSegments(path);
+            if (code == null) throw new ArgumentNullException("code");
+            ExtractSegments(code);
 
             var textMatch = rgx.Matches(textSegment);
             var dataMatch = rgx.Matches(dataSegment);
-            //var sdataMatch = rgx.Matches(sdataSegment);
             var codeMatch = rgxCode.Matches(textSegment);
 
-            if ((textMatch.Count)/ 2 * 4 >= core.InstructionMemory.SizeBytes)
-                throw new IndexOutOfRangeException(".text segment is greater than " + core.InstructionMemory.SizeBytes + ".");
-            if((dataMatch.Count) / 2 * 4 >= core.DataMemory.SizeBytes)
-                throw new IndexOutOfRangeException(".data segment is greater than " + core.DataMemory.SizeBytes + ".");
-
-            TextSegmentEndAddress = ProgramRegex(textMatch, core.InstructionMemory);
-            ProgramRegex(dataMatch, core.DataMemory);
-            //ProgramRegex(sdataMatch, core.DataMemory);
+            TextSegmentEndAddress = ProgramRegex(textMatch, core.InstructionMemory, MemoryType.Text);
+            DataSegmentEndAddress = ProgramRegex(dataMatch, core.DataMemory, MemoryType.Data);
             ProgramRegex(codeMatch, Code);
         }
 
-        private void ExtractSegments(string path)
+        public void ProgramObjdumpFile(string path)
         {
+            if (path == null) throw new ArgumentNullException("path");
             var strCode = System.IO.File.ReadAllText(path);
-
-            textSegment = GetSegment(strCode, ".text");
-            if (textSegment == "") throw new ArgumentException("The file " + path + "does not contain a .text segment");
-            dataSegment = GetSegment(strCode, ".data");
-            //sdataSegment = GetSegment(strCode, ".sdata");
+            Program(strCode);
         }
 
-        private uint ProgramRegex(MatchCollection match, IMemory memory)
+        private void ExtractSegments(string code)
+        {
+            textSegment = GetSegment(code, ".text");
+            if (textSegment == "") throw new ArgumentException("The file " + code + "does not contain a .text segment");
+            dataSegment = GetSegment(code, ".data");
+        }
+
+        private enum MemoryType {Text, Data};
+
+        private uint ProgramRegex(IEnumerable match, IMemory memory, MemoryType memoryType)
         {
             uint counter = 0;
             uint address = 0;
             foreach (var stringMatch in from Match codeMatch in match select codeMatch.Value)
             {
-                if (counter % 2 == 0)
-                    address = Convert.ToUInt32(stringMatch, 16);
+                if ((counter % 2) == 0)
+                {
+                    try { address = Convert.ToUInt32(stringMatch, 16); }
+                    catch { throw new FormatException("Format Exception:\nThe loaded objectfile has a wrong format at address " + (address + 4) + "."); }
+                }
                 else
                 {
                     var instruction = Convert.ToUInt32(stringMatch, 16);
+
+                    if (memoryType == MemoryType.Data && address > core.DataMemory.SizeBytes)
+                        throw new OutOfMemoryException("Out of Memory:\nThe .data segment of loaded program is greater than .data segment of the MIPSCore (" + core.DataMemory.SizeBytes + ").");
+                    if (memoryType == MemoryType.Text && address > core.InstructionMemory.SizeBytes)
+                        throw new OutOfMemoryException("Out of Memory:\nThe .text segment of loaded program is greater than .text segment of the MIPSCore (" + core.InstructionMemory.SizeBytes + ").");
                     memory.WriteWord(new Word(instruction), address);
                 }
                 counter++;
@@ -81,28 +88,21 @@ namespace MIPSCore.Util
             return address;
         }
 
-        private void ProgramRegex(MatchCollection match, IDictionary<uint, string> dict)
+        private static void ProgramRegex(IEnumerable match, IDictionary<uint, string> dict)
         {
             uint counter = 0;
             uint address = 0;
             dict.Clear();
             foreach (var stringMatch in from Match codeMatch in match select codeMatch.Value)
             {
-                if (counter % 2 == 0)
+                if ((counter % 2) == 0)
                 {
-                    try
-                    {
-                        address = Convert.ToUInt32(stringMatch, 16);
-                    }
-                    catch
-                    {
-                        throw new Exception("Object dump file has wrong format");
-                    }
+                    try { address = Convert.ToUInt32(stringMatch, 16); }
+                    catch { throw new FormatException("Format Exception:\nThe loaded objectfile has a wrong format at address " + (address + 4) + "."); }
                 }
                 else
                 {
-                    //var code = stringMatch.Replace('\t', ' ');
-                    string code = System.Text.RegularExpressions.Regex.Replace(stringMatch.Trim(), @"\s+", " ");
+                    var code = Regex.Replace(stringMatch.Trim(), @"\s+", " "); //remove obsolete whitespaces
                     dict.Add(address, code);
                 } 
                 counter++;
