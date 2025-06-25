@@ -144,7 +144,7 @@ namespace MIPSCoreUI.ViewModel
             {
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
-                    outputViewModel.ErrorMessage(mips_args.Message);
+                    outputViewModel.NotificationMessage(mips_args.Message);
                     outputViewModel.Draw();
                 });
             }
