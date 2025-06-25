@@ -1,5 +1,6 @@
 ﻿using System;
 using MIPSCore;
+using MIPSCore.Util.MIPSEventArgs;
 
 namespace MIPSCoreConsole
 {
@@ -57,7 +58,8 @@ namespace MIPSCoreConsole
 
         static void Exception(object obj, EventArgs args)
         {
-            Console.WriteLine(core.GetExceptionString());
+            MIPSEventArgs mips_args = args as MIPSEventArgs;
+            Console.WriteLine(mips_args.Message);
         }
 
         static public bool ServeStartArguments(string[] args)

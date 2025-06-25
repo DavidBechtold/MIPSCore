@@ -27,7 +27,8 @@ namespace MIPSCore.Instruction_Set
         }
 
         public CInstruction GetInstruction(Word opcode, Word function, Word rd)
-        {
+        {   
+            
             switch (opcode.UnsignedDecimal)
             {
                 case 0:
@@ -49,7 +50,7 @@ namespace MIPSCore.Instruction_Set
                             return Instructions[i];
                     break;
             }
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException("Unbekannter Befehl");
         }
     }
 

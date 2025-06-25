@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using MIPSCore.ALU;
@@ -10,6 +11,7 @@ using MIPSCore.Register_File;
 using MIPSCore.Timing;
 using MIPSCore.Util;
 using MIPSCore.Util._Memory;
+using MIPSCore.Util.MIPSEventArgs;
 
 namespace MIPSCore
 {
@@ -37,8 +39,6 @@ namespace MIPSCore
 
         private readonly IClock clock;
         private readonly MipsProgrammer programmer;
-        private string excetpionString;
-        private string notificationMessage;
 
         private readonly List<uint> breakpoints;
 
@@ -80,7 +80,6 @@ namespace MIPSCore
             DataMemory.RegisterFile = RegisterFile;
 
             programmCompleted = false;
-            excetpionString = "";
             SetMode(ExecutionMode.SingleStep);
 
             programmedFile = "";
@@ -89,7 +88,6 @@ namespace MIPSCore
         private void InitCore()
         {
             programmCompleted = false;
-            excetpionString = "";
             RegisterFile.Flush();
             InstructionMemory.Flush();
             DataMemory.Flush();
@@ -127,8 +125,7 @@ namespace MIPSCore
             }
             catch (Exception exeption)
             {
-                excetpionString = exeption.ToString();
-                if (Exception != null) Exception(this, new EventArgs());
+                if (Exception != null) Exception(this, new MIPSEventArgs(exeption.ToString()));
             }
         }
 
@@ -146,8 +143,7 @@ namespace MIPSCore
             }
             catch (Exception exeption)
             {
-                excetpionString = exeption.Message;
-                if (Exception != null) Exception(this, new EventArgs());
+                if (Exception != null) Exception(this, new MIPSEventArgs(exeption.Message));
             }
         }
 
@@ -165,8 +161,7 @@ namespace MIPSCore
             }
             catch (Exception exeption)
             {
-                excetpionString = exeption.Message;
-                if (Exception != null) Exception(this, new EventArgs());
+                if (Exception != null) Exception(this, new MIPSEventArgs(exeption.Message));
             }
         }
 
@@ -181,8 +176,7 @@ namespace MIPSCore
             }
             catch (Exception exeption)
             {
-                excetpionString = exeption.ToString();
-                if (Exception != null) Exception(this, new EventArgs());
+                if (Exception != null) Exception(this, new MIPSEventArgs(exeption.ToString()));
             }
         }
 
@@ -235,14 +229,13 @@ namespace MIPSCore
                     {
                         case 1: // Print integer
                             int value = RegisterFile.ReadRegister(4); // $a0
-                            notificationMessage = $"{value}\n";
-                            Notification(this, new EventArgs());
+                            Notification(this, new MIPSEventArgs($"{value}\n"));
                             break;
 
                         case 4: // Print string
                             uint address = RegisterFile.ReadRegisterUnsigned(4); // $a0
-                            notificationMessage = DataMemory.ReadNullTerminatedString(address) + "\n";
-                            Notification(this, new EventArgs());
+                            string notificationMessage = DataMemory.ReadNullTerminatedString(address) + "\n";
+                            Notification(this, new MIPSEventArgs(notificationMessage));
                             break;
 
                         case 10: // Exit
@@ -267,10 +260,13 @@ namespace MIPSCore
                     SetMode(ExecutionMode.SingleStep);
                 }
             }
-            catch (Exception exeption)
+            catch (Exception exception)
             {
-                excetpionString = exeption.ToString();
-                if (Exception != null) Exception(this, new EventArgs());
+                // message to output field
+                if (Exception != null) Exception(this, new MIPSEventArgs(exception.ToString()));
+                // complete execution
+                programmCompleted = true;
+                if (Completed != null) Completed(this, new EventArgs());
             }
         }
         
@@ -337,16 +333,6 @@ namespace MIPSCore
         public string ReadControlUnitSignals()
         {
             return ControlUnit.ToString();
-        }
-
-        public string GetExceptionString()
-        {
-            return excetpionString;
-        }
-
-        public string GetNotificationMessage()
-        {
-            return notificationMessage;
         }
 
         public Dictionary<uint, string> Code

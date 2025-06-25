@@ -9,6 +9,7 @@ using MIPSCore;
 using MIPSCore.ALU;
 using MIPSCore.Control_Unit;
 using MIPSCore.Util;
+using MIPSCore.Util.MIPSEventArgs;
 using MIPSCoreUI.Services;
 using MIPSCoreUI.View;
 using MipsCore = MIPSCore.MipsCore;
@@ -39,6 +40,7 @@ namespace MIPSCoreUI.ViewModel
         public DelegateCommand ViewHexadecimal { get; private set; }
         public DelegateCommand ViewSignedDecimal { get; private set; }
         public DelegateCommand ViewUnsignedDecimal { get; private set; }
+        public DelegateCommand ViewVersion { get; private set; }
         public DelegateCommand Settings { get; private set; }
         public DelegateCommand Exit { get; private set; }
 
@@ -97,6 +99,7 @@ namespace MIPSCoreUI.ViewModel
             ViewHexadecimal = new DelegateCommand(() => OnViewRegister(ValueView.HexaDecimal));
             ViewSignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.SignedDecimal));
             ViewUnsignedDecimal = new DelegateCommand(() => OnViewRegister(ValueView.UnsignedDecimal));
+            ViewVersion = new DelegateCommand(() => OnVersionView());
             Settings = new DelegateCommand(OnSettings);
             Exit = new DelegateCommand(OnExit);
 
@@ -123,14 +126,28 @@ namespace MIPSCoreUI.ViewModel
 
         private void Exception(object sender, EventArgs args)
         {
-            //messageBox.ShowNotification(core.GetExceptionString());
-            outputViewModel.ErrorMessage(core.GetExceptionString());
+            MIPSEventArgs mips_args = args as MIPSEventArgs;
+            if (mips_args != null)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    outputViewModel.ErrorMessage(mips_args.Message);
+                    outputViewModel.Draw();
+                });
+            }
         }
 
         private void Notification(object sender, EventArgs args)
         {
-            //messageBox.ShowNotification(core.GetExceptionString());
-            outputViewModel.NotificationMessage(core.GetNotificationMessage());
+            MIPSEventArgs mips_args = args as MIPSEventArgs;
+            if (mips_args != null)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    outputViewModel.ErrorMessage(mips_args.Message);
+                    outputViewModel.Draw();
+                });
+            }
         }
 
 
@@ -252,6 +269,12 @@ namespace MIPSCoreUI.ViewModel
             mipsMemoryViewModel.Display = view;
             mipsRegisterViewModel.Refresh();
             mipsMemoryViewModel.Draw();
+        }
+
+        private void OnVersionView()
+        {
+            VersionView versionView = new VersionView();
+            versionView.ShowDialog();
         }
 
         private void FillExecutedInstructionGroupBox()

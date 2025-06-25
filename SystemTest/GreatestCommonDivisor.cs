@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MIPSCore;
+using MIPSCore.Util.MIPSEventArgs;
 using System.Threading;
 
 namespace SystemTest
@@ -18,9 +19,10 @@ namespace SystemTest
             Assert.IsTrue(System.IO.File.Exists("Testcode//gcd.objdump"));
             core.ProgramObjdump("Testcode//gcd.objdump");
 
-            core.Exception += delegate
+            core.Exception += (sender, e) =>
             {
-                Assert.Fail(core.GetExceptionString());
+                MIPSEventArgs args = (MIPSEventArgs)e;
+                Assert.Fail(args.Message);
             };
             core.Completed += delegate
             {

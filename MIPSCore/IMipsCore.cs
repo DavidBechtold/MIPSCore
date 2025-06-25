@@ -41,11 +41,8 @@ namespace MIPSCore
         /* exception event */
         event EventHandler Exception;
 
-        string GetExceptionString();
-
         /* notification event */
         event EventHandler Notification;
-        string GetNotificationMessage();
 
         /* get actual Instruction */
         string ActualInstruction();

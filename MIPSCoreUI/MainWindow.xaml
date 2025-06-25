@@ -41,6 +41,9 @@
                         <MenuItem  Header="UnsignedDecimal" HorizontalAlignment="Left" Command="{Binding ViewUnsignedDecimal}"/>
                     </MenuItem>
                 </MenuItem>
+                <MenuItem Header="Help">
+                    <MenuItem Header="Version" HorizontalAlignment="Left" Command="{Binding ViewVersion}"/>
+                </MenuItem>
             </Menu>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">

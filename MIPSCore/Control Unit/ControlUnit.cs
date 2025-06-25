@@ -16,14 +16,14 @@ namespace MIPSCore.Control_Unit
             var rd = InstructionMemory.GetRd;
 
             // 2.) interpret the opCode and function
-            try
-            {
+            //try
+            //{
                 PrepareControlSignals(opCode, function, rd);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            //}
+            //catch (ArgumentOutOfRangeException)
+            //{
+            //    throw new ArgumentOutOfRangeException("Unbekannter Befehl");
+            //}
         }
     }
 }
