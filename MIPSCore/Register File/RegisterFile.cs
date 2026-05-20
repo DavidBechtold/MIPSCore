@@ -38,6 +38,9 @@ namespace MIPSCore.Register_File
                 case RegisterFileInput.AluHi:
                     Write(Alu.GetResultHi);
                     break;
+                case RegisterFileInput.AluLoSpecial:
+                    Write(Alu.LoRegister);
+                    break;
                 case RegisterFileInput.DataMemory:
                     Write(DataMemory.LoadedValue);
                     break;

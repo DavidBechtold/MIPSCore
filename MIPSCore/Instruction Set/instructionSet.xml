@@ -332,14 +332,14 @@
     <name>move from alu low register</name>
     <assembler>mflo</assembler>
     <example>mflo Register</example>
-    <meaning>Rd = AluLo</meaning>
+    <meaning>Rd = LoRegister</meaning>
     <format>R</format>
     <opcode>0</opcode>
     <function>18</function>
     <rd>0</rd>
     <regWrite>true</regWrite>
     <regDestination>Rd</regDestination>
-    <regFileInput>AluLo</regFileInput>
+    <regFileInput>AluLoSpecial</regFileInput>
     <aluSource1>Rs</aluSource1>
     <aluSource2>Rt</aluSource2>
     <aluControl>Stall</aluControl>
@@ -389,6 +389,52 @@
     <aluSource1>Rs</aluSource1>
     <aluSource2>Rt</aluSource2>
     <aluControl>Multu</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>ProgramCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>divide</name>
+    <assembler>div</assembler>
+    <example>div Rs, Rt</example>
+    <meaning>HI = Rs mod Rt; LO = Rs / Rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>26</function>
+    <rd>0</rd>
+    <regWrite>false</regWrite>
+    <regDestination>Rd</regDestination>
+    <regFileInput>AluLo</regFileInput>
+    <aluSource1>Rs</aluSource1>
+    <aluSource2>Rt</aluSource2>
+    <aluControl>Div</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>ProgramCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>divide unsigned</name>
+    <assembler>divu</assembler>
+    <example>divu Rs, Rt</example>
+    <meaning>HI = Rs mod Rt; LO = Rs / Rt</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>27</function>
+    <rd>0</rd>
+    <regWrite>false</regWrite>
+    <regDestination>Rd</regDestination>
+    <regFileInput>AluLo</regFileInput>
+    <aluSource1>Rs</aluSource1>
+    <aluSource2>Rt</aluSource2>
+    <aluControl>Divu</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>
@@ -619,6 +665,29 @@
     <aluSource1>RsSignExtendZero</aluSource1>
     <aluSource2>RtSignExtendZero</aluSource2>
     <aluControl>SetLessThanU</aluControl>
+    <memWrite>false</memWrite>
+    <memRead>false</memRead>
+    <memWordSize>SingleByte</memWordSize>
+    <memSignExtend>false</memSignExtend>
+    <pcSource>ProgramCounter</pcSource>
+    <systemcall>false</systemcall>
+  </CInstruction>
+
+  <CInstruction>
+    <name>trap if equal</name>
+    <assembler>teq</assembler>
+    <example>teq Rs, Rt</example>
+    <meaning>if Rs == Rt: trap</meaning>
+    <format>R</format>
+    <opcode>0</opcode>
+    <function>52</function>
+    <rd>0</rd>
+    <regWrite>false</regWrite>
+    <regDestination>Rd</regDestination>
+    <regFileInput>AluLo</regFileInput>
+    <aluSource1>Rs</aluSource1>
+    <aluSource2>Rt</aluSource2>
+    <aluControl>Stall</aluControl>
     <memWrite>false</memWrite>
     <memRead>false</memRead>
     <memWordSize>SingleByte</memWordSize>

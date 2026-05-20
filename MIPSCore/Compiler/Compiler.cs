@@ -103,7 +103,7 @@ namespace MIPSCore.Util
             {
                 p.StartInfo.FileName = GCCAssemblerPath;
 
-                p.StartInfo.Arguments = $"-mips32 -O0 -o {Path.GetFileNameWithoutExtension(asmFile)}.o \"{asmFile}\"";
+                p.StartInfo.Arguments = $"--trap -mips32 -O0 -o {Path.GetFileNameWithoutExtension(asmFile)}.o \"{asmFile}\"";
                 p.Start();
 
                 error = p.StandardError.ReadToEnd();

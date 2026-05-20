@@ -49,6 +49,7 @@ namespace MIPSCore.Instruction_Set
         [Text("Multiply")] Mult,
         [Text("Multiply unsigned")] Multu,
         [Text("Divide")] Div,
+        [Text("Divide unsigned")] Divu,
         [Text("Shift left")] ShiftLeft,
         [Text("Shift right")] ShiftRight,
          [Text("Shift right arithmetic")] ShiftRightArithmetic,
@@ -59,6 +60,7 @@ namespace MIPSCore.Instruction_Set
     public enum RegisterFileInput { 
         [Text("alu low register")] AluLo, 
         [Text("alu high register")] AluHi,
+        [Text("alu lo special register")] AluLoSpecial,
         [Text("data memory")] DataMemory,
         [Text("program counter")] ProgramCounter
     }
