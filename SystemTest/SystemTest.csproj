@@ -55,6 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DivisionHiLoAssembler.cs" />
     <Compile Include="Fibonacci.cs" />
     <Compile Include="Insertionsort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,6 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Testcode\bubblesort.s">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testcode\division_hilo.s">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Testcode\fibonacci.s">
