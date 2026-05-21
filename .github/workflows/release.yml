@@ -1,0 +1,82 @@
+name: Release after merged PR
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  build-smoke-release:
+    if: github.event.pull_request.merged == true
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore packages
+        run: nuget restore MIPSCore.sln
+
+      - name: Build solution (Release)
+        run: msbuild MIPSCore.sln /p:Configuration=Release /p:Platform="Any CPU"
+
+      - name: Prepare release package
+        shell: pwsh
+        run: |
+          New-Item -Path release -ItemType Directory -Force | Out-Null
+          Copy-Item -Path "MIPSCoreConsole/bin/Release/*" -Destination "release" -Recurse -Force
+          Copy-Item -Path "SystemTest/Testcode/fibonacci.objdump" -Destination "release/fibonacci.objdump" -Force
+
+      - name: Smoke test built release
+        shell: pwsh
+        run: |
+          $logPath = Join-Path $PWD "release/smoke.log"
+          $objdumpPath = Join-Path $PWD "release/fibonacci.objdump"
+          $exePath = Join-Path $PWD "release/MIPSCoreConsole.exe"
+
+          $process = Start-Process -FilePath $exePath `
+            -ArgumentList "-p `"$objdumpPath`"" `
+            -RedirectStandardOutput $logPath `
+            -NoNewWindow `
+            -PassThru
+
+          Start-Sleep -Seconds 8
+
+          if (-not $process.HasExited) {
+            Stop-Process -Id $process.Id
+          }
+
+          if (-not (Select-String -Path $logPath -Pattern "Completed" -Quiet)) {
+            Get-Content $logPath
+            throw "Smoke-Test fehlgeschlagen: 'Completed' wurde nicht gefunden."
+          }
+
+      - name: Archive release package
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "release/*" -DestinationPath "MIPSCore-release.zip" -Force
+
+      - name: Create release metadata
+        id: meta
+        shell: pwsh
+        run: |
+          $tag = "pr-${{ github.event.pull_request.number }}-run-${{ github.run_number }}"
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: Release PR #${{ github.event.pull_request.number }}
+          body: |
+            Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.
+            Enthält den Build aus `Release` sowie den erfolgreichen Smoke-Test mit `fibonacci.objdump`.
+          files: MIPSCore-release.zip
