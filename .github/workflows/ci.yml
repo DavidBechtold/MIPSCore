@@ -24,11 +24,12 @@ jobs:
       - name: Restore packages
         run: nuget restore MIPSCore.sln
 
-      - name: Install .NET Framework 4.5 reference assemblies
-        run: nuget install Microsoft.NETFramework.ReferenceAssemblies.net45 -Version 1.0.3 -OutputDirectory packages -ExcludeVersion
-
-      - name: Build solution (Release)
-        run: msbuild MIPSCore.sln /p:Configuration=Release /p:Platform="Any CPU" /p:TargetFrameworkRootPath="${{ github.workspace }}/packages/Microsoft.NETFramework.ReferenceAssemblies.net45/build/.NETFramework/"
+      - name: Install .NET Framework 4.5 reference assemblies and build
+        shell: pwsh
+        run: |
+          nuget install Microsoft.NETFramework.ReferenceAssemblies.net45 -Version 1.0.3 -OutputDirectory packages -ExcludeVersion
+          $frameworkPath = Join-Path $PWD "packages\Microsoft.NETFramework.ReferenceAssemblies.net45\build\.NETFramework\v4.5"
+          msbuild MIPSCore.sln /p:Configuration=Release /p:Platform="Any CPU" "/p:FrameworkPathOverride=$frameworkPath\"
 
       - name: Run all tests
         shell: pwsh
