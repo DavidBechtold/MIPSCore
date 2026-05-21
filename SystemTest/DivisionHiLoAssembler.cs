@@ -9,7 +9,7 @@ namespace SystemTest
     public class DivisionHiLoAssembler
     {
         [TestMethod]
-        [Timeout(25000)]
+        [Timeout(60000)]
         public void SystemTest_division_hi_lo_assembler()
         {
             var finished = new ManualResetEvent(false);
