@@ -24,11 +24,11 @@ jobs:
       - name: Restore packages
         run: nuget restore MIPSCore.sln
 
-      - name: Install .NET Framework 4.5 reference assemblies
-        run: nuget install Microsoft.NETFramework.ReferenceAssemblies -Version 1.0.3 -OutputDirectory packages -ExcludeVersion
+      - name: Install .NET Framework 4.5 Developer Pack
+        run: choco install netfx-4.5-devpack -y --no-progress
 
       - name: Build solution (Release)
-        run: msbuild MIPSCore.sln /p:Configuration=Release /p:Platform="Any CPU" /p:TargetFrameworkRootPath="${{ github.workspace }}/packages/Microsoft.NETFramework.ReferenceAssemblies/build/.NETFramework/"
+        run: msbuild MIPSCore.sln /p:Configuration=Release /p:Platform="Any CPU"
 
       - name: Run all tests
         shell: pwsh
