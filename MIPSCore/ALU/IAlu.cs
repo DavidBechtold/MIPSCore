@@ -14,6 +14,7 @@ namespace MIPSCore.ALU
         bool CarryFlag { get; }
         Word GetResultLo { get; }
         Word GetResultHi { get; }
+        Word LoRegister { get; }
 
         IControlUnit ControlUnit { get; set; }
         IInstructionMemory InstructionMemory { get; set; }

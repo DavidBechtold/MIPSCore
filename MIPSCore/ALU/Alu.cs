@@ -23,6 +23,7 @@ namespace MIPSCore.ALU
         public bool CarryFlag { get; private set; }
         public Word GetResultLo { get; private set; }
         public Word GetResultHi { get; private set; }
+        public Word LoRegister { get; private set; }
 
         public Alu()
         {
@@ -30,6 +31,7 @@ namespace MIPSCore.ALU
             OverflowFlag = false;
             GetResultLo = new Word((uint) 0);
             GetResultHi = new Word((uint) 0);
+            LoRegister = new Word((uint) 0);
             arg1 = new Word(0);
             arg2 = new Word(0);
         }
@@ -58,6 +60,7 @@ namespace MIPSCore.ALU
                 case AluControl.Mult:           PerformMult();          break;
                 case AluControl.Multu:          PerformMultU();         break;
                 case AluControl.Div:            PerformDiv();           break;
+                case AluControl.Divu:           PerformDivU();          break;
                 case AluControl.ShiftLeft:      PerformShift(true);     break;
                 case AluControl.ShiftRight:     PerformShift(false);    break;
                 case AluControl.ShiftRightArithmetic: PerformShiftArithmetic(false); break;
@@ -199,6 +202,7 @@ namespace MIPSCore.ALU
             long res = (long)arg1.SignedDecimal * (long)arg2.SignedDecimal;
             GetResultLo.Set((int) res);
             GetResultHi.Set((int) (res >> 32));
+            LoRegister.Set((int) res);
         }
 
         private void PerformMultU()
@@ -206,12 +210,25 @@ namespace MIPSCore.ALU
             ulong res = (ulong)arg1.UnsignedDecimal * (ulong)arg2.UnsignedDecimal;
             GetResultLo.Set((uint)res);
             GetResultHi.Set((uint)(res >> 32));
+            LoRegister.Set((uint)res);
         }
 
         private void PerformDiv()
         {
-            GetResultLo.Set(arg1.UnsignedDecimal / arg2.UnsignedDecimal);
-            GetResultHi.Set(arg1.UnsignedDecimal % arg2.UnsignedDecimal);
+            var quotient = arg1.SignedDecimal / arg2.SignedDecimal;
+            var remainder = arg1.SignedDecimal % arg2.SignedDecimal;
+            GetResultLo.Set(quotient);
+            GetResultHi.Set(remainder);
+            LoRegister.Set(quotient);
+        }
+
+        private void PerformDivU()
+        {
+            var quotient = arg1.UnsignedDecimal / arg2.UnsignedDecimal;
+            var remainder = arg1.UnsignedDecimal % arg2.UnsignedDecimal;
+            GetResultLo.Set(quotient);
+            GetResultHi.Set(remainder);
+            LoRegister.Set(quotient);
         }
 
         private void SetAluArguments()

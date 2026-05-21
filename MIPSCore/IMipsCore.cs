@@ -32,6 +32,8 @@ namespace MIPSCore
          */
         void ProgramObjdump(string path);
 
+        void ProgramAssembler(string path);
+
         /* this event is called if an exit systemcall occured */
         event EventHandler Completed;
 
