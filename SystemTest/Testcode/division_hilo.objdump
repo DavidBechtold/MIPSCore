@@ -1,0 +1,11 @@
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	2408000a 	li	t0,10
+   4:	24090003 	li	t1,3
+   8:	0109001a 	div	t0,t1
+   c:	00005010 	mfhi	t2
+  10:	00005812 	mflo	t3
+  14:	01606021 	move	t4,t3
+  18:	2402000a 	li	v0,10
+  1c:	0000000c 	syscall

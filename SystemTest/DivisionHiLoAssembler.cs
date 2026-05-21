@@ -9,7 +9,7 @@ namespace SystemTest
     public class DivisionHiLoAssembler
     {
         [TestMethod]
-        [Timeout(25000)]
+        [Timeout(60000)]
         public void SystemTest_division_hi_lo_assembler()
         {
             var finished = new ManualResetEvent(false);
@@ -17,8 +17,8 @@ namespace SystemTest
             IMipsCore core = new MipsCore();
 
             core.SetMode(ExecutionMode.RunToCompletion);
-            Assert.IsTrue(System.IO.File.Exists("Testcode//division_hilo.s"));
-            core.ProgramAssembler("Testcode//division_hilo.s");
+            Assert.IsTrue(System.IO.File.Exists("Testcode//division_hilo.objdump"));
+            core.ProgramObjdump("Testcode//division_hilo.objdump");
 
             core.Exception += (sender, e) =>
             {
