@@ -36,8 +36,36 @@ jobs:
         shell: pwsh
         run: |
           New-Item -Path release -ItemType Directory -Force | Out-Null
-          Copy-Item -Path "MIPSCoreConsole/bin/Release/*" -Destination "release" -Recurse -Force
+          $releaseSources = @(
+            "MIPSCoreConsole/bin/Release/*",
+            "MIPSCoreUI/bin/Release/*"
+          )
+
+          foreach ($source in $releaseSources) {
+            Copy-Item -Path $source -Destination "release" -Recurse -Force
+          }
+
+          Copy-Item -Path "MIPSCore/Compiler/Compiler/*" -Destination "release/Compiler" -Recurse -Force
           Copy-Item -Path "SystemTest/Testcode/fibonacci.objdump" -Destination "release/fibonacci.objdump" -Force
+
+          $requiredPaths = @(
+            "release/MIPSCoreConsole.exe",
+            "release/MIPSCoreUI.exe",
+            "release/Compiler"
+          )
+
+          foreach ($requiredPath in $requiredPaths) {
+            if (-not (Test-Path $requiredPath)) {
+              throw "Erwartete Release-Datei oder -Ordner fehlt: $requiredPath"
+            }
+          }
+
+          Get-ChildItem -Path "MIPSCore/Compiler/Compiler" -Directory | ForEach-Object {
+            $releaseCompilerPath = Join-Path "release/Compiler" $_.Name
+            if (-not (Test-Path $releaseCompilerPath)) {
+              throw "Compiler-Unterordner fehlt im Release: $releaseCompilerPath"
+            }
+          }
 
       - name: Smoke test built release
         shell: pwsh
