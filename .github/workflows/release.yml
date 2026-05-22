@@ -42,26 +42,63 @@ jobs:
       - name: Smoke test built release
         shell: pwsh
         run: |
-          $logPath = Join-Path $PWD "release/smoke.log"
+          $stdoutPath = Join-Path $PWD "release/smoke.log"
+          $stderrPath = Join-Path $PWD "release/smoke.err.log"
           $objdumpPath = Join-Path $PWD "release/fibonacci.objdump"
           $exePath = Join-Path $PWD "release/MIPSCoreConsole.exe"
+          $timeoutSeconds = 30
+          $pollIntervalMilliseconds = 500
 
           $process = Start-Process -FilePath $exePath `
             -ArgumentList "-p `"$objdumpPath`"" `
-            -RedirectStandardOutput $logPath `
+            -RedirectStandardOutput $stdoutPath `
+            -RedirectStandardError $stderrPath `
             -WorkingDirectory (Join-Path $PWD "release") `
             -NoNewWindow `
             -PassThru
 
-          Start-Sleep -Seconds 8
+          $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+          $completed = $false
 
-          if (-not $process.HasExited) {
-            Stop-Process -Id $process.Id
+          while ((Get-Date) -lt $deadline) {
+            if (Test-Path $stdoutPath -PathType Leaf) {
+              if (Select-String -Path $stdoutPath -Pattern "Completed" -Quiet -ErrorAction SilentlyContinue) {
+                $completed = $true
+                break
+              }
+            }
+
+            if ($process.HasExited) {
+              break
+            }
+
+            Start-Sleep -Milliseconds $pollIntervalMilliseconds
           }
 
-          if (-not (Select-String -Path $logPath -Pattern "Completed" -Quiet)) {
-            Get-Content $logPath
-            throw "Smoke-Test fehlgeschlagen: 'Completed' wurde nicht gefunden."
+          if (-not $process.HasExited) {
+            Stop-Process -Id $process.Id -Force
+            $process.WaitForExit()
+          }
+
+          $stdout = if (Test-Path $stdoutPath -PathType Leaf) { Get-Content $stdoutPath -Raw } else { "" }
+          $stderr = if (Test-Path $stderrPath -PathType Leaf) { Get-Content $stderrPath -Raw } else { "" }
+
+          if (-not $completed -and $stdout -match "Completed") {
+            $completed = $true
+          }
+
+          if (-not $completed) {
+            if ($stdout) {
+              Write-Host "=== Smoke stdout ==="
+              Write-Host $stdout
+            }
+            if ($stderr) {
+              Write-Host "=== Smoke stderr ==="
+              Write-Host $stderr
+            }
+
+            $exitCode = if ($process.HasExited) { $process.ExitCode } else { "n/a" }
+            throw "Smoke-Test fehlgeschlagen: 'Completed' innerhalb von $timeoutSeconds Sekunden nicht gefunden (ExitCode=$exitCode)."
           }
 
       - name: Archive release package
