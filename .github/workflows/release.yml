@@ -49,6 +49,7 @@ jobs:
           $process = Start-Process -FilePath $exePath `
             -ArgumentList "-p `"$objdumpPath`"" `
             -RedirectStandardOutput $logPath `
+            -WorkingDirectory (Join-Path $PWD "release") `
             -NoNewWindow `
             -PassThru
 
