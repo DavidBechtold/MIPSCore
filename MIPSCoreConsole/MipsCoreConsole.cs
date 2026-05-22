@@ -86,6 +86,7 @@ namespace MIPSCoreConsole
             }
 
             core.ProgramObjdump(args[1]);
+            core.SetMode(ExecutionMode.RunToCompletion);
 
             for (var i = 2; i < args.Length; i++)
             {
