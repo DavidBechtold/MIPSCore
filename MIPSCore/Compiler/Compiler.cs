@@ -11,20 +11,31 @@ namespace MIPSCore.Util
 {
     class Compiler
     {
-        public const string GCCPath = @"Compiler\bin\mips-linux-gnu-gcc.exe";
-        public const string GCCAssemblerPath = @"Compiler\bin\mips-linux-gnu-as.exe";
-        public const string GCCLinkerPath = @"Compiler\bin\mips-linux-gnu-ld.exe";
-        public const string GCCObjdumpPath = @"Compiler\bin\mips-linux-gnu-objdump.exe";
+        private readonly string gccPath;
+        private readonly string gccAssemblerPath;
+        private readonly string gccLinkerPath;
+        private readonly string gccObjdumpPath;
+        private readonly string linkerScriptPath;
+
         public Compiler() 
         {
-            if (!File.Exists(GCCPath))
-                throw new FileNotFoundException($"Compiler nicht gefunden: {GCCPath}");
-            if (!File.Exists(GCCAssemblerPath))
-                throw new FileNotFoundException($"Assembler nicht gefunden: {GCCAssemblerPath}");
-            if (!File.Exists(GCCLinkerPath))
-                throw new FileNotFoundException($"Linker nicht gefunden: {GCCLinkerPath}");
-            if (!File.Exists(GCCObjdumpPath))
-                throw new FileNotFoundException($"Objectdump nicht gefunden: {GCCObjdumpPath}");
+            var compilerRootPath = ResolveCompilerRootPath();
+            gccPath = Path.Combine(compilerRootPath, "bin", "mips-linux-gnu-gcc.exe");
+            gccAssemblerPath = Path.Combine(compilerRootPath, "bin", "mips-linux-gnu-as.exe");
+            gccLinkerPath = Path.Combine(compilerRootPath, "bin", "mips-linux-gnu-ld.exe");
+            gccObjdumpPath = Path.Combine(compilerRootPath, "bin", "mips-linux-gnu-objdump.exe");
+            linkerScriptPath = Path.Combine(compilerRootPath, "MIPSCore.ld");
+
+            if (!File.Exists(gccPath))
+                throw new FileNotFoundException($"Compiler nicht gefunden: {gccPath}");
+            if (!File.Exists(gccAssemblerPath))
+                throw new FileNotFoundException($"Assembler nicht gefunden: {gccAssemblerPath}");
+            if (!File.Exists(gccLinkerPath))
+                throw new FileNotFoundException($"Linker nicht gefunden: {gccLinkerPath}");
+            if (!File.Exists(gccObjdumpPath))
+                throw new FileNotFoundException($"Objectdump nicht gefunden: {gccObjdumpPath}");
+            if (!File.Exists(linkerScriptPath))
+                throw new FileNotFoundException($"Linker-Script nicht gefunden: {linkerScriptPath}");
         }
         public string Compile(string[] files)
         {
@@ -38,7 +49,7 @@ namespace MIPSCore.Util
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
-            p.StartInfo.FileName = GCCPath;
+            p.StartInfo.FileName = gccPath;
             p.StartInfo.Arguments = GenerateCompileArguments(files);
             p.Start();
      
@@ -49,7 +60,7 @@ namespace MIPSCore.Util
             var exit = p.ExitCode;
 
             //link
-            p.StartInfo.FileName = GCCLinkerPath;
+            p.StartInfo.FileName = gccLinkerPath;
             p.StartInfo.Arguments = GenerateLinkArguments(filenames);
             p.Start();
 
@@ -60,7 +71,7 @@ namespace MIPSCore.Util
             exit = p.ExitCode;
 
             //objdump
-            p.StartInfo.FileName = GCCObjdumpPath;
+            p.StartInfo.FileName = gccObjdumpPath;
             p.StartInfo.Arguments = "-D exe";
             p.Start();
 
@@ -101,7 +112,7 @@ namespace MIPSCore.Util
             // **Kompilieren von Assembler-Dateien**
             foreach (var asmFile in asmFiles)
             {
-                p.StartInfo.FileName = GCCAssemblerPath;
+                p.StartInfo.FileName = gccAssemblerPath;
 
                 p.StartInfo.Arguments = $"--trap -mips32 -O0 -o {Path.GetFileNameWithoutExtension(asmFile)}.o \"{asmFile}\"";
                 p.Start();
@@ -120,7 +131,7 @@ namespace MIPSCore.Util
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
-            p.StartInfo.FileName = GCCLinkerPath;
+            p.StartInfo.FileName = gccLinkerPath;
             p.StartInfo.Arguments = GenerateLinkArguments(filenames);
             p.Start();
 
@@ -137,7 +148,7 @@ namespace MIPSCore.Util
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
-            p.StartInfo.FileName = GCCObjdumpPath;
+            p.StartInfo.FileName = gccObjdumpPath;
             p.StartInfo.Arguments = "-D exe";
             p.Start();
 
@@ -169,10 +180,36 @@ namespace MIPSCore.Util
 
         private string GenerateLinkArguments(string[] filenames)
         {
-            string result = @"-T Compiler\MIPSCore.ld -o exe ";
+            string result = $"-T \"{linkerScriptPath}\" -o exe ";
             foreach (var s in filenames)
                 result += s + ".o ";
             return result;
+        }
+
+        private string ResolveCompilerRootPath()
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var candidates = new[]
+            {
+                Path.Combine(baseDirectory, "Compiler"),
+                Path.Combine(Directory.GetCurrentDirectory(), "Compiler"),
+                Path.Combine(baseDirectory, "..", "Compiler"),
+                Path.Combine(baseDirectory, "..", "..", "Compiler")
+            }
+            .Select(Path.GetFullPath)
+            .Distinct();
+
+            foreach (var candidate in candidates)
+            {
+                if (File.Exists(Path.Combine(candidate, "bin", "mips-linux-gnu-gcc.exe")) &&
+                    File.Exists(Path.Combine(candidate, "MIPSCore.ld")))
+                {
+                    return candidate;
+                }
+            }
+
+            throw new FileNotFoundException(
+                "Compiler-Ordner nicht gefunden. Geprüfte Pfade: " + string.Join(", ", candidates));
         }
 
         private string[] GetFilenames(string[] files)

@@ -47,11 +47,13 @@ jobs:
 
           Copy-Item -Path "MIPSCore/Compiler/Compiler/*" -Destination "release/Compiler" -Recurse -Force
           Copy-Item -Path "SystemTest/Testcode/fibonacci.objdump" -Destination "release/fibonacci.objdump" -Force
+          Copy-Item -Path "SystemTest/Testcode/division_hilo.s" -Destination "release/division_hilo.s" -Force
 
           $requiredPaths = @(
             "release/MIPSCoreConsole.exe",
             "release/MIPSCoreUI.exe",
-            "release/Compiler"
+            "release/Compiler",
+            "release/division_hilo.s"
           )
 
           foreach ($requiredPath in $requiredPaths) {
@@ -129,6 +131,44 @@ jobs:
             throw "Smoke-Test fehlgeschlagen: 'Completed' innerhalb von $timeoutSeconds Sekunden nicht gefunden (ExitCode=$exitCode)."
           }
 
+      - name: Smoke test MIPSCoreUI assembler compile
+        shell: pwsh
+        run: |
+          $stdoutPath = Join-Path $PWD "release/ui-smoke.log"
+          $stderrPath = Join-Path $PWD "release/ui-smoke.err.log"
+          $asmPath = Join-Path $PWD "release/division_hilo.s"
+          $exePath = Join-Path $PWD "release/MIPSCoreUI.exe"
+          $timeoutSeconds = 60
+
+          $process = Start-Process -FilePath $exePath `
+            -ArgumentList "--smoke-asm `"$asmPath`"" `
+            -RedirectStandardOutput $stdoutPath `
+            -RedirectStandardError $stderrPath `
+            -WorkingDirectory (Join-Path $PWD "release") `
+            -NoNewWindow `
+            -PassThru
+
+          if (-not $process.WaitForExit($timeoutSeconds * 1000)) {
+            Stop-Process -Id $process.Id -Force
+            $process.WaitForExit()
+            throw "UI-Smoke-Test überschritt Timeout von $timeoutSeconds Sekunden."
+          }
+
+          $stdout = if (Test-Path $stdoutPath -PathType Leaf) { Get-Content $stdoutPath -Raw } else { "" }
+          $stderr = if (Test-Path $stderrPath -PathType Leaf) { Get-Content $stderrPath -Raw } else { "" }
+
+          if ($process.ExitCode -ne 0) {
+            if ($stdout) {
+              Write-Host "=== UI Smoke stdout ==="
+              Write-Host $stdout
+            }
+            if ($stderr) {
+              Write-Host "=== UI Smoke stderr ==="
+              Write-Host $stderr
+            }
+            throw "UI-Smoke-Test fehlgeschlagen (ExitCode=$($process.ExitCode))."
+          }
+
       - name: Archive release package
         shell: pwsh
         run: |
@@ -148,5 +188,5 @@ jobs:
           name: Release PR #${{ github.event.pull_request.number }}
           body: |
             Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.
-            Enthält den Build aus `Release` sowie den erfolgreichen Smoke-Test mit `fibonacci.objdump`.
+            Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Assembler-Kompilierung).
           files: MIPSCore-release.zip
