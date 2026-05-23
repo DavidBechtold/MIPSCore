@@ -112,7 +112,7 @@ namespace MIPSCore.Util
             // **Kompilieren von Assembler-Dateien**
             foreach (var asmFile in asmFiles)
             {
-                p.StartInfo.FileName = GCCAssemblerPath;
+                p.StartInfo.FileName = gccAssemblerPath;
 
                 p.StartInfo.Arguments = $"--trap -mips32 -O0 -o {Path.GetFileNameWithoutExtension(asmFile)}.o \"{asmFile}\"";
                 p.Start();
