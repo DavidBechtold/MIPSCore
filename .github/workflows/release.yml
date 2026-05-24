@@ -48,12 +48,14 @@ jobs:
           Copy-Item -Path "MIPSCore/Compiler/Compiler/*" -Destination "release/Compiler" -Recurse -Force
           Copy-Item -Path "SystemTest/Testcode/fibonacci.objdump" -Destination "release/fibonacci.objdump" -Force
           Copy-Item -Path "SystemTest/Testcode/division_hilo.s" -Destination "release/division_hilo.s" -Force
+          Copy-Item -Path "SystemTest/Testcode/division_hilo.objdump" -Destination "release/division_hilo.objdump" -Force
 
           $requiredPaths = @(
             "release/MIPSCoreConsole.exe",
             "release/MIPSCoreUI.exe",
             "release/Compiler",
-            "release/division_hilo.s"
+            "release/division_hilo.s",
+            "release/division_hilo.objdump"
           )
 
           foreach ($requiredPath in $requiredPaths) {
@@ -131,17 +133,17 @@ jobs:
             throw "Smoke-Test fehlgeschlagen: 'Completed' innerhalb von $timeoutSeconds Sekunden nicht gefunden (ExitCode=$exitCode)."
           }
 
-      - name: Smoke test MIPSCoreUI assembler compile
+      - name: Smoke test MIPSCoreUI program load
         shell: pwsh
         run: |
           $stdoutPath = Join-Path $PWD "release/ui-smoke.log"
           $stderrPath = Join-Path $PWD "release/ui-smoke.err.log"
-          $asmPath = Join-Path $PWD "release/division_hilo.s"
+          $objdumpPath = Join-Path $PWD "release/division_hilo.objdump"
           $exePath = Join-Path $PWD "release/MIPSCoreUI.exe"
           $timeoutSeconds = 60
 
           $process = Start-Process -FilePath $exePath `
-            -ArgumentList "--smoke-asm `"$asmPath`"" `
+            -ArgumentList "--smoke-objdump `"$objdumpPath`"" `
             -RedirectStandardOutput $stdoutPath `
             -RedirectStandardError $stderrPath `
             -WorkingDirectory (Join-Path $PWD "release") `
@@ -188,5 +190,5 @@ jobs:
           name: Release PR #${{ github.event.pull_request.number }}
           body: |
             Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.
-            Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Assembler-Kompilierung).
+            Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Programm-Laden).
           files: MIPSCore-release.zip
