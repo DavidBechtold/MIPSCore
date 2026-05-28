@@ -3,13 +3,16 @@ name: Release after merged PR
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   build-smoke-release:
-    if: github.event.pull_request.merged == true
+    if: >
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master')
     runs-on: windows-latest
 
     steps:
@@ -203,15 +206,35 @@ jobs:
         id: meta
         shell: pwsh
         run: |
-          $tag = "pr-${{ github.event.pull_request.number }}-run-${{ github.run_number }}"
+          if ("${{ github.event_name }}" -eq "pull_request") {
+            $tag = "pr-${{ github.event.pull_request.number }}-run-${{ github.run_number }}"
+            $name = "Release PR #${{ github.event.pull_request.number }}"
+            $body = @"
+Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.
+Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Programm-Laden).
+"@
+          }
+          else {
+            $tag = "manual-master-run-${{ github.run_number }}"
+            $name = "Manual Release master"
+            $body = @"
+Manuell ausgelöster Release-Run auf `master`.
+Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Programm-Laden).
+"@
+          }
+
           "tag=$tag" >> $env:GITHUB_OUTPUT
+          "name<<EOF" >> $env:GITHUB_OUTPUT
+          $name >> $env:GITHUB_OUTPUT
+          "EOF" >> $env:GITHUB_OUTPUT
+          "body<<EOF" >> $env:GITHUB_OUTPUT
+          $body >> $env:GITHUB_OUTPUT
+          "EOF" >> $env:GITHUB_OUTPUT
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
-          name: Release PR #${{ github.event.pull_request.number }}
-          body: |
-            Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.
-            Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Programm-Laden).
+          name: ${{ steps.meta.outputs.name }}
+          body: ${{ steps.meta.outputs.body }}
           files: MIPSCore-release.zip
