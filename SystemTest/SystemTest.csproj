@@ -89,6 +89,9 @@
     <None Include="Testcode\gcd.objdump">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Testcode\division_hilo.objdump">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Testcode\insertionsort.objdump">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

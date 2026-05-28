@@ -1,0 +1,217 @@
+name: Release after merged PR
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  build-smoke-release:
+    if: github.event.pull_request.merged == true
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore packages
+        run: nuget restore MIPSCore.sln
+
+      - name: Install .NET Framework 4.5 reference assemblies and build
+        shell: pwsh
+        run: |
+          nuget install Microsoft.NETFramework.ReferenceAssemblies.net45 -Version 1.0.3 -OutputDirectory packages -ExcludeVersion
+          $frameworkPath = Join-Path $PWD "packages\Microsoft.NETFramework.ReferenceAssemblies.net45\build\.NETFramework\v4.5"
+          msbuild MIPSCore.sln /p:Configuration=Release /p:Platform="Any CPU" "/p:FrameworkPathOverride=$frameworkPath\"
+
+      - name: Prepare release package
+        shell: pwsh
+        run: |
+          New-Item -Path release -ItemType Directory -Force | Out-Null
+          $releaseSources = @(
+            "MIPSCoreConsole/bin/Release/*",
+            "MIPSCoreUI/bin/Release/*"
+          )
+
+          foreach ($source in $releaseSources) {
+            Copy-Item -Path $source -Destination "release" -Recurse -Force
+          }
+
+          Copy-Item -Path "MIPSCore/Compiler/Compiler/*" -Destination "release/Compiler" -Recurse -Force
+
+          if (-not (Test-Path "release/Compiler/bin")) {
+            $compilerBinSources = @(
+              "MIPSCore/bin/Release/Compiler/bin",
+              "MIPSCoreConsole/bin/Release/Compiler/bin",
+              "MIPSCoreUI/bin/Release/Compiler/bin",
+              "MIPSCore/Compiler/Compiler/bin",
+              "MIPSCore/Compiler/Compiler/mips-linux-gnu/bin"
+            )
+
+            foreach ($compilerBinSource in $compilerBinSources) {
+              if (Test-Path $compilerBinSource) {
+                New-Item -Path "release/Compiler/bin" -ItemType Directory -Force | Out-Null
+                Copy-Item -Path "$compilerBinSource/*" -Destination "release/Compiler/bin" -Recurse -Force
+                break
+              }
+            }
+          }
+          Copy-Item -Path "SystemTest/Testcode/fibonacci.objdump" -Destination "release/fibonacci.objdump" -Force
+          Copy-Item -Path "SystemTest/Testcode/division_hilo.s" -Destination "release/division_hilo.s" -Force
+          Copy-Item -Path "SystemTest/Testcode/division_hilo.objdump" -Destination "release/division_hilo.objdump" -Force
+
+          $requiredPaths = @(
+            "release/MIPSCoreConsole.exe",
+            "release/MIPSCoreUI.exe",
+            "release/Compiler",
+            "release/Compiler/bin",
+            "release/Compiler/bin/mips-linux-gnu-gcc.exe",
+            "release/Compiler/bin/mips-linux-gnu-as.exe",
+            "release/Compiler/bin/mips-linux-gnu-ld.exe",
+            "release/Compiler/bin/mips-linux-gnu-objdump.exe",
+            "release/division_hilo.s",
+            "release/division_hilo.objdump"
+          )
+
+          foreach ($requiredPath in $requiredPaths) {
+            if (-not (Test-Path $requiredPath)) {
+              throw "Erwartete Release-Datei oder -Ordner fehlt: $requiredPath"
+            }
+          }
+
+          Get-ChildItem -Path "MIPSCore/Compiler/Compiler" -Directory | ForEach-Object {
+            $releaseCompilerPath = Join-Path "release/Compiler" $_.Name
+            if (-not (Test-Path $releaseCompilerPath)) {
+              throw "Compiler-Unterordner fehlt im Release: $releaseCompilerPath"
+            }
+          }
+
+      - name: Smoke test built release
+        shell: pwsh
+        run: |
+          $stdoutPath = Join-Path $PWD "release/smoke.log"
+          $stderrPath = Join-Path $PWD "release/smoke.err.log"
+          $objdumpPath = Join-Path $PWD "release/fibonacci.objdump"
+          $exePath = Join-Path $PWD "release/MIPSCoreConsole.exe"
+          $timeoutSeconds = 30
+          $pollIntervalMilliseconds = 500
+
+          $process = Start-Process -FilePath $exePath `
+            -ArgumentList "-p `"$objdumpPath`"" `
+            -RedirectStandardOutput $stdoutPath `
+            -RedirectStandardError $stderrPath `
+            -WorkingDirectory (Join-Path $PWD "release") `
+            -NoNewWindow `
+            -PassThru
+
+          $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+          $completed = $false
+
+          while ((Get-Date) -lt $deadline) {
+            if (Test-Path $stdoutPath -PathType Leaf) {
+              if (Select-String -Path $stdoutPath -Pattern "Completed" -Quiet -ErrorAction SilentlyContinue) {
+                $completed = $true
+                break
+              }
+            }
+
+            if ($process.HasExited) {
+              break
+            }
+
+            Start-Sleep -Milliseconds $pollIntervalMilliseconds
+          }
+
+          if (-not $process.HasExited) {
+            Stop-Process -Id $process.Id -Force
+            $process.WaitForExit()
+          }
+
+          $stdout = if (Test-Path $stdoutPath -PathType Leaf) { Get-Content $stdoutPath -Raw } else { "" }
+          $stderr = if (Test-Path $stderrPath -PathType Leaf) { Get-Content $stderrPath -Raw } else { "" }
+
+          if (-not $completed -and $stdout -match "Completed") {
+            $completed = $true
+          }
+
+          if (-not $completed) {
+            if ($stdout) {
+              Write-Host "=== Smoke stdout ==="
+              Write-Host $stdout
+            }
+            if ($stderr) {
+              Write-Host "=== Smoke stderr ==="
+              Write-Host $stderr
+            }
+
+            $exitCode = if ($process.HasExited) { $process.ExitCode } else { "n/a" }
+            throw "Smoke-Test fehlgeschlagen: 'Completed' innerhalb von $timeoutSeconds Sekunden nicht gefunden (ExitCode=$exitCode)."
+          }
+
+      - name: Smoke test MIPSCoreUI program load
+        shell: pwsh
+        run: |
+          $stdoutPath = Join-Path $PWD "release/ui-smoke.log"
+          $stderrPath = Join-Path $PWD "release/ui-smoke.err.log"
+          $objdumpPath = Join-Path $PWD "release/division_hilo.objdump"
+          $exePath = Join-Path $PWD "release/MIPSCoreUI.exe"
+          $timeoutSeconds = 60
+
+          $process = Start-Process -FilePath $exePath `
+            -ArgumentList "--smoke-objdump `"$objdumpPath`"" `
+            -RedirectStandardOutput $stdoutPath `
+            -RedirectStandardError $stderrPath `
+            -WorkingDirectory (Join-Path $PWD "release") `
+            -NoNewWindow `
+            -PassThru
+
+          if (-not $process.WaitForExit($timeoutSeconds * 1000)) {
+            Stop-Process -Id $process.Id -Force
+            $process.WaitForExit()
+            throw "UI-Smoke-Test überschritt Timeout von $timeoutSeconds Sekunden."
+          }
+
+          $stdout = if (Test-Path $stdoutPath -PathType Leaf) { Get-Content $stdoutPath -Raw } else { "" }
+          $stderr = if (Test-Path $stderrPath -PathType Leaf) { Get-Content $stderrPath -Raw } else { "" }
+
+          if ($process.ExitCode -ne 0) {
+            if ($stdout) {
+              Write-Host "=== UI Smoke stdout ==="
+              Write-Host $stdout
+            }
+            if ($stderr) {
+              Write-Host "=== UI Smoke stderr ==="
+              Write-Host $stderr
+            }
+            throw "UI-Smoke-Test fehlgeschlagen (ExitCode=$($process.ExitCode))."
+          }
+
+      - name: Archive release package
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "release/*" -DestinationPath "MIPSCore-release.zip" -Force
+
+      - name: Create release metadata
+        id: meta
+        shell: pwsh
+        run: |
+          $tag = "pr-${{ github.event.pull_request.number }}-run-${{ github.run_number }}"
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: Release PR #${{ github.event.pull_request.number }}
+          body: |
+            Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.
+            Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Programm-Laden).
+          files: MIPSCore-release.zip
