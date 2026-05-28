@@ -15,6 +15,7 @@
 
     <Window.Resources>
         <system:Double x:Key="FontSize">13</system:Double>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
 
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -127,5 +128,17 @@
             </Grid>
             <view:RegisterView Width="180" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </StackPanel>
+        <Grid Grid.RowSpan="2"
+              Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+              Background="#40FFFFFF"
+              Panel.ZIndex="10">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar Width="220" Height="16" IsIndeterminate="True"/>
+                <TextBlock Text="Datei wird geladen..."
+                           Margin="0,10,0,0"
+                           HorizontalAlignment="Center"
+                           FontWeight="Bold"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

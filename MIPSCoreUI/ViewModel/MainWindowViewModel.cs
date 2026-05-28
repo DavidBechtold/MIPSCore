@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -28,6 +29,7 @@ namespace MIPSCoreUI.ViewModel
         private readonly IMessageableViewModel outputViewModel;
         private readonly IMessageBoxService messageBox;
         private readonly IOpenFileDialogService openFileDialog;
+        private bool isBusy;
 
         public DelegateCommand Clock { get; private set; }
         public DelegateCommand Run { get; private set; }
@@ -176,50 +178,55 @@ namespace MIPSCoreUI.ViewModel
             outputViewModel.Draw();
         }
 
-        private void OnLoadFile()
+        private async void OnLoadFile()
         {
-            openFileDialog.SetFilter("Object Dumps (*.objdump)|*.objdump|All files (*.*)|*.*");
-            if (!openFileDialog.OpenFileDialog())
-                return;
-
-            core.StopCore();
-            core.SetMode(ExecutionMode.SingleStep);
-            core.ProgramObjdump(openFileDialog.GetFileName());
-            core.StartCore();
-            mipsRegisterViewModel.Draw();
-            mipsMemoryViewModel.Draw();
-            ledsViewModel.Draw();
-            outputViewModel.Refresh();
+            await LoadProgramAsync("Object Dumps (*.objdump)|*.objdump|All files (*.*)|*.*", core.ProgramObjdump, true);
         }
 
-        private void OnLoadCFile()
+        private async void OnLoadCFile()
         {
-            openFileDialog.SetFilter("C Files (*.c)|*.c");
-            if (!openFileDialog.OpenFileDialog())
-                return;
-
-            core.StopCore();
-            core.SetMode(ExecutionMode.SingleStep);
-            core.ProgramC(openFileDialog.GetFileName());
-            core.StartCore();
-            mipsRegisterViewModel.Draw();
-            mipsMemoryViewModel.Draw();
-            ledsViewModel.Draw();
+            await LoadProgramAsync("C Files (*.c)|*.c", core.ProgramC);
         }
 
-        private void OnLoadAsmFile()
+        private async void OnLoadAsmFile()
         {
-            openFileDialog.SetFilter("C Files (*.s)|*.asm");
+            await LoadProgramAsync("C Files (*.s)|*.asm", core.ProgramAssembler);
+        }
+
+        private async Task LoadProgramAsync(string filter, Action<string> loadAction, bool refreshOutput = false)
+        {
+            openFileDialog.SetFilter(filter);
             if (!openFileDialog.OpenFileDialog())
                 return;
 
-            core.StopCore();
-            core.SetMode(ExecutionMode.SingleStep);
-            core.ProgramAssembler(openFileDialog.GetFileName());
-            core.StartCore();
-            mipsRegisterViewModel.Draw();
-            mipsMemoryViewModel.Draw();
-            ledsViewModel.Draw();
+            string fileName = openFileDialog.GetFileName();
+            IsBusy = true;
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    core.StopCore();
+                    core.SetMode(ExecutionMode.SingleStep);
+                    loadAction(fileName);
+                    core.StartCore();
+                });
+
+                mipsRegisterViewModel.Draw();
+                mipsMemoryViewModel.Draw();
+                ledsViewModel.Draw();
+
+                if (refreshOutput)
+                    outputViewModel.Refresh();
+            }
+            catch (Exception ex)
+            {
+                messageBox.ShowNotification(string.Format("Fehler beim Laden: {0}", ex.Message));
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private void OnSaveFile()
@@ -369,6 +376,16 @@ namespace MIPSCoreUI.ViewModel
         {
             set { stateRegisterCarryFlag = value; RaisePropertyChanged(() => StateRegisterCarryFlag); }
             get { return stateRegisterCarryFlag; }
+        }
+
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
         }
     }
 }
