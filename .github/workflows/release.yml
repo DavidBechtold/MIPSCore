@@ -46,6 +46,24 @@ jobs:
           }
 
           Copy-Item -Path "MIPSCore/Compiler/Compiler/*" -Destination "release/Compiler" -Recurse -Force
+
+          if (-not (Test-Path "release/Compiler/bin")) {
+            $compilerBinSources = @(
+              "MIPSCore/bin/Release/Compiler/bin",
+              "MIPSCoreConsole/bin/Release/Compiler/bin",
+              "MIPSCoreUI/bin/Release/Compiler/bin",
+              "MIPSCore/Compiler/Compiler/bin",
+              "MIPSCore/Compiler/Compiler/mips-linux-gnu/bin"
+            )
+
+            foreach ($compilerBinSource in $compilerBinSources) {
+              if (Test-Path $compilerBinSource) {
+                New-Item -Path "release/Compiler/bin" -ItemType Directory -Force | Out-Null
+                Copy-Item -Path "$compilerBinSource/*" -Destination "release/Compiler/bin" -Recurse -Force
+                break
+              }
+            }
+          }
           Copy-Item -Path "SystemTest/Testcode/fibonacci.objdump" -Destination "release/fibonacci.objdump" -Force
           Copy-Item -Path "SystemTest/Testcode/division_hilo.s" -Destination "release/division_hilo.s" -Force
           Copy-Item -Path "SystemTest/Testcode/division_hilo.objdump" -Destination "release/division_hilo.objdump" -Force
@@ -54,6 +72,11 @@ jobs:
             "release/MIPSCoreConsole.exe",
             "release/MIPSCoreUI.exe",
             "release/Compiler",
+            "release/Compiler/bin",
+            "release/Compiler/bin/mips-linux-gnu-gcc.exe",
+            "release/Compiler/bin/mips-linux-gnu-as.exe",
+            "release/Compiler/bin/mips-linux-gnu-ld.exe",
+            "release/Compiler/bin/mips-linux-gnu-objdump.exe",
             "release/division_hilo.s",
             "release/division_hilo.objdump"
           )
