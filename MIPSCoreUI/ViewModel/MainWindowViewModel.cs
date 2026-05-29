@@ -14,6 +14,7 @@ using MIPSCore.Util.MIPSEventArgs;
 using MIPSCoreUI.Services;
 using MIPSCoreUI.View;
 using MipsCore = MIPSCore.MipsCore;
+using System.Windows.Threading;
 
 namespace MIPSCoreUI.ViewModel
 {
@@ -29,7 +30,14 @@ namespace MIPSCoreUI.ViewModel
         private readonly IMessageableViewModel outputViewModel;
         private readonly IMessageBoxService messageBox;
         private readonly IOpenFileDialogService openFileDialog;
+        private readonly DispatcherTimer loadingAnimationTimer;
         private bool isBusy;
+        private int loadingAnimationStep;
+        private string loadingAnimationFileName;
+        private string busyStatusText;
+        private string currentLoadedFilePath;
+        private Action<string> currentLoadAction;
+        private bool currentLoadRefreshOutput;
 
         public DelegateCommand Clock { get; private set; }
         public DelegateCommand Run { get; private set; }
@@ -45,6 +53,7 @@ namespace MIPSCoreUI.ViewModel
         public DelegateCommand ViewVersion { get; private set; }
         public DelegateCommand Settings { get; private set; }
         public DelegateCommand Exit { get; private set; }
+        public DelegateCommand ReloadCurrentFile { get; private set; }
 
         /* executed command */
         private string executedInstructionName;
@@ -104,10 +113,15 @@ namespace MIPSCoreUI.ViewModel
             ViewVersion = new DelegateCommand(() => OnVersionView());
             Settings = new DelegateCommand(OnSettings);
             Exit = new DelegateCommand(OnExit);
+            ReloadCurrentFile = new DelegateCommand(OnReloadCurrentFile);
 
             /* state register */
             stateRegisterActive = new SolidColorBrush(Colors.DeepSkyBlue);
             stateRegisterInactive = new SolidColorBrush(Colors.White);
+
+            loadingAnimationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
+            loadingAnimationTimer.Tick += LoadingAnimationTick;
+            BusyStatusText = "Datei wird geladen...";
         }
 
         private void Clocked(object sender, EventArgs args)
@@ -193,6 +207,17 @@ namespace MIPSCoreUI.ViewModel
             await LoadProgramAsync("C Files (*.s)|*.asm", core.ProgramAssembler);
         }
 
+        private async void OnReloadCurrentFile()
+        {
+            if (string.IsNullOrWhiteSpace(currentLoadedFilePath) || currentLoadAction == null)
+            {
+                messageBox.ShowNotification("Es ist keine Datei geladen.");
+                return;
+            }
+
+            await LoadProgramFromFileAsync(currentLoadedFilePath, currentLoadAction, currentLoadRefreshOutput);
+        }
+
         private async Task LoadProgramAsync(string filter, Action<string> loadAction, bool refreshOutput = false)
         {
             openFileDialog.SetFilter(filter);
@@ -200,8 +225,13 @@ namespace MIPSCoreUI.ViewModel
                 return;
 
             string fileName = openFileDialog.GetFileName();
-            IsBusy = true;
+            await LoadProgramFromFileAsync(fileName, loadAction, refreshOutput);
+        }
 
+        private async Task LoadProgramFromFileAsync(string fileName, Action<string> loadAction, bool refreshOutput = false)
+        {
+            SetCurrentLoadedProgram(fileName, loadAction, refreshOutput);
+            StartLoadingAnimation(fileName);
             try
             {
                 await Task.Run(() =>
@@ -225,8 +255,49 @@ namespace MIPSCoreUI.ViewModel
             }
             finally
             {
-                IsBusy = false;
+                StopLoadingAnimation();
             }
+        }
+
+        private void SetCurrentLoadedProgram(string fileName, Action<string> loadAction, bool refreshOutput)
+        {
+            currentLoadedFilePath = fileName;
+            currentLoadAction = loadAction;
+            currentLoadRefreshOutput = refreshOutput;
+        }
+
+        private void StartLoadingAnimation(string fileName)
+        {
+            loadingAnimationFileName = Path.GetFileName(fileName);
+            loadingAnimationStep = 0;
+            UpdateBusyStatusText();
+            IsBusy = true;
+            loadingAnimationTimer.Start();
+        }
+
+        private void StopLoadingAnimation()
+        {
+            loadingAnimationTimer.Stop();
+            IsBusy = false;
+            BusyStatusText = "Datei wird geladen...";
+        }
+
+        private void LoadingAnimationTick(object sender, EventArgs e)
+        {
+            loadingAnimationStep++;
+            UpdateBusyStatusText();
+        }
+
+        private void UpdateBusyStatusText()
+        {
+            var dots = string.Empty;
+            var dotsCount = (loadingAnimationStep % 4) + 1;
+            for (var i = 0; i < dotsCount; i++)
+            {
+                dots += " .";
+            }
+
+            BusyStatusText = string.Format("File \"{0}\" wird geladen{1}", loadingAnimationFileName, dots);
         }
 
         private void OnSaveFile()
@@ -385,6 +456,16 @@ namespace MIPSCoreUI.ViewModel
             {
                 isBusy = value;
                 RaisePropertyChanged(() => IsBusy);
+            }
+        }
+
+        public string BusyStatusText
+        {
+            get { return busyStatusText; }
+            set
+            {
+                busyStatusText = value;
+                RaisePropertyChanged(() => BusyStatusText);
             }
         }
     }
