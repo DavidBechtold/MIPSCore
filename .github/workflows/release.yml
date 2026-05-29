@@ -209,18 +209,12 @@ jobs:
           if ("${{ github.event_name }}" -eq "pull_request") {
             $tag = "pr-${{ github.event.pull_request.number }}-run-${{ github.run_number }}"
             $name = "Release PR #${{ github.event.pull_request.number }}"
-            $body = @"
-Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.
-Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Programm-Laden).
-"@
+            $body = "Automatischer Release nach Merge von PR #${{ github.event.pull_request.number }}.`nEnthält den Build aus ``Release`` sowie erfolgreiche Smoke-Tests für ``MIPSCoreConsole.exe`` und ``MIPSCoreUI.exe`` (Programm-Laden)."
           }
           else {
             $tag = "manual-master-run-${{ github.run_number }}"
             $name = "Manual Release master"
-            $body = @"
-Manuell ausgelöster Release-Run auf `master`.
-Enthält den Build aus `Release` sowie erfolgreiche Smoke-Tests für `MIPSCoreConsole.exe` und `MIPSCoreUI.exe` (Programm-Laden).
-"@
+            $body = "Manuell ausgelöster Release-Run auf ``master``.`nEnthält den Build aus ``Release`` sowie erfolgreiche Smoke-Tests für ``MIPSCoreConsole.exe`` und ``MIPSCoreUI.exe`` (Programm-Laden)."
           }
 
           "tag=$tag" >> $env:GITHUB_OUTPUT
