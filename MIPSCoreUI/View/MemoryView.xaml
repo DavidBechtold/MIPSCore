@@ -17,32 +17,54 @@
         <GroupBox Header="Memory" BorderThickness="2" BorderBrush="SlateGray" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TabControl SelectedIndex="{Binding SelectedMemoryIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <TabItem Header="Text" Height="24" VerticalAlignment="Bottom">
-                    <ListBox ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding AddBreakpoint}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Margin="0,0,2,0" Fill="Red" Height="10" Width="10" Stroke="Red" Visibility="{Binding BreakpointVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Content="Neu laden &amp; kompilieren"
+                                Margin="4"
+                                Padding="8,2"
+                                HorizontalAlignment="Left"
+                                Command="{Binding DataContext.ReloadCurrentFile, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        <ListBox Grid.Row="1" ItemsSource="{Binding Path=List, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding AddBreakpoint}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Margin="0,0,2,0" Fill="Red" Height="10" Width="10" Stroke="Red" Visibility="{Binding BreakpointVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Data" FontSize="13">
-                    <ListBox ItemsSource="{Binding Path=DataList, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Content="Neu laden &amp; kompilieren"
+                                Margin="4"
+                                Padding="8,2"
+                                HorizontalAlignment="Left"
+                                Command="{Binding DataContext.ReloadCurrentFile, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        <ListBox Grid.Row="1" ItemsSource="{Binding Path=DataList, Mode=TwoWay}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FontFamily="Courier New" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Name="TextMemory" Text="{Binding Text}" Background="{Binding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </GroupBox>
